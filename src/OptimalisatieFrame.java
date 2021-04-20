@@ -1,5 +1,4 @@
-public class OptimalisatieFrame {
-    public static void main(String[] args) {
-        System.out.println("hoi!");
-    }
+import javax.swing.*;
+
+public class OptimalisatieFrame extends JFrame {
 }
