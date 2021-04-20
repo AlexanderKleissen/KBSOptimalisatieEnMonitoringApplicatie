@@ -3,12 +3,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MonitoringFrame extends JFrame implements ActionListener {
+public class OntwerpFrame extends JFrame implements ActionListener {
     private JComboBox jcDropDownMenu; //
     private String[] comboBoxContent;
-    private JButton jbMonitoren, jbOntwerpen; //buttons voor footer
+    private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
 
-    public MonitoringFrame() {
+    public OntwerpFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
@@ -19,7 +19,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         this.add(header, BorderLayout.NORTH);
 
         //dropdownmenu
-        comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
+        comboBoxContent = new String[] {"Nieuw ontwerp", "Open ontwerp", "Sluit ontwerp", "Opslaan", "Opslaan als", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
         jcDropDownMenu.setEditable(true); //Om de teksts aan te passen moet het eerst enabled worden
@@ -34,10 +34,10 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
         //Ontwerpen-Monitoren keuzebox linksonderin
         jbOntwerpen = new JButton("Ontwerpen");
-        jbOntwerpen.addActionListener(this);
+        jbOntwerpen.setEnabled(false);
         footer.add(jbOntwerpen);
         jbMonitoren = new JButton("Monitoren");
-        jbMonitoren.setEnabled(false);
+        jbMonitoren.addActionListener(this);
         footer.add(jbMonitoren);
 
         //Panel voor midden van het scherm
@@ -47,6 +47,10 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         //Panel voor onderkant van midden van scherm
         JPanel onderkantCenter = new JPanel(new BorderLayout());
         center.add(onderkantCenter, BorderLayout.SOUTH);
+
+        //Optimaliseer ontwerp-knop
+        jbOptimaliseren = new JButton("Optimaliseer ontwerp");
+        onderkantCenter.add(jbOptimaliseren, BorderLayout.WEST);
 
         //Summary veld rechtsonderin
         JPanel summary = new JPanel(new GridLayout(2,1));
@@ -66,11 +70,13 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(jcDropDownMenu.getSelectedItem());
-        if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
-            dispose();
-        }else if (e.getSource()==jbOntwerpen){
-            OntwerpFrame ontwerpFrame = new OntwerpFrame();
+        if(e.getSource()==jcDropDownMenu){
+            System.out.println(jcDropDownMenu.getSelectedItem());
+            if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
+                dispose();
+            }
+        } else if (e.getSource()==jbMonitoren){
+            MonitoringFrame monitoringFrame = new MonitoringFrame();
             dispose();
         }
     }
