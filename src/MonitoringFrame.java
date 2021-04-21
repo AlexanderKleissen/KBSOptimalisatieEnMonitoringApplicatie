@@ -52,7 +52,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         JPanel summary = new JPanel(new GridLayout(2,1));
         summary.setBorder(BorderFactory.createLineBorder(Color.black));
         onderkantCenter.add(summary, BorderLayout.EAST);
-        JLabel totaleKosten = new JLabel("Totale kosten: ");
+        JLabel totaleKosten = new JLabel("Totale periodieke kosten: ");
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: ");
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
