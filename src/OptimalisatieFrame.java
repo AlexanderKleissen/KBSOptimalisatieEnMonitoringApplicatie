@@ -1,17 +1,20 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.table.TableColumn;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class OptimalisatieFrame extends JFrame implements ActionListener {
+  private JLabel minimaalTotaleBeschikbaarheid;
+  private JTextField jtminimaalTotaleBeschikbaarheid;
+  private JButton bereken;
+  private JButton voegToe;
 
     public OptimalisatieFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 1000);
-
-        // setLayout(new FlowLayout());
-        // setTitle("Monitoringapplicatie (optimaliseren)");
 
        JButton bereken = new JButton("Bereken optimale waarden");
        add(bereken);
