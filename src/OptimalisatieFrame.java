@@ -15,14 +15,6 @@ public class OptimalisatieFrame extends JFrame implements ActionListener {
     public OptimalisatieFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 1000);
-        setLayout(new FlowLayout());
-        setTitle("Monitoringapplicatie (optimaliseren)");
-
-        JButton bereken = new JButton("Bereken optimale waarden");
-        add(bereken);
-        JButton voegToe = new JButton("Voeg componenten toe aan ontwerp");
-        add(voegToe);
-
         setLayout(new BorderLayout());
         setTitle("Monitoringapplicatie (optimaliseren)");
 
