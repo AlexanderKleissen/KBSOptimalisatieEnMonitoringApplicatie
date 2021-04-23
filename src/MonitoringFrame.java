@@ -12,7 +12,6 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
-<<<<<<< HEAD
         setTitle("Monitoringapplicatie (monitoren)");
 
         //Panel voor header
@@ -21,16 +20,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
         //dropdownmenu
         comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
-=======
-        setTitle("Monitoringapplicatie");
 
-        //Panel voor header
-        JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        this.add(header, BorderLayout.NORTH);
-
-        //dropdownmenu
-        comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit netwerk", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
->>>>>>> origin/Monitoring
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
         jcDropDownMenu.setEditable(true); //Om de teksts aan te passen moet het eerst enabled worden
@@ -51,14 +41,12 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         jbMonitoren.setEnabled(false);
         footer.add(jbMonitoren);
 
-<<<<<<< HEAD
-=======
         setVisible(true);
     }
 
     public MonitoringFrame(Monitoringnetwerk netwerk){
         this();
->>>>>>> origin/Monitoring
+
         //Panel voor midden van het scherm
         JPanel center = new JPanel(new BorderLayout());
         this.add(center);
@@ -69,15 +57,13 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
         //Summary veld rechtsonderin
         JPanel summary = new JPanel(new GridLayout(2,1));
-<<<<<<< HEAD
+
         summary.setBorder(BorderFactory.createLineBorder(Color.black));
-        onderkantCenter.add(summary, BorderLayout.EAST);
-        JLabel totaleKosten = new JLabel("Totale periodieke kosten: ");
-=======
+
         summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(5,5,5,5))));
         onderkantCenter.add(summary, BorderLayout.EAST);
         JLabel totaleKosten = new JLabel("Totale kosten: ");
->>>>>>> origin/Monitoring
+
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: ");
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
@@ -86,8 +72,6 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         JScrollBar scrollBar = new JScrollBar();
         center.add(scrollBar, BorderLayout.EAST);
 
-<<<<<<< HEAD
-=======
         //Panel voor componenten
         JPanel componentenPanel = new JPanel();
         componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
@@ -114,20 +98,12 @@ public class MonitoringFrame extends JFrame implements ActionListener {
             }
         }
 
->>>>>>> origin/Monitoring
         setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-        System.out.println(jcDropDownMenu.getSelectedItem());
-        if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
-            dispose();
-        }else if (e.getSource()==jbOntwerpen){
-            OntwerpFrame ontwerpFrame = new OntwerpFrame();
-            dispose();
-=======
+
         if(e.getSource()==jcDropDownMenu) {
             System.out.println(jcDropDownMenu.getSelectedItem());
             if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
@@ -145,8 +121,6 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         }
         if (e.getSource()==jbOntwerpen){
             OntwerpFrame ontwerpFrame = new OntwerpFrame();
->>>>>>> origin/Monitoring
         }
-        dispose();
     }
 }

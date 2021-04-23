@@ -2,14 +2,12 @@ import java.util.ArrayList;
 
 public class Monitoringnetwerk extends Netwerk{
     private int periodiekeKosten;
-<<<<<<< HEAD
 
     //Constructors
-    public Monitoringnetwerk(int periodiekeKosten, double beschikbaarheidspercentage) {
-        super(beschikbaarheidspercentage, new ArrayList());
-        this.periodiekeKosten = periodiekeKosten;
-    }
-=======
+//    public Monitoringnetwerk(int periodiekeKosten, double beschikbaarheidspercentage) {
+//        super(beschikbaarheidspercentage, new ArrayList());
+//        this.periodiekeKosten = periodiekeKosten;
+//    }
     private static ArrayList<Monitoringnetwerk> monitoringNetwerken =  new ArrayList<>();
 
     //Constructors
@@ -24,6 +22,4 @@ public class Monitoringnetwerk extends Netwerk{
     public static ArrayList<Monitoringnetwerk> getMonitoringNetwerken() {
         return monitoringNetwerken;
     }
-
->>>>>>> origin/Monitoring
 }
