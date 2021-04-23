@@ -2,8 +2,17 @@ import java.util.ArrayList;
 
 public abstract class Netwerk {
     private double beschikbaarheidspercentage;
-    private ArrayList<Groep> groepen;
+    protected ArrayList<Groep> groepen;
+    private String naam;
 
     //Constructor
-    public Netwerk(double beschikbaarheidspercentage, ArrayList<Groep> groepen){};
+    public Netwerk(String naam, double beschikbaarheidspercentage, ArrayList<Groep> groepen){
+        this.naam = naam;
+        this.beschikbaarheidspercentage=beschikbaarheidspercentage;
+    };
+
+    //Getters en setters
+    public String getNaam() {
+        return naam;
+    }
 }

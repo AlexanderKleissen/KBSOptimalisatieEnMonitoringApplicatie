@@ -4,8 +4,8 @@ public class Ontwerpnetwerk extends Netwerk{
     private double kosten;
     private double opgegevenBeschikbaarheid;
 
-    public Ontwerpnetwerk(double kosten, double opgegevenBeschikbaarheid, double beschikbaarheidspercentage) {
-        super(beschikbaarheidspercentage, new ArrayList());
+    public Ontwerpnetwerk(String naam, double kosten, double opgegevenBeschikbaarheid, double beschikbaarheidspercentage) {
+        super(naam, beschikbaarheidspercentage, new ArrayList());
         this.kosten = kosten;
         this.opgegevenBeschikbaarheid = opgegevenBeschikbaarheid;
     }

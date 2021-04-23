@@ -4,7 +4,8 @@ import java.util.ArrayList;
 public class Groep {
     private String type;
     private double beschikbaarheidspercentage;
-    private ArrayList<Component> componenten;
+    protected ArrayList<Component> componenten;
+
 
     //Constructors
     public Groep(String type, double beschikbaarheidspercentage) {

@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MonitoringFrame extends JFrame implements ActionListener {
-    private JComboBox jcDropDownMenu; //
+    private JComboBox jcDropDownMenu;
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen; //buttons voor footer
 
@@ -12,6 +12,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
+<<<<<<< HEAD
         setTitle("Monitoringapplicatie (monitoren)");
 
         //Panel voor header
@@ -20,6 +21,16 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
         //dropdownmenu
         comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
+=======
+        setTitle("Monitoringapplicatie");
+
+        //Panel voor header
+        JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        this.add(header, BorderLayout.NORTH);
+
+        //dropdownmenu
+        comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit netwerk", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
+>>>>>>> origin/Monitoring
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
         jcDropDownMenu.setEditable(true); //Om de teksts aan te passen moet het eerst enabled worden
@@ -40,6 +51,14 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         jbMonitoren.setEnabled(false);
         footer.add(jbMonitoren);
 
+<<<<<<< HEAD
+=======
+        setVisible(true);
+    }
+
+    public MonitoringFrame(Monitoringnetwerk netwerk){
+        this();
+>>>>>>> origin/Monitoring
         //Panel voor midden van het scherm
         JPanel center = new JPanel(new BorderLayout());
         this.add(center);
@@ -50,9 +69,15 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
         //Summary veld rechtsonderin
         JPanel summary = new JPanel(new GridLayout(2,1));
+<<<<<<< HEAD
         summary.setBorder(BorderFactory.createLineBorder(Color.black));
         onderkantCenter.add(summary, BorderLayout.EAST);
         JLabel totaleKosten = new JLabel("Totale periodieke kosten: ");
+=======
+        summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(5,5,5,5))));
+        onderkantCenter.add(summary, BorderLayout.EAST);
+        JLabel totaleKosten = new JLabel("Totale kosten: ");
+>>>>>>> origin/Monitoring
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: ");
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
@@ -61,17 +86,67 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         JScrollBar scrollBar = new JScrollBar();
         center.add(scrollBar, BorderLayout.EAST);
 
+<<<<<<< HEAD
+=======
+        //Panel voor componenten
+        JPanel componentenPanel = new JPanel();
+        componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
+        center.add(componentenPanel);
+
+        //Componenten info op het scherm
+        for(Groep groep: netwerk.groepen) {
+            for (Component component : groep.componenten) {
+                JPanel jPanel = new JPanel(new GridLayout(6, 1));
+                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
+                JLabel naam = new JLabel("Naam: ");
+                jPanel.add(naam);
+                JLabel disk = new JLabel("Overige diskruimte van (): ");
+                jPanel.add(disk);
+                JLabel processor = new JLabel("Huidige processorbelasting: ");
+                jPanel.add(processor);
+                JLabel status = new JLabel("Status: ");
+                jPanel.add(status);
+                JLabel beschikbaarheid = new JLabel("Beschikbaarheidspercentage: ");
+                jPanel.add(beschikbaarheid);
+                JLabel uptime = new JLabel("Uptime sinds laatste reboot: ");
+                jPanel.add(uptime);
+                componentenPanel.add(jPanel);
+            }
+        }
+
+>>>>>>> origin/Monitoring
         setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
         System.out.println(jcDropDownMenu.getSelectedItem());
         if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
             dispose();
         }else if (e.getSource()==jbOntwerpen){
             OntwerpFrame ontwerpFrame = new OntwerpFrame();
             dispose();
+=======
+        if(e.getSource()==jcDropDownMenu) {
+            System.out.println(jcDropDownMenu.getSelectedItem());
+            if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
+            }
+            if (jcDropDownMenu.getSelectedItem().equals("Sluit netwerk")) {
+                MonitoringFrame monitoringFrame = new MonitoringFrame();
+                //Het monitoringframe blijft, maar zonder inhoud.
+            }
+            if  (jcDropDownMenu.getSelectedItem().equals("Monitor netwerk")){
+                KiesNetwerkDialog kiesNetwerk = new KiesNetwerkDialog(this); //Een keuzelijst voor alle beschikbare netwerken wordt weergegeven
+            }
+            if  (jcDropDownMenu.getSelectedItem().equals("Nieuw netwerk")){
+                MonitoringFrame monitoringFrame = new MonitoringFrame();
+            }
         }
+        if (e.getSource()==jbOntwerpen){
+            OntwerpFrame ontwerpFrame = new OntwerpFrame();
+>>>>>>> origin/Monitoring
+        }
+        dispose();
     }
 }

@@ -20,6 +20,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
 
         //dropdownmenu
         comboBoxContent = new String[] {"Nieuw ontwerp", "Open ontwerp", "Optimaliseer ontwerp" , "Sluit ontwerp", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
+
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
         jcDropDownMenu.setEditable(true); //Om de teksts aan te passen moet het eerst enabled worden
@@ -85,3 +86,4 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         }
     }
 }
+
