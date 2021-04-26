@@ -41,6 +41,12 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         jbMonitoren.addActionListener(this);
         footer.add(jbMonitoren);
 
+        setVisible(true);
+    }
+
+    public OntwerpFrame(Ontwerpnetwerk netwerk){
+        this();
+
         //Panel voor midden van het scherm
         JPanel center = new JPanel(new BorderLayout());
         this.add(center);
@@ -51,13 +57,18 @@ public class OntwerpFrame extends JFrame implements ActionListener {
 
         //Optimaliseer ontwerp-knop
         jbOptimaliseren = new JButton("Optimaliseer ontwerp");
+        jbOptimaliseren.addActionListener(this);
         onderkantCenter.add(jbOptimaliseren, BorderLayout.WEST);
 
         //Summary veld rechtsonderin
         JPanel summary = new JPanel(new GridLayout(2,1));
+
         summary.setBorder(BorderFactory.createLineBorder(Color.black));
+
+        summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(5,5,5,5))));
         onderkantCenter.add(summary, BorderLayout.EAST);
         JLabel totaleKosten = new JLabel("Totale kosten: ");
+
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: ");
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
@@ -66,6 +77,28 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         JScrollBar scrollBar = new JScrollBar();
         center.add(scrollBar, BorderLayout.EAST);
 
+        //Panel voor componenten
+        JPanel componentenPanel = new JPanel();
+        componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
+        center.add(componentenPanel);
+
+        //Componenten info op het scherm
+        for(Groep groep: netwerk.groepen) {
+            for (Component component : groep.componenten) {
+                JPanel jPanel = new JPanel(new GridLayout(4, 1));
+                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
+                JLabel naam = new JLabel("Naam: ");
+                jPanel.add(naam);
+                JLabel disk = new JLabel("Totale diksruimte: ");
+                jPanel.add(disk);
+                JLabel beschikbaarheid = new JLabel("Beschikbaarheid: ");
+                jPanel.add(beschikbaarheid);
+                JLabel kosten = new JLabel("Kosten: ");
+                jPanel.add(kosten);
+                componentenPanel.add(jPanel);
+            }
+        }
+
         setVisible(true);
     }
 
@@ -73,16 +106,29 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==jcDropDownMenu){
             System.out.println(jcDropDownMenu.getSelectedItem());
-            if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
+            if(jcDropDownMenu.getSelectedItem().equals("Programma sluiten")){
                 dispose();
-            }else if (jcDropDownMenu.getSelectedItem().equals("Nieuw ontwerp")) {
-                dispose();
-                OptimalisatieFrame optimalisatieFrame = new OptimalisatieFrame();
+            }
+            if (jcDropDownMenu.getSelectedItem().equals("Nieuw ontwerp")) {
+                OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
                 //Als er op nieuw ontwerp wordt geklikt in het drop down menu dan word een optimalisatiescherm geopent.
             }
+            if(jcDropDownMenu.getSelectedItem().equals("Open ontwerp")){
+                KiesNetwerkDialog kiesNetwerk = new KiesNetwerkDialog(this); //Een keuzelijst voor alle beschikbare netwerken wordt weergegeven
+            }
+            if(jcDropDownMenu.getSelectedItem().equals("Optimaliseer ontwerp")){
+                //Zelfde functie als de optimalisatieknop.
+                OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
+            }
+            if(jcDropDownMenu.getSelectedItem().equals("Sluit ontwerp")){
+                OntwerpFrame ontwerpFrame = new OntwerpFrame();
+                dispose();
+            }
         } else if (e.getSource()==jbMonitoren){
-            dispose();
             MonitoringFrame monitoringFrame = new MonitoringFrame();
+            dispose();
+        } else if(e.getSource()==jbOptimaliseren){
+            OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
         }
     }
 }

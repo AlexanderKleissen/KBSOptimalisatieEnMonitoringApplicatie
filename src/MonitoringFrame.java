@@ -103,12 +103,10 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if(e.getSource()==jcDropDownMenu) {
             System.out.println(jcDropDownMenu.getSelectedItem());
-            if (jcDropDownMenu.getSelectedItem().equals("Programma sluiten")) {
-            }
             if (jcDropDownMenu.getSelectedItem().equals("Sluit netwerk")) {
+                dispose();
                 MonitoringFrame monitoringFrame = new MonitoringFrame();
                 //Het monitoringframe blijft, maar zonder inhoud.
             }
@@ -116,10 +114,12 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 KiesNetwerkDialog kiesNetwerk = new KiesNetwerkDialog(this); //Een keuzelijst voor alle beschikbare netwerken wordt weergegeven
             }
             if  (jcDropDownMenu.getSelectedItem().equals("Nieuw netwerk")){
+                dispose();
                 MonitoringFrame monitoringFrame = new MonitoringFrame();
             }
         }
         if (e.getSource()==jbOntwerpen){
+            dispose();
             OntwerpFrame ontwerpFrame = new OntwerpFrame();
         }
     }

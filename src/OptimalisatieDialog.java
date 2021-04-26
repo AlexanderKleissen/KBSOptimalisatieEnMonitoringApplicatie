@@ -5,19 +5,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class OptimalisatieFrame extends JFrame implements ActionListener {
+public class OptimalisatieDialog extends JDialog implements ActionListener {
     private JLabel minimaalTotaleBeschikbaarheid ;
     private JTextField jtminimaalTotaleBeschikbaarheid;
     private JButton bereken;
     private JButton voegToe;
 
-
-    public OptimalisatieFrame() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1500, 1000);
+    public OptimalisatieDialog(Frame frame) {
+        super(frame, false);
+        setSize(1500,1000);
         setLayout(new BorderLayout());
         setTitle("Monitoringapplicatie (optimaliseren)");
-
 
        //Boveste twee labels:
        Border zwarteRand = BorderFactory.createLineBorder(Color.BLACK,1);                   //zwarte rand voor de bovenste twee labels
