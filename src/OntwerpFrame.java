@@ -7,6 +7,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     private JComboBox jcDropDownMenu;
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
+    private Ontwerpnetwerk ontwerpnetwerk;
 
     public OntwerpFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,6 +48,9 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     public OntwerpFrame(Ontwerpnetwerk netwerk){
         this();
 
+        //netwerk aan frame koppelen
+        this.ontwerpnetwerk = netwerk;
+
         //Panel voor midden van het scherm
         JPanel center = new JPanel(new BorderLayout());
         this.add(center);
@@ -67,9 +71,9 @@ public class OntwerpFrame extends JFrame implements ActionListener {
 
         summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(5,5,5,5))));
         onderkantCenter.add(summary, BorderLayout.EAST);
-        JLabel totaleKosten = new JLabel("Totale kosten: ");
+        JLabel totaleKosten = new JLabel("Totale kosten: €" + netwerk.getKosten());
 
-        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: ");
+        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + netwerk.getBeschikbaarheidspercentage() + " %");
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
@@ -87,19 +91,26 @@ public class OntwerpFrame extends JFrame implements ActionListener {
             for (Component component : groep.componenten) {
                 JPanel jPanel = new JPanel(new GridLayout(4, 1));
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
-                JLabel naam = new JLabel("Naam: ");
-                jPanel.add(naam);
-                JLabel disk = new JLabel("Totale diksruimte: ");
-                jPanel.add(disk);
-                JLabel beschikbaarheid = new JLabel("Beschikbaarheid: ");
-                jPanel.add(beschikbaarheid);
-                JLabel kosten = new JLabel("Kosten: ");
-                jPanel.add(kosten);
-                componentenPanel.add(jPanel);
+                if(component instanceof Ontwerpcomponent) {
+                    JLabel naam = new JLabel("Naam: " + component.getNaam() + " " + "(" + component.getType() + ")");
+                    jPanel.add(naam);
+                    JLabel disk = new JLabel("Totale diksruimte: " + ((Ontwerpcomponent) component).getTotaleDiskruimte() + " GB");
+                    jPanel.add(disk);
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + " %");
+                    jPanel.add(beschikbaarheid);
+                    JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
+                    jPanel.add(kosten);
+                    componentenPanel.add(jPanel);
+                }
             }
         }
 
         setVisible(true);
+    }
+
+    //Getters en setters
+    public Ontwerpnetwerk getOntwerpnetwerk() {
+        return ontwerpnetwerk;
     }
 
     @Override

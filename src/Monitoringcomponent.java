@@ -3,11 +3,11 @@ public class Monitoringcomponent extends Component{
     private int beschikbaarheidsduur;
     private int processorbelasting;
     private int diskruimte;
-    private int periodiekeKosten;
+    private double periodiekeKosten;
 
     //Constructors
-    public Monitoringcomponent(String beschikbaarheidsstatus, int beschikbaarheidsduur, int processorbelasting, int diskruimte, int periodiekeKosten, double beschikbaarheidspercentage) {
-        super(beschikbaarheidspercentage);
+    public Monitoringcomponent(String naam, String type, String beschikbaarheidsstatus, int beschikbaarheidsduur, int processorbelasting, int diskruimte, double periodiekeKosten, double beschikbaarheidspercentage) {
+        super(naam, type, beschikbaarheidspercentage);
         this.beschikbaarheidsstatus = beschikbaarheidsstatus;
         this.beschikbaarheidsduur = beschikbaarheidsduur;
         this.processorbelasting = processorbelasting;

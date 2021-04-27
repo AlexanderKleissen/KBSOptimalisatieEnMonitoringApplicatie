@@ -15,4 +15,8 @@ public abstract class Netwerk {
     public String getNaam() {
         return naam;
     }
+
+    public double getBeschikbaarheidspercentage() {
+        return beschikbaarheidspercentage;
+    }
 }

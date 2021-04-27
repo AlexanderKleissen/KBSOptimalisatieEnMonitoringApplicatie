@@ -18,4 +18,8 @@ public class Ontwerpnetwerk extends Netwerk{
     public static ArrayList<Ontwerpnetwerk> getOntwerpNetwerken() {
         return ontwerpNetwerken;
     }
+
+    public double getKosten() {
+        return kosten;
+    }
 }
