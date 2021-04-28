@@ -239,14 +239,13 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 }
             }
             if (e.getSource() == voegToe) {
-                // wanneer het ontwerpframe nog geen netwerk heeft
-                if (ontwerpFrame.getOntwerpnetwerk() == null) {
+
 //                    String afrondingDrieDecimalen = "##,000";     // afronding beschikbaarheidspercentage op drie decimalen
 //                    String afrondingTweeDecimalen = "";
 
                     int aantalOntwerpnetwerken = Ontwerpnetwerk.getOntwerpNetwerken().size();
                     //nieuw ontwerpnetwerk aanmaken
-                    Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk("Ontwerpnetwerk" + (aantalOntwerpnetwerken + 1), Double.parseDouble(totaleBedrag.getText()),
+                    Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk("Ontwerpnetwerk " + (aantalOntwerpnetwerken + 1), Double.parseDouble(totaleBedrag.getText()),
                             Double.parseDouble(jtminimaalTotaleBeschikbaarheid.getText()), Double.parseDouble(beschikbaarheidsPercentage.getText()));
 
                     // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu
@@ -274,13 +273,21 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                                 ontwerpnetwerk.groepen.add(firewall);
                             }
                     }
-                    OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
-                    dispose();}
+                    //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken
+                // nog geen ontwerpnetwerk had, wordt deze gesloten en wordt er een nieuw ontwerpframe met het
+                //nieuwe netwerk aangemaakt
+                if(ontwerpFrame.getOntwerpnetwerk() == null) {
+                    ontwerpFrame.dispose();
                 }
-            } catch(NumberFormatException nfe){
+
+                OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
+
+                dispose();
+            }
+        } catch(NumberFormatException nfe){
                 minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in (gebruik een punt)!<font/><html/>");
                 // melding dat er een percentage ingevuld moet worden
-            }
         }
     }
+}
 

@@ -63,7 +63,7 @@ public class main {
         Groep firewallOntwerpComponent = new Groep("OntwerpFirewall", 99.99);
         firewallOntwerpComponent.componenten.add(pfSense2);
 
-        Ontwerpnetwerk netwerk3 = new Ontwerpnetwerk("Ontwerpnetwerk 3", 999, 99.99, 99.98);
+        Ontwerpnetwerk netwerk3 = new Ontwerpnetwerk("Ontwerpnetwerk uit main", 999, 99.99, 99.98);
         netwerk3.groepen.add(dbOntwerpComponenten);
         netwerk3.groepen.add(wsOntwerpComponenten);
         netwerk3.groepen.add(firewallOntwerpComponent);

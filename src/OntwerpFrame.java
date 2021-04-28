@@ -20,7 +20,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         this.add(header, BorderLayout.NORTH);
 
         //dropdownmenu
-        comboBoxContent = new String[] {"Nieuw ontwerp", "Open ontwerp", "Optimaliseer ontwerp" , "Sluit ontwerp", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
+        comboBoxContent = new String[] {"Nieuw ontwerp", "Open ontwerp", "Optimaliseer ontwerp" , "Sluit ontwerp", "Programma sluiten"}; //Array voor de teksten binnen de JComboBox
 
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
