@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MonitoringFrame extends JFrame implements ActionListener {
-    private JComboBox jcDropDownMenu;
+    private JComboBox<String> jcDropDownMenu;
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen; //buttons voor footer
 
@@ -19,11 +19,11 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         this.add(header, BorderLayout.NORTH);
 
         //dropdownmenu
-        comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksts binnen de JComboBox
+        comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksten binnen de JComboBox
 
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
-        jcDropDownMenu.setEditable(true); //Om de teksts aan te passen moet het eerst enabled worden
+        jcDropDownMenu.setEditable(true); //Om de teksten aan te passen moet het eerst enabled worden
         jcDropDownMenu.setSelectedItem("Bestand");
         jcDropDownMenu.setEditable(false); //Als dit enabled blijft dan kan de gebruiker ook de tekst aanpassen
         header.add(jcDropDownMenu);

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class OptimalisatieDialog extends JDialog implements ActionListener {
     private OntwerpFrame ontwerpFrame;
     private JLabel minimaalTotaleBeschikbaarheid;
-    private JTextField jtminimaalTotaleBeschikbaarheid;  //hierin wordt minimaal gewenste beschikbaarheidspercentage opgegeven
+    private JTextField jtMinimaalTotaleBeschikbaarheid;  //hierin wordt minimaal gewenste beschikbaarheidspercentage opgegeven
     private JButton bereken;
-    private JLabel beschikbaarheidsPercentage;  //berekende beschikbaarheidspercentage uit optimalisatiefunctie
+    private JLabel beschikbaarheidspercentage;  //berekende beschikbaarheidspercentage uit optimalisatiefunctie
     private JLabel totaleBedrag;                //berekende totale bedrag uit optimalisatiefunctie
     private JButton voegToe;
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
@@ -23,7 +23,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         setTitle("Monitoringapplicatie (optimaliseren)");
 
-        //Boveste twee labels:
+        //Bovenste twee labels:
         Border zwarteRand = BorderFactory.createLineBorder(Color.BLACK, 1);                   //zwarte rand voor de bovenste twee labels
         Dimension dimensie = new Dimension(700, 100);                                     // hoogte en breedte voor de bovenste twee labels
         JLabel mogelijkeComponenten = new JLabel("Specificaties mogelijke ontwerpcomponenten");
@@ -113,10 +113,10 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         //Controls van JPanel links onderin
         minimaalTotaleBeschikbaarheid = new JLabel("Minimaal totaal beschikbaarheidspercentage:");
 
-        jtminimaalTotaleBeschikbaarheid = new JTextField(7);
+        jtMinimaalTotaleBeschikbaarheid = new JTextField(7);
 
         bereken = new JButton("Bereken optimale waarden");
-        bereken.addActionListener(this);                                                        //knop handelt ingevoerd percentage af in 'jtminimaalTotaleBeschikbaarheid'
+        bereken.addActionListener(this);                                                        //knop handelt ingevoerd percentage af in 'jtMinimaalTotaleBeschikbaarheid'
 
         //Jpanel links onderin
         JPanel panelLinksOnder = new JPanel();
@@ -142,7 +142,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         gridBagConstraints3.insets = new Insets(0, 0, 5, 5);                 // padding tussen control en cel voor de onder- en rechterkant
 
         panelLinksOnder.add(minimaalTotaleBeschikbaarheid, gridBagConstraints1);                  // gemaakte label toevoegen
-        panelLinksOnder.add(jtminimaalTotaleBeschikbaarheid, gridBagConstraints2);                // gemaakte tekstveld toevoegen
+        panelLinksOnder.add(jtMinimaalTotaleBeschikbaarheid, gridBagConstraints2);                // gemaakte tekstveld toevoegen
         panelLinksOnder.add(bereken, gridBagConstraints3);                                        // gemaakte knop toevoegen
         panelLinksOnder.setPreferredSize(dimensie);
         panelLinksOnder.setBorder(zwarteRand);
@@ -150,7 +150,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         //Controls van JPanel rechts onderin
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid ontwerp (%):");
 
-        beschikbaarheidsPercentage = new JLabel("99.99");          //  voorbeelddata, echte data volgt uit optimalisatiefunctie
+        beschikbaarheidspercentage = new JLabel("99.99");          //  voorbeelddata, echte data volgt uit optimalisatiefunctie
 
         JLabel totaleKosten = new JLabel("Totale kosten ontwerp (€):");
 
@@ -198,7 +198,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         panelRechtsOnder.setPreferredSize(dimensie);
         panelRechtsOnder.setBorder(zwarteRand);
         panelRechtsOnder.add(totaleBeschikbaarheid, _1);                                          // gemaakte label toevoegen
-        panelRechtsOnder.add(beschikbaarheidsPercentage, _2);                                     // gemaakte label toevoegen
+        panelRechtsOnder.add(beschikbaarheidspercentage, _2);                                     // gemaakte label toevoegen
         panelRechtsOnder.add(totaleKosten, _3);                                                   // gemaakte label toevoegen
         panelRechtsOnder.add(totaleBedrag, _4);                                                   // gemaakte label toevoegen
         panelRechtsOnder.add(voegToe, _5);                                                        // gemaakte knop toevoegen
@@ -232,7 +232,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         minimaalTotaleBeschikbaarheid.setText("Minimaal totaal beschikbaarheidspercentage:");     // standaard labeltekst zonder melding
         try {
             if (e.getSource() == bereken) {
-                double ingevoerdPercentage = Double.parseDouble(jtminimaalTotaleBeschikbaarheid.getText()); // ingevoerd percentage wordt van String naar Double omgezet
+                double ingevoerdPercentage = Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()); // ingevoerd percentage wordt van String naar Double omgezet
                 System.out.println(ingevoerdPercentage);                                          // voor nu even om te testen of ingevoerd percentage opgehaald kan worden
                 /*
                 for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
@@ -261,7 +261,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                     int aantalOntwerpnetwerken = Ontwerpnetwerk.getOntwerpNetwerken().size();
                     //nieuw ontwerpnetwerk aanmaken
                     Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk("Ontwerpnetwerk " + (aantalOntwerpnetwerken + 1), Double.parseDouble(totaleBedrag.getText()),
-                            Double.parseDouble(jtminimaalTotaleBeschikbaarheid.getText()), Double.parseDouble(beschikbaarheidsPercentage.getText()));
+                            Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()), Double.parseDouble(beschikbaarheidspercentage.getText()));
 
                     // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu
                     // voorbeelddata gebruikt
@@ -270,14 +270,14 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                     for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
                         if (ontwerpcomponent.getType().equals("database")) {
                             Groep databasegroep = new Groep("databases", 90);
-                            // beschikbaarheidspercentage moet berkend worden naar aanleiding van de databases
+                            // beschikbaarheidspercentage moet bekend worden naar aanleiding van de databases
                             // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
                             databasegroep.componenten.add(ontwerpcomponent);
                             ontwerpnetwerk.groepen.add(databasegroep);
                         }
                             if (ontwerpcomponent.getType().equals("webserver")) {
                                 Groep webservergroep = new Groep("webservers", 94);
-                                // beschikbaarheidspercentage moet berkend worden naar aanleiding van de webservers
+                                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de webservers
                                 // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
                                 webservergroep.componenten.add(ontwerpcomponent);
                                 ontwerpnetwerk.groepen.add(webservergroep);
@@ -305,4 +305,3 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         }
     }
 }
-

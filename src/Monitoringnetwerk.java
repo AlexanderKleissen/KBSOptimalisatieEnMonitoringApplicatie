@@ -6,7 +6,7 @@ public class Monitoringnetwerk extends Netwerk{
 
     //Constructors
     public Monitoringnetwerk(String naam, int periodiekeKosten, double beschikbaarheidspercentage) {
-        super(naam, beschikbaarheidspercentage, new ArrayList());
+        super(naam, beschikbaarheidspercentage, new ArrayList<>());
         this.periodiekeKosten = periodiekeKosten;
         groepen = new ArrayList<>();
         monitoringNetwerken.add(this);

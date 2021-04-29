@@ -7,7 +7,7 @@ public class Ontwerpnetwerk extends Netwerk{
 
     //Constructors
     public Ontwerpnetwerk(String naam, double kosten, double opgegevenBeschikbaarheid, double beschikbaarheidspercentage) {
-        super(naam, beschikbaarheidspercentage, new ArrayList());
+        super(naam, beschikbaarheidspercentage, new ArrayList<>());
         this.kosten = kosten;
         this.opgegevenBeschikbaarheid = opgegevenBeschikbaarheid;
         groepen = new ArrayList<>();

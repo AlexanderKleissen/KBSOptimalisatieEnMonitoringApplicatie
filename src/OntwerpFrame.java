@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class OntwerpFrame extends JFrame implements ActionListener {
-    private JComboBox jcDropDownMenu;
+    private JComboBox<String> jcDropDownMenu;
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
     private Ontwerpnetwerk ontwerpnetwerk;
@@ -143,4 +143,3 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         }
     }
 }
-
