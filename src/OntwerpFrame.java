@@ -94,7 +94,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                 if(component instanceof Ontwerpcomponent) {
                     JLabel naam = new JLabel("Naam: " + component.getNaam() + " " + "(" + component.getType() + ")");
                     jPanel.add(naam);
-                    JLabel disk = new JLabel("Totale diksruimte: " + ((Ontwerpcomponent) component).getTotaleDiskruimte() + " GB");
+                    JLabel disk = new JLabel("Totale diskruimte: " + ((Ontwerpcomponent) component).getTotaleDiskruimte() + " GB");
                     jPanel.add(disk);
                     JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + " %");
                     jPanel.add(beschikbaarheid);
