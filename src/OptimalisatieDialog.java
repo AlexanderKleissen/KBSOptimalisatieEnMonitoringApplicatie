@@ -234,9 +234,24 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
             if (e.getSource() == bereken) {
                 double ingevoerdPercentage = Double.parseDouble(jtminimaalTotaleBeschikbaarheid.getText()); // ingevoerd percentage wordt van String naar Double omgezet
                 System.out.println(ingevoerdPercentage);                                          // voor nu even om te testen of ingevoerd percentage opgehaald kan worden
+                /*
                 for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
                     System.out.println(ontwerpcomponent);
-                }
+                } */
+
+                /* Backtrackingalgoritme optimalisatie */
+
+                //Controle om te kijken of de beschikbaarheid 99,99% is.
+
+                    //false: Controle om te kijken of de beschikbaarheid stijgt als een component wordt toegevoegd.
+
+                        //false: component weghalen en volgende component gebruiken
+
+                        //true: component toevoegen en volgende component gebruiken
+
+                    //true: componenten toevoegen aan het optimalisatiescherm aan de rechterkant.
+
+                //einde backtrackingalgoritme
             }
             if (e.getSource() == voegToe) {
 
