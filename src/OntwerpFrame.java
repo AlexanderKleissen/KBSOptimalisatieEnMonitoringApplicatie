@@ -8,6 +8,8 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
     private Ontwerpnetwerk ontwerpnetwerk;
+    private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
+    private Color backClr2 = new Color(43, 43, 43); //de kleur van het midden
 
     public OntwerpFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,6 +19,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
 
         //Panel voor header
         JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        header.setBackground(backClr1);
         this.add(header, BorderLayout.NORTH);
 
         //dropdownmenu
@@ -27,21 +30,29 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         jcDropDownMenu.setEditable(true); //Om de teksts aan te passen moet het eerst enabled worden
         jcDropDownMenu.setSelectedItem("Bestand");
         jcDropDownMenu.setEditable(false); //Als dit enabled blijft dan kan de gebruiker ook de tekst aanpassen
+        jcDropDownMenu.setForeground(Color.white);
+        jcDropDownMenu.setBackground(backClr1);
         header.add(jcDropDownMenu);
 
         //Panel voor footer
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        footer.setBorder(BorderFactory.createLineBorder(Color.black));
+        footer.setBorder(BorderFactory.createLineBorder(Color.white));
+        footer.setBackground(backClr1);
         this.add(footer, BorderLayout.SOUTH);
 
         //Ontwerpen-Monitoren keuzebox linksonderin
         jbOntwerpen = new JButton("Ontwerpen");
+        jbOntwerpen.setBackground(backClr1);
+        jbOntwerpen.setForeground(Color.white);
         jbOntwerpen.setEnabled(false);
         footer.add(jbOntwerpen);
         jbMonitoren = new JButton("Monitoren");
+        jbMonitoren.setBackground(backClr1);
+        jbMonitoren.setForeground(Color.white);
         jbMonitoren.addActionListener(this);
         footer.add(jbMonitoren);
 
+        setBackground(backClr2);
         setVisible(true);
     }
 
@@ -53,27 +64,34 @@ public class OntwerpFrame extends JFrame implements ActionListener {
 
         //Panel voor midden van het scherm
         JPanel center = new JPanel(new BorderLayout());
+        center.setBackground(backClr2);
         this.add(center);
 
         //Panel voor onderkant van midden van scherm
         JPanel onderkantCenter = new JPanel(new BorderLayout());
+        onderkantCenter.setBackground(backClr2);
         center.add(onderkantCenter, BorderLayout.SOUTH);
 
         //Optimaliseer ontwerp-knop
         jbOptimaliseren = new JButton("Optimaliseer ontwerp");
         jbOptimaliseren.addActionListener(this);
+        jbOptimaliseren.setForeground(Color.white);
+        jbOptimaliseren.setBackground(backClr2);
         onderkantCenter.add(jbOptimaliseren, BorderLayout.WEST);
 
         //Summary veld rechtsonderin
         JPanel summary = new JPanel(new GridLayout(2,1));
 
-        summary.setBorder(BorderFactory.createLineBorder(Color.black));
+        summary.setBorder(BorderFactory.createLineBorder(Color.white));
 
-        summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(5,5,5,5))));
+        summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white), BorderFactory.createEmptyBorder(5,5,5,5))));
+        summary.setBackground(backClr2);
         onderkantCenter.add(summary, BorderLayout.EAST);
         JLabel totaleKosten = new JLabel("Totale kosten: €" + netwerk.getKosten());
+        totaleKosten.setForeground(Color.white);
 
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + netwerk.getBeschikbaarheidspercentage() + "%");
+        totaleBeschikbaarheid.setForeground(Color.white);
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
@@ -84,21 +102,27 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         //Panel voor componenten
         JPanel componentenPanel = new JPanel();
         componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
+        componentenPanel.setBackground(backClr2);
         center.add(componentenPanel);
 
         //Componenten info op het scherm
         for(Groep groep: netwerk.groepen) {
             for (Component component : groep.componenten) {
                 JPanel jPanel = new JPanel(new GridLayout(4, 1));
-                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
+                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
+                jPanel.setBackground(backClr1);
                 if(component instanceof Ontwerpcomponent) {
                     JLabel naam = new JLabel("Naam: " + component.getNaam());
+                    naam.setForeground(Color.white);
                     jPanel.add(naam);
                     JLabel disk = new JLabel("Totale diskruimte: " + ((Ontwerpcomponent) component).getTotaleDiskruimte() + " GB");
+                    disk.setForeground(Color.white);
                     jPanel.add(disk);
                     JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
+                    beschikbaarheid.setForeground(Color.white);
                     jPanel.add(beschikbaarheid);
                     JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
+                    kosten.setForeground(Color.white);
                     jPanel.add(kosten);
                     componentenPanel.add(jPanel);
                 }

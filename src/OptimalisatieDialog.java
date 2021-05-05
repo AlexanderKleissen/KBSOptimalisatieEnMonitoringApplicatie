@@ -15,6 +15,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private JLabel totaleBedrag;                //berekende totale bedrag uit optimalisatiefunctie
     private JButton voegToe;
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
+    private Color backClr1 = new Color(60, 63, 65); //achtergrondkleur
 
     public OptimalisatieDialog(OntwerpFrame frame) {
         super(frame, false);
@@ -24,15 +25,17 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         setTitle("Monitoringapplicatie (optimaliseren)");
 
         //Bovenste twee labels:
-        Border zwarteRand = BorderFactory.createLineBorder(Color.BLACK, 1);                   //zwarte rand voor de bovenste twee labels
+        Border bovenRand = BorderFactory.createLineBorder(Color.WHITE, 1);                   //rand voor de bovenste twee labels
         Dimension dimensie = new Dimension(700, 100);                                     // hoogte en breedte voor de bovenste twee labels
         JLabel mogelijkeComponenten = new JLabel("Specificaties mogelijke ontwerpcomponenten");
-        mogelijkeComponenten.setBorder(zwarteRand);
+        mogelijkeComponenten.setBorder(bovenRand);
         mogelijkeComponenten.setPreferredSize(dimensie);
+        mogelijkeComponenten.setForeground(Color.white);
 
         JLabel optimaleWaardenOntwerp = new JLabel("Optimale waarden ontwerp");
-        optimaleWaardenOntwerp.setBorder(zwarteRand);
+        optimaleWaardenOntwerp.setBorder(bovenRand);
         optimaleWaardenOntwerp.setPreferredSize(dimensie);
+        optimaleWaardenOntwerp.setForeground(Color.white);
 
 
         //Linker tabel:
@@ -116,6 +119,8 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         jtMinimaalTotaleBeschikbaarheid = new JTextField(7);
 
         bereken = new JButton("Bereken optimale waarden");
+        bereken.setBackground(backClr1);
+        bereken.setForeground(Color.white);
         bereken.addActionListener(this);                                                        //knop handelt ingevoerd percentage af in 'jtMinimaalTotaleBeschikbaarheid'
 
         //Jpanel links onderin
@@ -145,7 +150,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         panelLinksOnder.add(jtMinimaalTotaleBeschikbaarheid, gridBagConstraints2);                // gemaakte tekstveld toevoegen
         panelLinksOnder.add(bereken, gridBagConstraints3);                                        // gemaakte knop toevoegen
         panelLinksOnder.setPreferredSize(dimensie);
-        panelLinksOnder.setBorder(zwarteRand);
+        panelLinksOnder.setBorder(bovenRand);
 
         //Controls van JPanel rechts onderin
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid ontwerp (%):");
@@ -196,7 +201,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         _5.insets = new Insets(0, 0, 5, 5);                                 // padding tussen control en cel voor de onder- en rechterkant
 
         panelRechtsOnder.setPreferredSize(dimensie);
-        panelRechtsOnder.setBorder(zwarteRand);
+        panelRechtsOnder.setBorder(bovenRand);
         panelRechtsOnder.add(totaleBeschikbaarheid, _1);                                          // gemaakte label toevoegen
         panelRechtsOnder.add(beschikbaarheidspercentage, _2);                                     // gemaakte label toevoegen
         panelRechtsOnder.add(totaleKosten, _3);                                                   // gemaakte label toevoegen

@@ -8,6 +8,7 @@ public class KiesNetwerkDialog extends JDialog implements ActionListener {
     private int aantalO = Ontwerpnetwerk.getOntwerpNetwerken().size();
     private JButton netwerkKeuzeM, netwerkKeuzeO;
     private Frame frame;
+    private Color backClr1 = new Color(60, 63, 65); //achtergrondkleur
 
     //Constructor
     KiesNetwerkDialog(MonitoringFrame frame){ //constructor vanuit het MonitoringFrame
@@ -18,10 +19,13 @@ public class KiesNetwerkDialog extends JDialog implements ActionListener {
 
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.PAGE_AXIS));
+        jPanel.setBackground(backClr1);
         add(jPanel);
 
         for(Monitoringnetwerk netwerk : Monitoringnetwerk.getMonitoringNetwerken()){
             netwerkKeuzeM = new JButton(netwerk.getNaam());
+            netwerkKeuzeM.setBackground(backClr1);
+            netwerkKeuzeM.setForeground(Color.white);
             netwerkKeuzeM.addActionListener(this);
             jPanel.add(netwerkKeuzeM);
         }
@@ -37,10 +41,13 @@ public class KiesNetwerkDialog extends JDialog implements ActionListener {
 
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.PAGE_AXIS));
+        jPanel.setBackground(backClr1);
         add(jPanel);
 
         for(Ontwerpnetwerk netwerk : Ontwerpnetwerk.getOntwerpNetwerken()){
             netwerkKeuzeO = new JButton(netwerk.getNaam());
+            netwerkKeuzeO.setBackground(backClr1);
+            netwerkKeuzeO.setForeground(Color.white);
             jPanel.add(netwerkKeuzeO);
             netwerkKeuzeO.addActionListener(this);
         }
