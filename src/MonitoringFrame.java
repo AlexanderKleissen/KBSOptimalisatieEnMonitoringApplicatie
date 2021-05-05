@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class MonitoringFrame extends JFrame implements ActionListener {
     private JComboBox<String> jcDropDownMenu;
@@ -62,9 +64,27 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
         summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(5,5,5,5))));
         onderkantCenter.add(summary, BorderLayout.EAST);
-        JLabel totaleKosten = new JLabel("Totale periodieke kosten: ");
 
-        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: ");
+            //Totale kosten berekenen
+        double totalePeriodiekeKosten = 0;
+        for(Groep groep: netwerk.groepen) {
+            //Lijst met alleen de Monitoringcomponenten
+            ArrayList<Monitoringcomponent> monitoringcomponents = new ArrayList<>();
+            for (Component component : groep.componenten) {
+                if (component instanceof Monitoringcomponent) {
+                    monitoringcomponents.add((Monitoringcomponent) component);
+                }
+            }
+            for (Monitoringcomponent component : monitoringcomponents) {
+                totalePeriodiekeKosten += Double.parseDouble(component.getPeriodiekeKosten());
+            }
+        }
+        DecimalFormat df = new DecimalFormat("0.00");
+        String dfTotalePeriodiekeKosten = df.format(totalePeriodiekeKosten);
+
+        JLabel totaleKosten = new JLabel("Totale periodieke kosten: €" +dfTotalePeriodiekeKosten);
+
+        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + netwerk.getBeschikbaarheidspercentage() + "%");
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
@@ -79,21 +99,30 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
         //Componenten info op het scherm
         for(Groep groep: netwerk.groepen) {
-            for (Component component : groep.componenten) {
-                JPanel jPanel = new JPanel(new GridLayout(6, 1));
+            //Lijst met alleen de Monitoringcomponenten
+            ArrayList<Monitoringcomponent> monitoringcomponents =  new ArrayList<>();
+            for(Component component : groep.componenten){
+                if(component instanceof Monitoringcomponent){
+                    monitoringcomponents.add((Monitoringcomponent) component);
+                }
+            }
+            for (Monitoringcomponent component : monitoringcomponents) {
+                JPanel jPanel = new JPanel(new GridLayout(7, 1));
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
-                JLabel naam = new JLabel("Naam: ");
+                JLabel naam = new JLabel("Naam: " + component.getNaam());
                 jPanel.add(naam);
-                JLabel disk = new JLabel("Overige diskruimte van (): ");
+                JLabel disk = new JLabel("Beschikbare diskruimte: " + component.getDiskruimte());
                 jPanel.add(disk);
-                JLabel processor = new JLabel("Huidige processorbelasting: ");
+                JLabel processor = new JLabel("Huidige processorbelasting: " + component.getProcessorbelasting() + "%");
                 jPanel.add(processor);
-                JLabel status = new JLabel("Status: ");
+                JLabel status = new JLabel("Status: " + component.getBeschikbaarheidsstatus());
                 jPanel.add(status);
-                JLabel beschikbaarheid = new JLabel("Beschikbaarheidspercentage: ");
+                JLabel beschikbaarheid = new JLabel("Beschikbaarheidspercentage: " + component.getBeschikbaarheidspercentage() + "%");
                 jPanel.add(beschikbaarheid);
-                JLabel uptime = new JLabel("Uptime sinds laatste reboot: ");
+                JLabel uptime = new JLabel("Uptime sinds laatste reboot: " + component.getBeschikbaarheidsduur());
                 jPanel.add(uptime);
+                JLabel kosten = new JLabel("Periodieke kosten: €" + component.getPeriodiekeKosten());
+                jPanel.add(kosten);
                 componentenPanel.add(jPanel);
             }
         }

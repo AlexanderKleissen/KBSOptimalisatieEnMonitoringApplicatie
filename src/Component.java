@@ -1,25 +1,27 @@
+import java.text.DecimalFormat;
+
 public abstract class Component {
     private String naam;
     private String type;
-    private double beschikbaarheidspercentage;
+    private String beschikbaarheidspercentage;
 
     //Constructor
     public Component(String naam, String type, double beschikbaarheidspercentage) {
         this.naam = naam;
         this.type = type;
-        this.beschikbaarheidspercentage = beschikbaarheidspercentage;
+        DecimalFormat df = new DecimalFormat("0.00");
+        String dfBeschikbaarheidspercentage = df.format(beschikbaarheidspercentage);
+        this.beschikbaarheidspercentage = dfBeschikbaarheidspercentage;
     }
 
     //Getters en setters
-    public String getType() {
-        return type;
-    }
-
     public String getNaam() {
         return naam;
     }
 
-    public double getBeschikbaarheidspercentage() {
+    public String getType(){return type;}
+
+    public String getBeschikbaarheidspercentage() {
         return beschikbaarheidspercentage;
     }
 }

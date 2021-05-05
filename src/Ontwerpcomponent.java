@@ -1,11 +1,15 @@
+import java.text.DecimalFormat;
+
 public class Ontwerpcomponent extends Component {
-    private double kosten;
+    private String kosten;
     private int totaleDiskruimte;
 
     //Constructors
     public Ontwerpcomponent(String naam, String type, double kosten, int totaleDiskruimte, double beschikbaarheidspercentage) {
         super(naam, type, beschikbaarheidspercentage);
-        this.kosten = kosten;
+        DecimalFormat df = new DecimalFormat("0.00");
+        String dfKosten = df.format(kosten);
+        this.kosten = dfKosten;
         this.totaleDiskruimte = totaleDiskruimte;
     }
 
@@ -14,7 +18,7 @@ public class Ontwerpcomponent extends Component {
         return totaleDiskruimte;
     }
 
-    public double getKosten() {
+    public String getKosten() {
         return kosten;
     }
 }

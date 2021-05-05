@@ -73,7 +73,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         onderkantCenter.add(summary, BorderLayout.EAST);
         JLabel totaleKosten = new JLabel("Totale kosten: €" + netwerk.getKosten());
 
-        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + netwerk.getBeschikbaarheidspercentage() + " %");
+        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + netwerk.getBeschikbaarheidspercentage() + "%");
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
@@ -92,11 +92,11 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                 JPanel jPanel = new JPanel(new GridLayout(4, 1));
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
                 if(component instanceof Ontwerpcomponent) {
-                    JLabel naam = new JLabel("Naam: " + component.getNaam() + " " + "(" + component.getType() + ")");
+                    JLabel naam = new JLabel("Naam: " + component.getNaam());
                     jPanel.add(naam);
                     JLabel disk = new JLabel("Totale diskruimte: " + ((Ontwerpcomponent) component).getTotaleDiskruimte() + " GB");
                     jPanel.add(disk);
-                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + " %");
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
                     jPanel.add(beschikbaarheid);
                     JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
                     jPanel.add(kosten);
