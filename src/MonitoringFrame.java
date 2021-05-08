@@ -104,10 +104,6 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
-        //Scrollbar
-        JScrollBar scrollBar = new JScrollBar();
-        center.add(scrollBar, BorderLayout.EAST);
-
         //Panel voor componenten
         JPanel componentenPanel = new JPanel();
         componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));

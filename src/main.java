@@ -68,8 +68,8 @@ public class main {
         netwerk3.groepen.add(wsOntwerpComponenten);
         netwerk3.groepen.add(firewallOntwerpComponent);
 
-        Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
+        //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 
-        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk5);
+        OntwerpFrame ontwerpFrame = new OntwerpFrame();
     }
 }

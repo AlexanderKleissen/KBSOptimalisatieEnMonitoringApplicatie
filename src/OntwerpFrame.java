@@ -8,6 +8,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
     private Ontwerpnetwerk ontwerpnetwerk;
+    private boolean gedruktOpOptimalisatieknop;
     private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
     private Color backClr2 = new Color(43, 43, 43); //de kleur van het midden
 
@@ -95,10 +96,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
-        //Scrollbar
-        JScrollBar scrollBar = new JScrollBar();
-        center.add(scrollBar, BorderLayout.EAST);
-
         //Panel voor componenten
         JPanel componentenPanel = new JPanel();
         componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
@@ -137,6 +134,14 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         return ontwerpnetwerk;
     }
 
+    public boolean isGedruktOpOptimalisatieknop() {
+        return gedruktOpOptimalisatieknop;
+    }
+
+    public void setGedruktOpOptimalisatieknop(boolean gedruktOpOptimalisatieknop) {
+        this.gedruktOpOptimalisatieknop = gedruktOpOptimalisatieknop;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==jcDropDownMenu){
@@ -153,6 +158,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
             }
             if(jcDropDownMenu.getSelectedItem().equals("Optimaliseer ontwerp")){
                 //Zelfde functie als de optimalisatieknop.
+                gedruktOpOptimalisatieknop = true;
                 OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
             }
             if(jcDropDownMenu.getSelectedItem().equals("Sluit ontwerp")){
@@ -163,6 +169,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
             MonitoringFrame monitoringFrame = new MonitoringFrame();
             dispose();
         } else if(e.getSource()==jbOptimaliseren){
+            gedruktOpOptimalisatieknop = true;
             OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
         }
     }

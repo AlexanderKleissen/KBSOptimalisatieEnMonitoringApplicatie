@@ -25,4 +25,14 @@ public class Ontwerpnetwerk extends Netwerk{
     public String getKosten() {
         return kosten;
     }
+
+    public void setKosten(Double kosten) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        String dfKosten = df.format(kosten);
+        this.kosten = dfKosten;
+    }
+
+    public void setOpgegevenBeschikbaarheid(double opgegevenBeschikbaarheid) {
+        this.opgegevenBeschikbaarheid = opgegevenBeschikbaarheid;
+    }
 }

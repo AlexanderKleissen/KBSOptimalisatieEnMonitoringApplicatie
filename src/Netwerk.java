@@ -20,4 +20,8 @@ public abstract class Netwerk {
     public double getBeschikbaarheidspercentage() {
         return beschikbaarheidspercentage;
     }
+
+    public void setBeschikbaarheidspercentage(double beschikbaarheidspercentage) {
+        this.beschikbaarheidspercentage = beschikbaarheidspercentage;
+    }
 }

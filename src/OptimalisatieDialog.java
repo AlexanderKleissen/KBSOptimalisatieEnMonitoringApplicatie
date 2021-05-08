@@ -238,11 +238,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         try {
             if (e.getSource() == bereken) {
                 double ingevoerdPercentage = Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()); // ingevoerd percentage wordt van String naar Double omgezet
-                System.out.println(ingevoerdPercentage);                                          // voor nu even om te testen of ingevoerd percentage opgehaald kan worden
-                /*
-                for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
-                    System.out.println(ontwerpcomponent);
-                } */
+                System.out.println(ingevoerdPercentage);                                                // voor nu even om te testen of ingevoerd percentage opgehaald kan worden
 
                 /* Backtrackingalgoritme optimalisatie */
 
@@ -260,47 +256,71 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
             }
             if (e.getSource() == voegToe) {
 
-//                    String afrondingDrieDecimalen = "##,000";     // afronding beschikbaarheidspercentage op drie decimalen
-//                    String afrondingTweeDecimalen = "";
+                Groep databasegroep = new Groep("databases", 90);
+                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de databases
+                // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
+                Groep webservergroep = new Groep("webservers", 94);
+                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de webservers
+                // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
+                Groep firewall = new Groep("firewall", 99.998);
 
-                    int aantalOntwerpnetwerken = Ontwerpnetwerk.getOntwerpNetwerken().size();
-                    //nieuw ontwerpnetwerk aanmaken
-                    Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk("Ontwerpnetwerk " + (aantalOntwerpnetwerken + 1), Double.parseDouble(totaleBedrag.getText()),
-                            Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()), Double.parseDouble(beschikbaarheidspercentage.getText()));
-
-                    // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu
-                    // voorbeelddata gebruikt
-
-
-                    for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
-                        if (ontwerpcomponent.getType().equals("database")) {
-                            Groep databasegroep = new Groep("databases", 90);
-                            // beschikbaarheidspercentage moet bekend worden naar aanleiding van de databases
-                            // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
-                            databasegroep.componenten.add(ontwerpcomponent);
-                            ontwerpnetwerk.groepen.add(databasegroep);
-                        }
-                            if (ontwerpcomponent.getType().equals("webserver")) {
-                                Groep webservergroep = new Groep("webservers", 94);
-                                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de webservers
-                                // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
-                                webservergroep.componenten.add(ontwerpcomponent);
-                                ontwerpnetwerk.groepen.add(webservergroep);
-                            }
-                            if (ontwerpcomponent.getType().equals("firewall")) {
-                                Groep firewall = new Groep("firewall", 99.998);
-                                firewall.componenten.add(ontwerpcomponent);
-                                ontwerpnetwerk.groepen.add(firewall);
-                            }
+                for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
+                    if (ontwerpcomponent.getType().equals("database")) {
+                        databasegroep.componenten.add(ontwerpcomponent);
                     }
-                    //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken
+                    if (ontwerpcomponent.getType().equals("webserver")) {
+                        webservergroep.componenten.add(ontwerpcomponent);
+                    }
+                    if (ontwerpcomponent.getType().equals("firewall")) {
+                        firewall.componenten.add(ontwerpcomponent);
+                    }
+                }
+
+                //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken
                 // nog geen ontwerpnetwerk had, wordt deze gesloten en wordt er een nieuw ontwerpframe met het
                 //nieuwe netwerk aangemaakt
                 if(ontwerpFrame.getOntwerpnetwerk() == null) {
+                    int aantalOntwerpnetwerken = Ontwerpnetwerk.getOntwerpNetwerken().size();
+
+                    //nieuw ontwerpnetwerk aanmaken
+                    // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu voorbeelddata gebruikt
+                    Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk("Ontwerpnetwerk " + (aantalOntwerpnetwerken + 1), Double.parseDouble(totaleBedrag.getText()),
+                            Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()), Double.parseDouble(beschikbaarheidspercentage.getText()));
+                    ontwerpnetwerk.groepen.add(databasegroep);
+                    ontwerpnetwerk.groepen.add(webservergroep);
+                    ontwerpnetwerk.groepen.add(firewall);
                     ontwerpFrame.dispose();
+                    OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
                 }
 
-                OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
+                //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken al een ontwerpnetwerk heeft, wordt er een nieuw ontwerpframe met het nieuwe
+                //netwerk aangemaakt zonder het ontwerpframe eerst te sluiten
+                if(ontwerpFrame.getOntwerpnetwerk() != null && !ontwerpFrame.isGedruktOpOptimalisatieknop()) {
+                    int aantalOntwerpnetwerken = Ontwerpnetwerk.getOntwerpNetwerken().size();
+
+                 //nieuw ontwerpnetwerk aanmaken
+                 // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu voorbeelddata gebruikt
+                 Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk("Ontwerpnetwerk " + (aantalOntwerpnetwerken + 1), Double.parseDouble(totaleBedrag.getText()),
+                         Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()), Double.parseDouble(beschikbaarheidspercentage.getText()));
+                 ontwerpnetwerk.groepen.add(databasegroep);
+                 ontwerpnetwerk.groepen.add(webservergroep);
+                 ontwerpnetwerk.groepen.add(firewall);
+                 OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
+                }
+
+                //wanneer je een al bestaand ontwerpnetwerk wilt optimaliseren, wordt het bestaande ontwerpnetwerk geüpdatet
+                if(ontwerpFrame.getOntwerpnetwerk() != null && ontwerpFrame.isGedruktOpOptimalisatieknop()) {
+                    ontwerpFrame.getOntwerpnetwerk().setKosten(Double.parseDouble(totaleBedrag.getText()));
+                    ontwerpFrame.getOntwerpnetwerk().setOpgegevenBeschikbaarheid(Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()));
+                    ontwerpFrame.getOntwerpnetwerk().setBeschikbaarheidspercentage(Double.parseDouble(beschikbaarheidspercentage.getText()));
+                    ontwerpFrame.getOntwerpnetwerk().groepen.set(0, databasegroep);
+                    ontwerpFrame.getOntwerpnetwerk().groepen.set(1, webservergroep);
+                    ontwerpFrame.getOntwerpnetwerk().groepen.set(2, firewall);
+                    ontwerpFrame.setGedruktOpOptimalisatieknop(false);
+                    Ontwerpnetwerk geoptimaliseerdOntwerpnetwerk = ontwerpFrame.getOntwerpnetwerk();
+                    ontwerpFrame.dispose();
+                    OntwerpFrame ontwerpFrame = new OntwerpFrame(geoptimaliseerdOntwerpnetwerk);
+                }
 
                 dispose();
             }
