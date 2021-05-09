@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private JButton voegToe;
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
     private Color backClr1 = new Color(60, 63, 65); //achtergrondkleur
+    private Color backClr2 = new Color(43, 43, 43); //tabelkleur
 
     public OptimalisatieDialog(OntwerpFrame frame) {
         super(frame, false);
@@ -25,15 +27,15 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         setTitle("Monitoringapplicatie (optimaliseren)");
 
         //Bovenste twee labels:
-        Border bovenRand = BorderFactory.createLineBorder(Color.WHITE, 1);                   //rand voor de bovenste twee labels
+        Border witteRand = BorderFactory.createLineBorder(Color.WHITE, 1);                   //rand voor de meeste onderdelen
         Dimension dimensie = new Dimension(700, 100);                                     // hoogte en breedte voor de bovenste twee labels
         JLabel mogelijkeComponenten = new JLabel("Specificaties mogelijke ontwerpcomponenten");
-        mogelijkeComponenten.setBorder(bovenRand);
+        mogelijkeComponenten.setBorder(witteRand);
         mogelijkeComponenten.setPreferredSize(dimensie);
         mogelijkeComponenten.setForeground(Color.white);
 
         JLabel optimaleWaardenOntwerp = new JLabel("Optimale waarden ontwerp");
-        optimaleWaardenOntwerp.setBorder(bovenRand);
+        optimaleWaardenOntwerp.setBorder(witteRand);
         optimaleWaardenOntwerp.setPreferredSize(dimensie);
         optimaleWaardenOntwerp.setForeground(Color.white);
 
@@ -46,6 +48,13 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                                                                                                       soorten data op te slaan in de array.*/
         JTable tabel1 = new JTable(data, kolomnamen);                                                 // kolomnamen en data meegeven aan de tabel
         tabel1.setEnabled(false);                                                                   // data kan nu niet door gebruiker aangepast worden
+        tabel1.setBackground(backClr2);
+        tabel1.setForeground(Color.white);
+
+        //de bovenstaande code verandert alleen de gegevens, dus hieronder worden de headers apart ook gekleurd
+        JTableHeader header1 = tabel1.getTableHeader();
+        header1.setBackground(backClr1);
+        header1.setForeground(Color.white);
 
         //Van kolommen in tabel1 een TableColumnobject maken en vervolgens de gewenste breedte meegeven:
         TableColumn tabel1kolom1 = tabel1.getColumnModel().getColumn(0);                 // kolom 1
@@ -77,7 +86,12 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
         JTable tabel2 = new JTable(data2, kolomnamen2);
         tabel2.setEnabled(false);
+        tabel2.setBackground(backClr2);
+        tabel2.setForeground(Color.white);
 
+        JTableHeader header2 = tabel2.getTableHeader();
+        header2.setBackground(backClr1);
+        header2.setForeground(Color.white);
 
         //De optimale componenten (uit de rechter tabel) toevoegen aan de arraylist van ontwerpcomponenten
         for (int i = 0; i < data2.length; i++) {
@@ -115,8 +129,11 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
         //Controls van JPanel links onderin
         minimaalTotaleBeschikbaarheid = new JLabel("Minimaal totaal beschikbaarheidspercentage:");
+        minimaalTotaleBeschikbaarheid.setForeground(Color.white);
 
         jtMinimaalTotaleBeschikbaarheid = new JTextField(7);
+        jtMinimaalTotaleBeschikbaarheid.setBackground(backClr1);
+        jtMinimaalTotaleBeschikbaarheid.setForeground(Color.white);
 
         bereken = new JButton("Bereken optimale waarden");
         bereken.setBackground(backClr1);
@@ -126,6 +143,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         //Jpanel links onderin
         JPanel panelLinksOnder = new JPanel();
         panelLinksOnder.setLayout(new GridBagLayout());                                           //gridbaglayout
+        panelLinksOnder.setBackground(backClr1);
 
         //GridBagConstraints aanmaken (bestaat uit kolommen en rijen) en vervolgens aan de controls in het panel koppelen om ze de gewenste grootte en positie te geven
         GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
@@ -150,23 +168,30 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         panelLinksOnder.add(jtMinimaalTotaleBeschikbaarheid, gridBagConstraints2);                // gemaakte tekstveld toevoegen
         panelLinksOnder.add(bereken, gridBagConstraints3);                                        // gemaakte knop toevoegen
         panelLinksOnder.setPreferredSize(dimensie);
-        panelLinksOnder.setBorder(bovenRand);
+        panelLinksOnder.setBorder(witteRand);
 
         //Controls van JPanel rechts onderin
         JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid ontwerp (%):");
+        totaleBeschikbaarheid.setForeground(Color.white);
 
         beschikbaarheidspercentage = new JLabel("99.99");          //  voorbeelddata, echte data volgt uit optimalisatiefunctie
+        beschikbaarheidspercentage.setForeground(Color.white);
 
         JLabel totaleKosten = new JLabel("Totale kosten ontwerp (€):");
+        totaleKosten.setForeground(Color.white);
 
         totaleBedrag = new JLabel("42000");                       // voorbeelddata, echte data volgt uit optimalisatiefunctie
+        totaleBedrag.setForeground(Color.white);
 
         voegToe = new JButton("Voeg componenten toe aan ontwerp");
         voegToe.addActionListener(this);
+        voegToe.setForeground(Color.white);
+        voegToe.setBackground(backClr1);
 
         //JPanel rechts onderin
         JPanel panelRechtsOnder = new JPanel();
         panelRechtsOnder.setLayout(new GridBagLayout());
+        panelRechtsOnder.setBackground(backClr1);
 
         //GridBagConstraints aanmaken (bestaat uit kolommen en rijen) en vervolgens aan de controls in het panel koppelen om ze de gewenste grootte en positie te geven
         GridBagConstraints _1 = new GridBagConstraints();
@@ -201,7 +226,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         _5.insets = new Insets(0, 0, 5, 5);                                 // padding tussen control en cel voor de onder- en rechterkant
 
         panelRechtsOnder.setPreferredSize(dimensie);
-        panelRechtsOnder.setBorder(bovenRand);
+        panelRechtsOnder.setBorder(witteRand);
         panelRechtsOnder.add(totaleBeschikbaarheid, _1);                                          // gemaakte label toevoegen
         panelRechtsOnder.add(beschikbaarheidspercentage, _2);                                     // gemaakte label toevoegen
         panelRechtsOnder.add(totaleKosten, _3);                                                   // gemaakte label toevoegen
@@ -220,6 +245,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         panelScherm.add(panelLinksOnder);
         panelScherm.add(panelRechtsOnder);
         panelScherm.setPreferredSize(dimensiePanelScherm);
+        panelScherm.setBackground(backClr1);
 
         //JScrollpane aanmaken
         JScrollPane scrollPane = new JScrollPane(panelScherm);                                    //panelScherm toevoegen aan scrollPane

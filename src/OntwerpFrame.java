@@ -53,7 +53,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         jbMonitoren.addActionListener(this);
         footer.add(jbMonitoren);
 
-        setBackground(backClr2);
+        getContentPane().setBackground(backClr2);
         setVisible(true);
     }
 
@@ -107,7 +107,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
             for (Component component : groep.componenten) {
                 JPanel jPanel = new JPanel(new GridLayout(4, 1));
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
-                jPanel.setBackground(backClr1);
+                jPanel.setBackground(backClr2);
                 if(component instanceof Ontwerpcomponent) {
                     JLabel naam = new JLabel("Naam: " + component.getNaam());
                     naam.setForeground(Color.white);

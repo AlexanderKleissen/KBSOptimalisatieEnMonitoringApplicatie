@@ -148,7 +148,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
             }
         }
 
-        setBackground(backClr2);
+        getContentPane().setBackground(backClr2);
         setVisible(true);
     }
 
