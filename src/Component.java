@@ -9,7 +9,7 @@ public abstract class Component {
     public Component(String naam, String type, double beschikbaarheidspercentage) {
         this.naam = naam;
         this.type = type;
-        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("0.000");
         String dfBeschikbaarheidspercentage = df.format(beschikbaarheidspercentage);
         this.beschikbaarheidspercentage = dfBeschikbaarheidspercentage;
     }

@@ -24,6 +24,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         this.ontwerpFrame = frame;
         setSize(1500, 1000);
         setLayout(new BorderLayout());
+        UIManager.getLookAndFeelDefaults().put("TextField.caretForeground" , Color. white);
         setTitle("Monitoringapplicatie (optimaliseren)");
 
         //Bovenste twee labels:

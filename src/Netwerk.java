@@ -1,14 +1,17 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public abstract class Netwerk {
-    private double beschikbaarheidspercentage;
+    private String beschikbaarheidspercentage;
     protected ArrayList<Groep> groepen;
     private String naam;
 
     //Constructor
     public Netwerk(String naam, double beschikbaarheidspercentage, ArrayList<Groep> groepen){
         this.naam = naam;
-        this.beschikbaarheidspercentage=beschikbaarheidspercentage;
+        DecimalFormat df = new DecimalFormat("0.000");
+        String dfBeschikbaarheidspercentage = df.format(beschikbaarheidspercentage);
+        this.beschikbaarheidspercentage= dfBeschikbaarheidspercentage;
         this.groepen = groepen;
     }
 
@@ -17,11 +20,12 @@ public abstract class Netwerk {
         return naam;
     }
 
-    public double getBeschikbaarheidspercentage() {
+    public String getBeschikbaarheidspercentage() {
         return beschikbaarheidspercentage;
     }
 
     public void setBeschikbaarheidspercentage(double beschikbaarheidspercentage) {
-        this.beschikbaarheidspercentage = beschikbaarheidspercentage;
+        DecimalFormat df = new DecimalFormat("0.000");
+        String dfBeschikbaarheidspercentage = df.format(beschikbaarheidspercentage);
     }
 }
