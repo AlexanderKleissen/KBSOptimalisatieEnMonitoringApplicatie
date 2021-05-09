@@ -34,7 +34,7 @@ public class main {
         Monitoringnetwerk netwerk4 = new Monitoringnetwerk("Netwerk 4", 350, 90);
         Monitoringnetwerk netwerk6 = new Monitoringnetwerk("Netwerk 6", 350, 90);
         Monitoringnetwerk netwerk7 = new Monitoringnetwerk("Netwerk 7", 350, 90);
-//        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
+        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         Ontwerpcomponent db5 = new Ontwerpcomponent("Database5", "database", 100, 256,  99.90);
         Ontwerpcomponent db6 = new Ontwerpcomponent("Database6","database" ,400, 45,  98.00);
@@ -70,6 +70,6 @@ public class main {
 
         //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 
-        OntwerpFrame ontwerpFrame = new OntwerpFrame();
+//        OntwerpFrame ontwerpFrame = new OntwerpFrame();
     }
 }

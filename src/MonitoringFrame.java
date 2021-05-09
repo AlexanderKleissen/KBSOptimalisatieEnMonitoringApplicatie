@@ -90,7 +90,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 }
             }
             for (Monitoringcomponent component : monitoringcomponents) {
-                totalePeriodiekeKosten += Double.parseDouble(component.getPeriodiekeKosten());
+                totalePeriodiekeKosten += Double.parseDouble(component.getPeriodiekeKosten().replaceAll(",", "."));
             }
         }
         DecimalFormat df = new DecimalFormat("0.00");
