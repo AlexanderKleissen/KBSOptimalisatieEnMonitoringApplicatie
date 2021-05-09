@@ -23,6 +23,11 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         header.setBackground(backClr1);
         this.add(header, BorderLayout.NORTH);
 
+        //Panel voor midden van het scherm
+        JPanel center = new JPanel(new BorderLayout());
+        center.setBackground(backClr2);
+        this.add(center);
+
         //dropdownmenu
         comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksten binnen de JComboBox
 
