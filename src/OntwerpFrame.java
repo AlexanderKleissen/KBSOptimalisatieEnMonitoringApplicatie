@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +35,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         jcDropDownMenu.setEditable(false); //Als dit enabled blijft dan kan de gebruiker ook de tekst aanpassen
         jcDropDownMenu.setForeground(Color.white);
         jcDropDownMenu.setBackground(backClr1);
+        jcDropDownMenu.setUI(new ColorArrowUI());
         header.add(jcDropDownMenu);
 
         //Panel voor footer

@@ -1,4 +1,7 @@
 import javax.swing.*;
+import javax.swing.plaf.*;
+import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,11 +26,6 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         header.setBackground(backClr1);
         this.add(header, BorderLayout.NORTH);
 
-        //Panel voor midden van het scherm
-        JPanel center = new JPanel(new BorderLayout());
-        center.setBackground(backClr2);
-        this.add(center);
-
         //dropdownmenu
         comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksten binnen de JComboBox
 
@@ -38,6 +36,9 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         jcDropDownMenu.setEditable(false); //Als dit enabled blijft dan kan de gebruiker ook de tekst aanpassen
         jcDropDownMenu.setForeground(Color.white);
         jcDropDownMenu.setBackground(backClr1);
+
+        jcDropDownMenu.setUI(new ColorArrowUI());
+
         header.add(jcDropDownMenu);
 
         //Panel voor footer
@@ -58,7 +59,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         jbMonitoren.setEnabled(false);
         footer.add(jbMonitoren);
 
-        setBackground(backClr2);
+        getContentPane().setBackground(backClr2);
         setVisible(true);
     }
 
