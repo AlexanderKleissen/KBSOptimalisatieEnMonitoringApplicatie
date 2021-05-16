@@ -1,5 +1,10 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+        //Monitoringcomponent db1 = new Monitoringcomponent("DB1", "database", 99.99);
+
         Monitoringcomponent db1 = new Monitoringcomponent("Database1", "database", "Online", 90, 80, 256, 20, 99.99);
         Monitoringcomponent db2 = new Monitoringcomponent("Database2","database" ,"Offline", 40, 45, 315, 20, 98.00);
         Monitoringcomponent db3 = new Monitoringcomponent("Database3", "database", "Online", 80, 80, 256, 20, 99.99);
