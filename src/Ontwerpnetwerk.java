@@ -26,7 +26,7 @@ public class Ontwerpnetwerk extends Netwerk{
         return kosten;
     }
 
-    public void setKosten(Double kosten) {
+    public void setKosten(double kosten) {
         DecimalFormat df = new DecimalFormat("0.00");
         String dfKosten = df.format(kosten);
         this.kosten = dfKosten;

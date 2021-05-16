@@ -18,6 +18,8 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
     private Color backClr1 = new Color(60, 63, 65); //achtergrondkleur
     private Color backClr2 = new Color(43, 43, 43); //tabelkleur
+    private ArrayList<Ontwerpcomponent> mogelijkeComponenten = new ArrayList<>();
+    private ArrayList<Ontwerpcomponent> optimaleWaarden = new ArrayList<>();
 
     public OptimalisatieDialog(OntwerpFrame frame) {
         super(frame, false);
@@ -254,8 +256,94 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);      //horizontale scrollbar verschijnt indien nodig
         add(scrollPane);                                                                          //scrollpane toevoegen aan dit frame
 
-
         setVisible(true);
+    }
+
+    private double berekenBeschikbaarheid(ArrayList<Ontwerpcomponent> firewalls, ArrayList<Ontwerpcomponent> webservers, ArrayList<Ontwerpcomponent> dbservers){
+        double beschikbaarheidTotaal =1;
+        double beschikbaarheidFirewalls =1;
+        double beschikbaarheidWebservers =1;
+        double beschikbaarheidDbservers =1;
+        for(Ontwerpcomponent firewall : firewalls){
+            beschikbaarheidFirewalls = beschikbaarheidFirewalls * (1-Double.parseDouble(firewall.getBeschikbaarheidspercentage()));
+        } beschikbaarheidFirewalls = 1 - beschikbaarheidFirewalls;
+        for(Ontwerpcomponent webserver : webservers){
+            beschikbaarheidWebservers = beschikbaarheidWebservers * (1-Double.parseDouble(webserver.getBeschikbaarheidspercentage()));
+        } beschikbaarheidWebservers = 1 - beschikbaarheidWebservers;
+        for(Ontwerpcomponent dbserver : dbservers){
+            beschikbaarheidDbservers = beschikbaarheidDbservers * (1-Double.parseDouble(dbserver.getBeschikbaarheidspercentage()));
+        } beschikbaarheidDbservers = 1 - beschikbaarheidDbservers;
+        beschikbaarheidTotaal = beschikbaarheidFirewalls * beschikbaarheidWebservers * beschikbaarheidDbservers;
+        return beschikbaarheidTotaal;
+    }
+
+    private void optimaliseer(double minBeschikbaarheidspercentage){
+        /* Backtrackingalgoritme optimalisatie */
+        int kosten = 0;
+        int laagsteKosten = 0;
+        double beschikbaarheid = 0;
+        ArrayList<Ontwerpcomponent> besteOplossing = new ArrayList<>();
+        ArrayList<Ontwerpcomponent> huidigeOplossing = new ArrayList<>();
+        int component = 0;
+        ArrayList<Ontwerpcomponent> firewalls = new ArrayList<>();
+        ArrayList<Ontwerpcomponent> webservers = new ArrayList<>();
+        ArrayList<Ontwerpcomponent> dbservers = new ArrayList<>();
+
+        //Tijdelijk de componenten tot ze uit de database gehaald worden
+        mogelijkeComponenten.add(new Ontwerpcomponent("pfSense", "firewall", 4000, 100, 99.998));
+        mogelijkeComponenten.add(new Ontwerpcomponent("HAL9001DB", "DBserver", 5100, 100, 90));
+        mogelijkeComponenten.add(new Ontwerpcomponent("HAL9002DB", "DBserver", 7700, 100, 95));
+        mogelijkeComponenten.add(new Ontwerpcomponent("HAL9003DB", "DBserver", 12200, 100, 98));
+        mogelijkeComponenten.add(new Ontwerpcomponent("HAL9001W", "webserver", 2200, 100, 80));
+        mogelijkeComponenten.add(new Ontwerpcomponent("HAL9002W", "webserver", 3200, 100, 90));
+        mogelijkeComponenten.add(new Ontwerpcomponent("HAL9003W", "webserver", 5100, 100, 95));
+
+        //while(){
+            //false: Controle om te kijken of de beschikbaarheid stijgt als een component wordt toegevoegd.
+            while(beschikbaarheid < minBeschikbaarheidspercentage) {
+                huidigeOplossing.add(mogelijkeComponenten.get(component)); //een nieuw component wordt toegevoegd
+                //het component wordt ook aan de juiste categorie toegevoegd
+                if (mogelijkeComponenten.get(component).getType().equals("firewall")) {
+                    firewalls.add(mogelijkeComponenten.get(component));
+                } else if (mogelijkeComponenten.get(component).getType().equals("DBserver")) {
+                    dbservers.add(mogelijkeComponenten.get(component));
+                } else if (mogelijkeComponenten.get(component).getType().equals("webserver")) {
+                    webservers.add(mogelijkeComponenten.get(component));
+                }//true: component toevoegen en volgende component gebruiken
+                if (berekenBeschikbaarheid(firewalls, dbservers, webservers) > beschikbaarheid) { //als de beschikbaarheid met het nieuwe component hoger is dan zonder, worden de beschikbaarheid en kosten aangepast.
+                    beschikbaarheid = berekenBeschikbaarheid(firewalls, dbservers, webservers);
+                    kosten += Integer.parseInt(mogelijkeComponenten.get(component).getKosten());
+                }//false: component weghalen en volgende component gebruiken
+                else {//als de beschikbaarheid met het nieuwe component niet hoger is dan zonder, wordt het component verwijderd
+                    huidigeOplossing.add(mogelijkeComponenten.remove(component)); //het nieuwe component wordt weer verwijderd
+                    //het component wordt ook bij zijn categorie verwijderd
+                    if (mogelijkeComponenten.get(component).getType().equals("firewall")) {
+                        firewalls.add(mogelijkeComponenten.remove(component));
+                    } else if (mogelijkeComponenten.get(component).getType().equals("DBserver")) {
+                        dbservers.add(mogelijkeComponenten.remove(component));
+                    } else if (mogelijkeComponenten.get(component).getType().equals("webserver")) {
+                        webservers.add(mogelijkeComponenten.remove(component));
+                    }
+                }
+                if(component<mogelijkeComponenten.size()){
+                    component++;
+                }else{
+                    component = 0;
+                }
+            }//Controle om te kijken of de beschikbaarheid hoog genoeg is.
+            if (beschikbaarheid >= minBeschikbaarheidspercentage && firewalls.size()>=1 && webservers.size()>=2 && dbservers.size()>=2) {
+                //Dit is dan een mogelijke oplossing
+                if (kosten < laagsteKosten) {//als de oplossing goedkoper is dan de vorige opgeslagen oplossing, wordt deze opgeslagen
+                    besteOplossing = huidigeOplossing;
+                    laagsteKosten = kosten;
+                    kosten =0;
+                    huidigeOplossing.clear();
+                }
+            }
+        //}
+        //true: componenten toevoegen aan het optimalisatiescherm aan de rechterkant.
+
+        //einde backtrackingalgoritme
     }
 
 
@@ -266,20 +354,8 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
             if (e.getSource() == bereken) {
                 double ingevoerdPercentage = Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()); // ingevoerd percentage wordt van String naar Double omgezet
                 System.out.println(ingevoerdPercentage);                                                // voor nu even om te testen of ingevoerd percentage opgehaald kan worden
-
-                /* Backtrackingalgoritme optimalisatie */
-
-                //Controle om te kijken of de beschikbaarheid 99,99% is.
-
-                    //false: Controle om te kijken of de beschikbaarheid stijgt als een component wordt toegevoegd.
-
-                        //false: component weghalen en volgende component gebruiken
-
-                        //true: component toevoegen en volgende component gebruiken
-
-                    //true: componenten toevoegen aan het optimalisatiescherm aan de rechterkant.
-
-                //einde backtrackingalgoritme
+                //backtracking algoritme gebruiken om optimale waarden te bepalen
+                optimaliseer(ingevoerdPercentage);
             }
             if (e.getSource() == voegToe) {
 
