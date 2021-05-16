@@ -20,6 +20,10 @@ public abstract class Netwerk {
         return naam;
     }
 
+    public void setNaam(String naam) {
+        this.naam = naam;
+    }
+
     public String getBeschikbaarheidspercentage() {
         return beschikbaarheidspercentage;
     }

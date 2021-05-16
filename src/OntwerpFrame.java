@@ -115,9 +115,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                     JLabel naam = new JLabel("Naam: " + component.getNaam());
                     naam.setForeground(Color.white);
                     jPanel.add(naam);
-                    JLabel disk = new JLabel("Totale diskruimte: " + ((Ontwerpcomponent) component).getTotaleDiskruimte() + " GB");
-                    disk.setForeground(Color.white);
-                    jPanel.add(disk);
                     JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
                     beschikbaarheid.setForeground(Color.white);
                     jPanel.add(beschikbaarheid);

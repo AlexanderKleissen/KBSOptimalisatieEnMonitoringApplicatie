@@ -41,16 +41,17 @@ public class main {
         Monitoringnetwerk netwerk7 = new Monitoringnetwerk("Netwerk 7", 350, 90);
         MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
-        Ontwerpcomponent db5 = new Ontwerpcomponent("Database5", "database", 100, 256,  99.90);
-        Ontwerpcomponent db6 = new Ontwerpcomponent("Database6","database" ,400, 45,  98.00);
-        Ontwerpcomponent db7 = new Ontwerpcomponent("Database7", "database", 300, 20,  99.98);
-        Ontwerpcomponent db8 = new Ontwerpcomponent("Database8", "database",120, 100,  99.96);
-        Ontwerpcomponent ws6 = new Ontwerpcomponent("Webserver6", "database",930, 80,  99.93);
-        Ontwerpcomponent ws7 = new Ontwerpcomponent("Webserver7", "webserver",125, 40,  99.99);
-        Ontwerpcomponent ws8 = new Ontwerpcomponent("Webserver8", "webserver", 980, 120, 99.91);
-        Ontwerpcomponent ws9 = new Ontwerpcomponent("Webserver9","webserver", 470, 80, 99.89);
-        Ontwerpcomponent ws10 = new Ontwerpcomponent("Webserver10","webserver", 390, 50,  90.00);
-        Ontwerpcomponent pfSense2 = new Ontwerpcomponent("pfSense2","firewall",230, 30, 99.99);
+        Ontwerpcomponent db5 = new Ontwerpcomponent("Database5", "database", 100,   99.90);
+        Ontwerpcomponent db6 = new Ontwerpcomponent("Database6","database" ,400,  98.00);
+        Ontwerpcomponent db7 = new Ontwerpcomponent("Database7", "database", 300,  99.98);
+        Ontwerpcomponent db8 = new Ontwerpcomponent("Database8", "database",120,   99.96);
+        Ontwerpcomponent ws6 = new Ontwerpcomponent("Webserver6", "database",930,   99.93);
+        Ontwerpcomponent ws7 = new Ontwerpcomponent("Webserver7", "webserver",125,   99.99);
+        Ontwerpcomponent ws8 = new Ontwerpcomponent("Webserver8", "webserver", 980,  99.91);
+        Ontwerpcomponent ws9 = new Ontwerpcomponent("Webserver9","webserver", 470,  99.89);
+        Ontwerpcomponent ws10 = new Ontwerpcomponent("Webserver10","webserver", 390,   90.00);
+        Ontwerpcomponent pfSense2 = new Ontwerpcomponent("pfSense2","firewall",230, 99.99);
+
 
         Groep dbOntwerpComponenten = new Groep("OntwerpDatabaseservers", 99.99);
         dbOntwerpComponenten.componenten.add(db5);
