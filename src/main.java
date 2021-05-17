@@ -3,7 +3,11 @@ import java.sql.SQLException;
 
 public class main {
     public static void main(String[] args) throws SQLException {
-        //Monitoringcomponent db1 = new Monitoringcomponent("DB1", "database", 99.99);
+//        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 99.99, 7700, "192.168.1.1");
+//        Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 99.99, 7700, "192.168.1.1");
+//        Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 99.99, 3200, "192.168.1.1");
+//        Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 99.99, 3200, "192.168.1.1");
+//        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense","Firewall", 99.998, 4000, "192.168.1.1");
 
         Monitoringcomponent db1 = new Monitoringcomponent("Database1", "database", "Online", 90, 80, 256, 20, 99.99);
         Monitoringcomponent db2 = new Monitoringcomponent("Database2","database" ,"Offline", 40, 45, 315, 20, 98.00);

@@ -129,10 +129,10 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 JPanel jPanel = new JPanel(new GridLayout(7, 1));
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
                 jPanel.setBackground(backClr1);
-                JLabel naam = new JLabel("Naam: " + component.getNaam());
+                JLabel naam = new JLabel("Naam: " + component.getNaam() + " (" + component.getType() + ")");
                 naam.setForeground(Color.white);
                 jPanel.add(naam);
-                JLabel disk = new JLabel("Beschikbare diskruimte: " + component.getDiskruimte());
+                JLabel disk = new JLabel("Beschikbare diskruimte: " + component.getBeschikbareDiskruimte());
                 disk.setForeground(Color.white);
                 jPanel.add(disk);
                 JLabel processor = new JLabel("Huidige processorbelasting: " + component.getProcessorbelasting() + "%");
@@ -144,10 +144,10 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 JLabel beschikbaarheid = new JLabel("Beschikbaarheidspercentage: " + component.getBeschikbaarheidspercentage() + "%");
                 beschikbaarheid.setForeground(Color.white);
                 jPanel.add(beschikbaarheid);
-                JLabel uptime = new JLabel("Uptime sinds laatste reboot: " + component.getBeschikbaarheidsduur());
+                JLabel uptime = new JLabel("Uptime sinds laatste reboot: " + component.getBeschikbaarheidsduur() + " minuten");
                 uptime.setForeground(Color.white);
                 jPanel.add(uptime);
-                JLabel kosten = new JLabel("Periodieke kosten: €" + component.getPeriodiekeKosten());
+                JLabel kosten = new JLabel("Periodieke kosten: €" + component.getPeriodiekeKosten() + " per jaar");
                 kosten.setForeground(Color.white);
                 jPanel.add(kosten);
                 componentenPanel.add(jPanel);
