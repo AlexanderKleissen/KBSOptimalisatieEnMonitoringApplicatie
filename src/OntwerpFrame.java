@@ -4,6 +4,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 
 public class OntwerpFrame extends JFrame implements ActionListener {
     private JComboBox<String> jcDropDownMenu;
@@ -14,7 +15,12 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
     private Color backClr2 = new Color(43, 43, 43); //de kleur van het midden
 
+    //DragAndDrop dragAndDrop = new DragAndDrop();
+
+
+
     public OntwerpFrame() {
+        //this.add(dragAndDrop);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
