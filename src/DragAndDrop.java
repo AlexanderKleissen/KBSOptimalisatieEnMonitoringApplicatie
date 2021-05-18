@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class DragAndDrop extends JPanel{
 
-    ImageIcon image = new ImageIcon("smile.png");
+    ImageIcon image = new ImageIcon("smileSmall.png");
     final int WIDTH = image.getIconWidth();
     final int HEIGHT = image.getIconHeight();
     Point imageCorner;

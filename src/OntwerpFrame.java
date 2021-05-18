@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 public class OntwerpFrame extends JFrame implements ActionListener {
+    DragAndDrop dragAndDrop = new DragAndDrop();
     private JComboBox<String> jcDropDownMenu;
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
@@ -15,12 +16,9 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
     private Color backClr2 = new Color(43, 43, 43); //de kleur van het midden
 
-    DragAndDrop dragAndDrop = new DragAndDrop();
-
 
 
     public OntwerpFrame() {
-        this.add(dragAndDrop);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
@@ -63,6 +61,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         footer.add(jbMonitoren);
 
         getContentPane().setBackground(backClr2);
+        //this.add(dragAndDrop);
         setVisible(true);
     }
 
@@ -131,7 +130,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                 }
             }
         }
-
+        //this.add(dragAndDrop);
         setVisible(true);
     }
 
