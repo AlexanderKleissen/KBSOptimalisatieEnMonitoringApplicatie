@@ -126,30 +126,57 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 }
             }
             for (Monitoringcomponent component : monitoringcomponents) {
-                JPanel jPanel = new JPanel(new GridLayout(7, 1));
+                GridLayout gridLayout = new GridLayout(11, 1);
+                JPanel jPanel = new JPanel(gridLayout);
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
                 jPanel.setBackground(backClr1);
+
                 JLabel naam = new JLabel("Naam: " + component.getNaam() + " (" + component.getType() + ")");
                 naam.setForeground(Color.white);
                 jPanel.add(naam);
-                JLabel disk = new JLabel("Beschikbare diskruimte: " + component.getBeschikbareDiskruimte());
-                disk.setForeground(Color.white);
-                jPanel.add(disk);
-                JLabel processor = new JLabel("Huidige processorbelasting: " + component.getProcessorbelasting() + "%");
-                processor.setForeground(Color.white);
-                jPanel.add(processor);
-                JLabel status = new JLabel("Status: " + component.getBeschikbaarheidsstatus());
+
+                JLabel status = new JLabel("Status: online");
                 status.setForeground(Color.white);
                 jPanel.add(status);
-                JLabel beschikbaarheid = new JLabel("Beschikbaarheidspercentage: " + component.getBeschikbaarheidspercentage() + "%");
-                beschikbaarheid.setForeground(Color.white);
-                jPanel.add(beschikbaarheid);
+
+                JLabel enter1 = new JLabel("");
+                jPanel.add(enter1);
+
+                JLabel processor = new JLabel("CPU gebruik: " + component.getProcessorbelasting() + "%");
+                processor.setForeground(Color.white);
+                jPanel.add(processor);
+
+                JLabel werkgeheugen = new JLabel("Werkgeheugen gebruik: " + component.getWerkgeheugenVerbruik() + "%");
+                werkgeheugen.setForeground(Color.white);
+                jPanel.add(werkgeheugen);
+
+                JLabel totaalgeheugen = new JLabel("Totaal geheugen: " + component.getTotaleDiskruimte() + "GB");
+                totaalgeheugen.setForeground(Color.white);
+                jPanel.add(totaalgeheugen);
+
+                JLabel gebruiktegeheugen = new JLabel("Gebruikte geheugen: " + component.getGebruikteDiskruimte() + "GB");
+                gebruiktegeheugen.setForeground(Color.white);
+                jPanel.add(gebruiktegeheugen);
+
+                JLabel beschikbaregeheugen = new JLabel("Beschikbare geheugen: " + component.getBeschikbareDiskruimte() + "GB");
+                beschikbaregeheugen.setForeground(Color.white);
+                jPanel.add(beschikbaregeheugen);
+
                 JLabel uptime = new JLabel("Uptime sinds laatste reboot: " + component.getBeschikbaarheidsduur() + " minuten");
                 uptime.setForeground(Color.white);
                 jPanel.add(uptime);
+
+                JLabel enter2 = new JLabel("");
+                jPanel.add(enter2);
+
+                JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage());
+                beschikbaarheid.setForeground(Color.white);
+                jPanel.add(beschikbaarheid);
+
                 JLabel kosten = new JLabel("Periodieke kosten: €" + component.getPeriodiekeKosten() + " per jaar");
                 kosten.setForeground(Color.white);
                 jPanel.add(kosten);
+
                 componentenPanel.add(jPanel);
             }
         }
