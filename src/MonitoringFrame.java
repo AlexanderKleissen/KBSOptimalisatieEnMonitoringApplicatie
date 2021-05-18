@@ -2,9 +2,11 @@ import javax.swing.*;
 import javax.swing.plaf.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -102,6 +104,8 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         DecimalFormat df = new DecimalFormat("0.00");
         String dfTotalePeriodiekeKosten = df.format(totalePeriodiekeKosten);
 
+//        Groep.berekenBeschikbaarheidGroep(netwerk, "Databaseservers");
+
         JLabel totaleKosten = new JLabel("Totale periodieke kosten: €" +dfTotalePeriodiekeKosten);
         totaleKosten.setForeground(Color.white);
 
@@ -126,7 +130,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 }
             }
             for (Monitoringcomponent component : monitoringcomponents) {
-                GridLayout gridLayout = new GridLayout(11, 1);
+                GridLayout gridLayout = new GridLayout(12, 1);
                 JPanel jPanel = new JPanel(gridLayout);
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
                 jPanel.setBackground(backClr1);
