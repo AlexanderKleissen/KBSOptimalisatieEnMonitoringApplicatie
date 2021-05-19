@@ -150,7 +150,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==jcDropDownMenu){
-            System.out.println(jcDropDownMenu.getSelectedItem());
+//            System.out.println(jcDropDownMenu.getSelectedItem()); Kan gebruikt worden als testfunctie op welk dropdownmenu item geklikt is.
             if(jcDropDownMenu.getSelectedItem().equals("Programma sluiten")){
                 dispose();
             }

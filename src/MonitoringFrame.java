@@ -24,7 +24,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         this.add(header, BorderLayout.NORTH);
 
         //dropdownmenu
-        comboBoxContent = new String[] {"Nieuw netwerk", "Monitor netwerk", "Sluit Netwerk", "Programma sluiten"}; //Array voor de teksten binnen de JComboBox
+        comboBoxContent = new String[] {"Programma sluiten"}; //Array voor de teksten binnen de JComboBox
 
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
@@ -186,19 +186,11 @@ public class MonitoringFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==jcDropDownMenu) {
 //            System.out.println(jcDropDownMenu.getSelectedItem()); Kan gebruikt worden als testfunctie op welk dropdownmenu item geklikt is.
-            if (jcDropDownMenu.getSelectedItem().equals("Sluit netwerk")) {
-                dispose();
-                MonitoringFrame monitoringFrame = new MonitoringFrame();
-                //Het monitoringframe blijft, maar zonder inhoud.
-            }
-            if  (jcDropDownMenu.getSelectedItem().equals("Monitor netwerk")){
-                KiesNetwerkDialog kiesNetwerk = new KiesNetwerkDialog(this); //Een keuzelijst voor alle beschikbare netwerken wordt weergegeven
-            }
-            if  (jcDropDownMenu.getSelectedItem().equals("Nieuw netwerk")){
-                dispose();
-                MonitoringFrame monitoringFrame = new MonitoringFrame();
-            }
+
         }
+        if(jcDropDownMenu.getSelectedItem().equals("Programma sluiten")){
+                       dispose();
+                   }
         if (e.getSource()==jbOntwerpen){
             dispose();
             OntwerpFrame ontwerpFrame = new OntwerpFrame();
