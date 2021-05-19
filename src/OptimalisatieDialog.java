@@ -5,6 +5,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class OptimalisatieDialog extends JDialog implements ActionListener {
@@ -18,7 +19,14 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private Color backClr1 = new Color(60, 63, 65); //achtergrondkleur
     private Color backClr2 = new Color(43, 43, 43); //tabelkleur
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
+    private ArrayList<Ontwerpcomponent> webservers = new ArrayList<>();
+    private ArrayList<Ontwerpcomponent> dbservers = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> optimaleWaarden = new ArrayList<>();
+    ArrayList<Ontwerpcomponent> serversHuidigeOplossing = new ArrayList<>();
+    ArrayList<Ontwerpcomponent> serversBesteOplossing = new ArrayList<>();
+    double beschikbaarheid=0;
+    double kosten=0;
+    double laagsteKosten=1000000000;
 
     public OptimalisatieDialog(OntwerpFrame frame) {
         super(frame, false);
@@ -58,6 +66,12 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         ontwerpcomponenten.add(HAL9001W);
         ontwerpcomponenten.add(HAL9002W);
         ontwerpcomponenten.add(HAL9003W);
+        dbservers.add(HAL9001DB);
+        dbservers.add(HAL9002DB);
+        dbservers.add(HAL9003DB);
+        webservers.add(HAL9001W);
+        webservers.add(HAL9002W);
+        webservers.add(HAL9003W);
 
 
 
@@ -303,83 +317,116 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
+    /* Het backtracking algoritme */
+
     private double berekenBeschikbaarheid(ArrayList<Ontwerpcomponent> firewalls, ArrayList<Ontwerpcomponent> webservers, ArrayList<Ontwerpcomponent> dbservers){
         double beschikbaarheidTotaal =1;
         double beschikbaarheidFirewalls =1;
         double beschikbaarheidWebservers =1;
         double beschikbaarheidDbservers =1;
         for(Ontwerpcomponent firewall : firewalls){
-            beschikbaarheidFirewalls = beschikbaarheidFirewalls * (1-Double.parseDouble(firewall.getBeschikbaarheidspercentage().replaceAll(",", ".")));
+            beschikbaarheidFirewalls = beschikbaarheidFirewalls * (1-Double.parseDouble(firewall.getBeschikbaarheidspercentage().replaceAll(",", "."))/100);
         } beschikbaarheidFirewalls = 1 - beschikbaarheidFirewalls;
         for(Ontwerpcomponent webserver : webservers){
-            beschikbaarheidWebservers = beschikbaarheidWebservers * (1-Double.parseDouble(webserver.getBeschikbaarheidspercentage().replaceAll(",", ".")));
+            beschikbaarheidWebservers = beschikbaarheidWebservers * (1-Double.parseDouble(webserver.getBeschikbaarheidspercentage().replaceAll(",", "."))/100);
         } beschikbaarheidWebservers = 1 - beschikbaarheidWebservers;
         for(Ontwerpcomponent dbserver : dbservers){
-            beschikbaarheidDbservers = beschikbaarheidDbservers * (1-Double.parseDouble(dbserver.getBeschikbaarheidspercentage().replaceAll("," ,".")));
+            beschikbaarheidDbservers = beschikbaarheidDbservers * (1-Double.parseDouble(dbserver.getBeschikbaarheidspercentage().replaceAll("," ,"."))/100);
         } beschikbaarheidDbservers = 1 - beschikbaarheidDbservers;
         beschikbaarheidTotaal = beschikbaarheidFirewalls * beschikbaarheidWebservers * beschikbaarheidDbservers;
-        return beschikbaarheidTotaal;
+        return beschikbaarheidTotaal*100;
     }
 
-    private void optimaliseer(double minBeschikbaarheidspercentage){
+    private double berekenBeschikbaarheid(ArrayList<Ontwerpcomponent> componenten){
+        double beschikbaarheid =1;
+        for(Ontwerpcomponent component : componenten){
+            beschikbaarheid = beschikbaarheid * (1-Double.parseDouble(component.getBeschikbaarheidspercentage().replaceAll(",", "."))/100);
+        } beschikbaarheid = 1 - beschikbaarheid;
+        return beschikbaarheid*100;
+    }
+
+    /* De uitvoering van de oplossing: Alle rijen worden per kolom gecontroleerd met behulp van backtracking */
+    private boolean uitvoering(ArrayList<Ontwerpcomponent> componenten, double minBeschikbaarheidspercentage) {
+        int nummer;
+
+        /* Probeer alle rijen in de gegeven kolom */
+        for (int i = 0; i < 3; i++) {
+            /* De server wordt toegevoegd */
+            nummer=serversHuidigeOplossing.size();
+            serversHuidigeOplossing.add(nummer, componenten.get(i));
+            beschikbaarheid=berekenBeschikbaarheid(serversHuidigeOplossing);
+            this.kosten+=Double.parseDouble(componenten.get(i).getKosten());
+
+            /* Controle of het beschikbaarheidspercentage al hoog genoeg is */
+            if (beschikbaarheid>=minBeschikbaarheidspercentage && kosten<laagsteKosten) {
+                laagsteKosten=kosten;
+                kosten=0;
+                beschikbaarheid=0;
+                serversBesteOplossing=serversHuidigeOplossing;
+                serversHuidigeOplossing.clear();
+                uitvoering(componenten, minBeschikbaarheidspercentage);
+                return true;
+            }
+
+            //Als de kosten te hoog zijn, wordt een ander component geprobeert
+            if(kosten<laagsteKosten){
+                /* Voer deze methode uit voor de volgende toevoeging */
+                uitvoering(componenten, minBeschikbaarheidspercentage);
+                return true;
+            }
+
+            /* Er komt geen oplossing uit deze positie, dus de server wordt verwijderd */
+            serversHuidigeOplossing.remove(nummer);
+            //Als alle drie de servers niet tot een oplossing leiden, wordt er een stap teruggedaan en daar een andere server geprobeerd.
+            if(i==2){
+                nummer=serversHuidigeOplossing.size();
+                if(nummer==0){//Er zijn geen nieuwe oplossingen meer
+                    return true;
+                }
+                serversHuidigeOplossing.remove(nummer-1);
+                i=0;
+            }
+        }
+
+        //Als er geen oplossingen te vinden zijn
+        return false;
+    }
+
+    private ArrayList<Ontwerpcomponent> optimaliseer(double minBeschikbaarheidspercentage){
         /* Backtrackingalgoritme optimalisatie */
-        int kosten = 0;
-        int laagsteKosten = 0;
-        double beschikbaarheid = 0;
+        double beschikbaarheidFirewalls = 0;
         ArrayList<Ontwerpcomponent> besteOplossing = new ArrayList<>();
         ArrayList<Ontwerpcomponent> huidigeOplossing = new ArrayList<>();
-        int component = 0;
-        ArrayList<Ontwerpcomponent> firewalls = new ArrayList<>();
-        ArrayList<Ontwerpcomponent> webservers = new ArrayList<>();
-        ArrayList<Ontwerpcomponent> dbservers = new ArrayList<>();
+        ArrayList<Ontwerpcomponent> firewallsOplossing = new ArrayList<>();
+        ArrayList<Ontwerpcomponent> webserversBesteOplossing = new ArrayList<>();
+        ArrayList<Ontwerpcomponent> dbserversBesteOplossing = new ArrayList<>();
 
-        //while(){
-            //false: Controle om te kijken of de beschikbaarheid stijgt als een component wordt toegevoegd.
-            while(beschikbaarheid < minBeschikbaarheidspercentage) {
-                huidigeOplossing.add(ontwerpcomponenten.get(component)); //een nieuw component wordt toegevoegd
-                //het component wordt ook aan de juiste categorie toegevoegd
-                if (ontwerpcomponenten.get(component).getType().equals("firewall")) {
-                    firewalls.add(ontwerpcomponenten.get(component));
-                } else if (ontwerpcomponenten.get(component).getType().equals("database")) {
-                    dbservers.add(ontwerpcomponenten.get(component));
-                } else if (ontwerpcomponenten.get(component).getType().equals("webserver")) {
-                    webservers.add(ontwerpcomponenten.get(component));
-                }//true: component toevoegen en volgende component gebruiken
-                if (berekenBeschikbaarheid(firewalls, dbservers, webservers) > beschikbaarheid) { //als de beschikbaarheid met het nieuwe component hoger is dan zonder, worden de beschikbaarheid en kosten aangepast.
-                    beschikbaarheid = berekenBeschikbaarheid(firewalls, dbservers, webservers);
-                    kosten += Integer.parseInt(ontwerpcomponenten.get(component).getKosten());
-                }//false: component weghalen en volgende component gebruiken
-                else {//als de beschikbaarheid met het nieuwe component niet hoger is dan zonder, wordt het component verwijderd
-                    huidigeOplossing.add(ontwerpcomponenten.remove(component)); //het nieuwe component wordt weer verwijderd
-                    //het component wordt ook bij zijn categorie verwijderd
-                    if (ontwerpcomponenten.get(component).getType().equals("firewall")) {
-                        firewalls.add(ontwerpcomponenten.remove(component));
-                    } else if (ontwerpcomponenten.get(component).getType().equals("database")) {
-                        dbservers.add(ontwerpcomponenten.remove(component));
-                    } else if (ontwerpcomponenten.get(component).getType().equals("webserver")) {
-                        webservers.add(ontwerpcomponenten.remove(component));
-                    }
-                }
-                if(component<ontwerpcomponenten.size()){
-                    component++;
-                }else{
-                    component = 0;
-                }
-            }//Controle om te kijken of de beschikbaarheid hoog genoeg is.
-            if (beschikbaarheid >= minBeschikbaarheidspercentage && firewalls.size()>=1 && webservers.size()>=2 && dbservers.size()>=2) {
-                //Dit is dan een mogelijke oplossing
-                if (kosten < laagsteKosten) {//als de oplossing goedkoper is dan de vorige opgeslagen oplossing, wordt deze opgeslagen
-                    besteOplossing = huidigeOplossing;
-                    laagsteKosten = kosten;
-                    kosten =0;
-                    huidigeOplossing.clear();
-                }
-            }
-        //}
-        //true: componenten toevoegen aan het optimalisatiescherm aan de rechterkant.
+        //firewalls toevoegen
+        while(beschikbaarheidFirewalls<minBeschikbaarheidspercentage){
+            firewallsOplossing.add(ontwerpcomponenten.get(0));//een nieuw component wordt toegevoegd
+            beschikbaarheidFirewalls = berekenBeschikbaarheid(firewallsOplossing);
+        }
+        //webservers toevoegen
+        if (uitvoering(webservers, minBeschikbaarheidspercentage) == false) {
+            //Er zijn geen oplossingen
+        }else{
+            webserversBesteOplossing = serversBesteOplossing;
+            serversBesteOplossing.clear();
+        }
 
-        //einde backtrackingalgoritme
+        //dbservers toevoegen
+        if (uitvoering(dbservers, minBeschikbaarheidspercentage) == false) {
+            //Er zijn geen oplossingen
+        }else{
+            dbserversBesteOplossing = serversBesteOplossing;
+            serversBesteOplossing.clear();
+        }
+
+        //hele netwerk              https://www.geeksforgeeks.org/n-queen-problem-backtracking-3/
+
+        return besteOplossing;
     }
+    //einde backtrackingalgoritme
 
 
     @Override
@@ -389,8 +436,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
             if (e.getSource() == bereken) {
                 // ingevoerd percentage wordt van String naar Double omgezet
                 double ingevoerdPercentage = Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", "."));
-                // voor nu even om te testen of ingevoerd percentage opgehaald kan worden
-                System.out.println(ingevoerdPercentage);
+                //ruimte om te testen
 
                 //backtracking algoritme gebruiken om optimale waarden te bepalen
                // optimaliseer(ingevoerdPercentage);
