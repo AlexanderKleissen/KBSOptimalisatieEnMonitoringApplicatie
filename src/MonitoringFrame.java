@@ -1,12 +1,7 @@
 import javax.swing.*;
-import javax.swing.plaf.*;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicComboBoxUI;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -104,12 +99,10 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         DecimalFormat df = new DecimalFormat("0.00");
         String dfTotalePeriodiekeKosten = df.format(totalePeriodiekeKosten);
 
-//        Groep.berekenBeschikbaarheidGroep(netwerk, "Databaseservers");
-
         JLabel totaleKosten = new JLabel("Totale periodieke kosten: €" +dfTotalePeriodiekeKosten);
         totaleKosten.setForeground(Color.white);
 
-        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + netwerk.getBeschikbaarheidspercentage() + "%");
+        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + df.format(Groep.berekenBeschikbaarheidNetwerk(netwerk)) + "%");
         totaleBeschikbaarheid.setForeground(Color.white);
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);

@@ -3,21 +3,21 @@ import java.sql.SQLException;
 
 public class main {
     public static void main(String[] args) throws SQLException {
-//        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 99.99, 7700, "192.168.1.1");
-//        Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 99.99, 7700, "192.168.1.1");
-//        Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 99.99, 3200, "192.168.1.1");
-//        Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 99.99, 3200, "192.168.1.1");
+//        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "192.168.1.1");
+//        Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 95, 7700, "192.168.1.1");
+//        Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 90, 3200, "192.168.1.1");
+//        Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 90, 3200, "192.168.1.1");
 //        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense","Firewall", 99.998, 4000, "192.168.1.1");
 
-        Monitoringcomponent db1 = new Monitoringcomponent("Database1", "database", "Online", 90, 80, 256, 20, 99.99);
-        Monitoringcomponent db2 = new Monitoringcomponent("Database2","database" ,"Offline", 40, 45, 315, 20, 98.00);
-        Monitoringcomponent db3 = new Monitoringcomponent("Database3", "database", "Online", 80, 80, 256, 20, 99.99);
-        Monitoringcomponent db4 = new Monitoringcomponent("Database4", "database","Online", 120, 80, 256, 20, 99.99);
-        Monitoringcomponent ws1 = new Monitoringcomponent("Webserver1", "database","Online", 120, 80, 256, 50, 99.99);
-        Monitoringcomponent ws2 = new Monitoringcomponent("Webserver2", "webserver","Offline", 120, 80, 312, 50, 99.99);
-        Monitoringcomponent ws3 = new Monitoringcomponent("Webserver3", "webserver","Online", 60, 120, 256, 50, 99.99);
-        Monitoringcomponent ws4 = new Monitoringcomponent("Webserver4","webserver","Online", 120, 80, 256, 50, 99.89);
-        Monitoringcomponent ws5 = new Monitoringcomponent("Webserver5","webserver","Offline", 120, 80, 256, 50, 90.00);
+        Monitoringcomponent db1 = new Monitoringcomponent("Database1", "database", "Online", 90, 80, 256, 20, 90.00);
+        Monitoringcomponent db2 = new Monitoringcomponent("Database2","database" ,"Offline", 40, 45, 315, 20, 90.00);
+        Monitoringcomponent db3 = new Monitoringcomponent("Database3", "database", "Online", 80, 80, 256, 20, 90.00);
+        Monitoringcomponent db4 = new Monitoringcomponent("Database4", "database","Online", 120, 80, 256, 20, 95.00);
+        Monitoringcomponent ws1 = new Monitoringcomponent("Webserver1", "database","Online", 120, 80, 256, 50, 90.00);
+        Monitoringcomponent ws2 = new Monitoringcomponent("Webserver2", "webserver","Offline", 120, 80, 312, 50, 90.00);
+        Monitoringcomponent ws3 = new Monitoringcomponent("Webserver3", "webserver","Online", 60, 120, 256, 50, 90.00);
+        Monitoringcomponent ws4 = new Monitoringcomponent("Webserver4","webserver","Online", 120, 80, 256, 50, 90.00);
+        Monitoringcomponent ws5 = new Monitoringcomponent("Webserver5","webserver","Offline", 120, 80, 256, 50, 80.00);
         Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense1","firewall","Online", 2000, 30, 1256, 120, 99.99);
 
         Groep db = new Groep("Databaseservers", 99.98);
