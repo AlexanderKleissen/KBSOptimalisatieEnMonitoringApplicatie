@@ -1,4 +1,3 @@
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class main {
@@ -79,6 +78,7 @@ public class main {
         netwerk3.groepen.add(dbOntwerpComponenten);
         netwerk3.groepen.add(wsOntwerpComponenten);
         netwerk3.groepen.add(firewallOntwerpComponent);
+        netwerk3.setCorrecteKostenEnBeschikbaarheid();
 
         //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 

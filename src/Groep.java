@@ -22,7 +22,7 @@ public class Groep {
     public static double berekenBeschikbaarheidNetwerk(Netwerk netwerk) {
         //beschikbaarheid per netwerkdeel berekenen
         double beschikbaarheidDatabaseservers = berekenBeschikbaarheidGroep(netwerk, "Databaseservers");
-        double beschikbaarheidWebservers = berekenBeschikbaarheidGroep(netwerk, "Databaseservers");
+        double beschikbaarheidWebservers = berekenBeschikbaarheidGroep(netwerk, "Webservers");
         double beschikbaarheidFirewall = berekenBeschikbaarheidGroep(netwerk, "Firewall");
 
         //beschikbaarheid van het netwerk berekenen en returnen
