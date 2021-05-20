@@ -48,7 +48,7 @@ public class Groep {
             //voegt alle (1-beschikbaarheid) van de componenten in de ArrayList
             if (groep.getType().equals(type)) {
                 for (Component component : monitoringcomponents) {
-                    double beschikbaarheidComponent = (Double.parseDouble(component.getBeschikbaarheidspercentage()) / 100);
+                    double beschikbaarheidComponent = (Double.parseDouble(component.getBeschikbaarheidspercentage().replaceAll(",", ".")) / 100);
                     beschikbaarheidArrayList.add((1 - beschikbaarheidComponent));
                 }
 
@@ -68,4 +68,3 @@ public class Groep {
         return 0; //standaard return
     }
 }
-

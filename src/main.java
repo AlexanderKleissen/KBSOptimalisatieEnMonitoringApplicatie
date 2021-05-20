@@ -56,6 +56,8 @@ public class main {
         Ontwerpcomponent ws10 = new Ontwerpcomponent("Webserver10","webserver", 390,   90.00);
         Ontwerpcomponent pfSense2 = new Ontwerpcomponent("pfSense2","firewall",230, 99.99);
 
+//        Ontwerpcomponent db9 = new Ontwerpcomponent("Database9", "HAL9001DB", "database", 100, 99.0);
+
 
         Groep dbOntwerpComponenten = new Groep("OntwerpDatabaseservers", 99.99);
         dbOntwerpComponenten.componenten.add(db5);
@@ -80,6 +82,6 @@ public class main {
 
         //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 
-//        OntwerpFrame ontwerpFrame = new OntwerpFrame();
+//        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
     }
 }
