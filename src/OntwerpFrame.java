@@ -61,7 +61,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         footer.add(jbMonitoren);
 
         getContentPane().setBackground(backClr2);
-        //this.add(dragAndDrop);
+        this.add(dragAndDrop);
         setVisible(true);
     }
 
@@ -130,7 +130,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                 }
             }
         }
-        //this.add(dragAndDrop);
         setVisible(true);
     }
 

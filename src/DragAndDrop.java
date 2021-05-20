@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class DragAndDrop extends JPanel{
+public class DragAndDrop extends JPanel {
 
     ImageIcon image = new ImageIcon("smileSmall.png");
     final int WIDTH = image.getIconWidth();
@@ -10,9 +10,8 @@ public class DragAndDrop extends JPanel{
     Point imageCorner;
     Point prevPt;
 
-    DragAndDrop(){
-
-        imageCorner = new Point(0,0);
+    DragAndDrop() {
+        imageCorner = new Point(0, 0);
         ClickListener clickListener = new ClickListener();
         DragListener dragListener = new DragListener();
         this.addMouseListener(clickListener);
@@ -21,28 +20,32 @@ public class DragAndDrop extends JPanel{
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        image.paintIcon(this, g, (int)imageCorner.getX(), (int)imageCorner.getY());
+        image.paintIcon(this, g, (int) imageCorner.getX(), (int) imageCorner.getY());
     }
 
-    private class ClickListener extends MouseAdapter{
-
+    private class ClickListener extends MouseAdapter {
         public void mousePressed(MouseEvent e) {
-            prevPt = e.getPoint();
+            if (e.getClickCount() == 2) {
+                System.out.println("double click");
+            } else {
+                prevPt = e.getPoint();
+            }
         }
     }
 
-    private class DragListener extends MouseMotionAdapter{
-
+    private class DragListener extends MouseMotionAdapter {
         public void mouseDragged(MouseEvent e) {
-
-            Point currentPt = e.getPoint();
-
-            imageCorner.translate(
-
-                    (int)(currentPt.getX() - prevPt.getX()),
-                    (int)(currentPt.getY() - prevPt.getY())
-            );
-            prevPt = currentPt;
+            Point currentpt = e.getPoint();
+            if ((e.getPoint().getX() < ((int) imageCorner.getX() + WIDTH) &&
+                    e.getPoint().getY() < (int) (imageCorner.getY() + HEIGHT)) &&
+                    (e.getPoint().getX() > (int) imageCorner.getX() &&
+                            e.getPoint().getY() > (int) imageCorner.getY())) {
+                imageCorner.translate(
+                        (int) (currentpt.getX() - prevPt.getX()),
+                        (int) (currentpt.getY() - prevPt.getY())
+                );
+                prevPt = currentpt;
+            }
             repaint();
         }
     }
