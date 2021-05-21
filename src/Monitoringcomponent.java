@@ -44,7 +44,9 @@ public class Monitoringcomponent extends Component{
         DecimalFormat df = new DecimalFormat("0.00");
         String dfPeriodiekeKosten = df.format(periodiekeKosten);
         this.periodiekeKosten = dfPeriodiekeKosten;
+
         rs.close();
+        connection.close();
     }
 
 
@@ -79,5 +81,27 @@ public class Monitoringcomponent extends Component{
 
     public double getWerkgeheugenVerbruik() {
         return werkgeheugenVerbruik;
+    }
+
+    public void setGegevensUitDatabase() {
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+            Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
+            ResultSet rs = statement.executeQuery("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = '" + this.getNaam() + "'"); //Query uitvoeren
+            rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
+
+            this.beschikbaarheidsstatus = "Online";
+            this.processorbelasting = rs.getDouble(1);
+            this.werkgeheugenVerbruik = rs.getDouble(2);
+            this.totaleDiskruimte = rs.getDouble(3);
+            this.gebruikteDiskruimte = rs.getDouble(4);
+            this.beschikbareDiskruimte = rs.getDouble(5);
+            this.beschikbaarheidsduur = rs.getInt(6);
+
+            rs.close();
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }
 }
