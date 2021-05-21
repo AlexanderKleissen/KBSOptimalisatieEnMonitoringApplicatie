@@ -4,6 +4,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import javax.swing.JFrame;
 
 public class OntwerpFrame extends JFrame implements ActionListener {
@@ -154,7 +155,11 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                 dispose();
             }
             if (jcDropDownMenu.getSelectedItem().equals("Nieuw ontwerp")) {
-                OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
+                try {
+                    OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 //Als er op nieuw ontwerp wordt geklikt in het drop down menu dan word een optimalisatiescherm geopent.
             }
             if(jcDropDownMenu.getSelectedItem().equals("Open ontwerp")){
@@ -163,7 +168,11 @@ public class OntwerpFrame extends JFrame implements ActionListener {
             if(jcDropDownMenu.getSelectedItem().equals("Optimaliseer ontwerp")){
                 //Zelfde functie als de optimalisatieknop.
                 gedruktOpOptimalisatieknop = true;
-                OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
+                try {
+                    OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
             if(jcDropDownMenu.getSelectedItem().equals("Sluit ontwerp")){
                 OntwerpFrame ontwerpFrame = new OntwerpFrame();
@@ -174,7 +183,11 @@ public class OntwerpFrame extends JFrame implements ActionListener {
             dispose();
         } else if(e.getSource()==jbOptimaliseren){
             gedruktOpOptimalisatieknop = true;
-            OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
+            try {
+                OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 }

@@ -9,13 +9,14 @@ public class Ontwerpnetwerk extends Netwerk{
 
     //Constructors
     public Ontwerpnetwerk(String naam, double kosten, double opgegevenBeschikbaarheid, double beschikbaarheidspercentage) {
-        super(naam, beschikbaarheidspercentage, new ArrayList<>());
-        DecimalFormat df = new DecimalFormat("0.00");
-        String dfKosten = df.format(kosten);
-        this.kosten = dfKosten;
-        this.opgegevenBeschikbaarheid = opgegevenBeschikbaarheid;
-        groepen = new ArrayList<>();
-        ontwerpNetwerken.add(this);
+        this(naam, opgegevenBeschikbaarheid);
+//        super(naam, beschikbaarheidspercentage, new ArrayList<>());
+//        DecimalFormat df = new DecimalFormat("0.00");
+//        String dfKosten = df.format(kosten);
+//        this.kosten = dfKosten;
+//        this.opgegevenBeschikbaarheid = opgegevenBeschikbaarheid;
+//        groepen = new ArrayList<>();
+//        ontwerpNetwerken.add(this);
     }
 
     public Ontwerpnetwerk(String naam, double opgegevenBeschikbaarheid){
@@ -45,9 +46,15 @@ public class Ontwerpnetwerk extends Netwerk{
 
     //omdat we groepen gebruiken, kun je de kosten en beschikbaarheid pas achteraf berekenen en in database zetten, dus dat wordt hier gedaan
     public void setCorrecteKostenEnBeschikbaarheid() throws SQLException {
-        double beschikbaarheidDB=100, beschikbaarheidFirewall=100, beschikbaarheidWS=100, kosten=0, beschikbaarheidGroep = 1;
+        double beschikbaarheidDB=100;
+        double beschikbaarheidFirewall=100;
+        double beschikbaarheidWS=100;
+        double kosten=0;
+        double beschikbaarheidGroep=1;
         String netwerk = this.getNaam();
         ArrayList<Ontwerpcomponent> componentenNetwerk = new ArrayList<>();
+        ArrayList<String> mogelijkeComponenten = new ArrayList<>();
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
 
         for(Groep groep: groepen) {
             if (groep.componenten.size() == 1) { //als er maar 1 van is, is de beschikbaarheid van de groep
@@ -82,18 +89,47 @@ public class Ontwerpnetwerk extends Netwerk{
             beschikbaarheidGroep = 1;
         }
 
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("select NaamComponent from component_ontwerpen");
+        while (rs.next()){
+            String component = rs.getString(1);
+            mogelijkeComponenten.add(component);
+        }
+        rs.close();
+
         for (Ontwerpcomponent component: componentenNetwerk) {
+            int index = componentenNetwerk.indexOf(component);
+            int[] aantal = new int[componentenNetwerk.size()];
+            int teller = 0;
             kosten += Double.parseDouble(component.getKosten().replaceAll(",", "."));
 
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
-//            Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-//            boolean insertGelukt = statement.execute("insert into ontwerpnetwerk (NaamNetwerk, NaamComponent, AantalGebruikt) values " +
-//                    "('" + netwerk + "', '" + component.getNaam() + "', " + 1 + ")");
-//            //officieel moet dit ergens anders, want dan moet er eerst worden geteld hoeveel van ieder component het netwerk heeft
-//
-//            if(insertGelukt) {
-//                System.out.println("gelukt" + component.getNaam());
-//            }
+            try {
+                Statement insert = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
+                boolean insertGelukt = insert.execute("insert into ontwerpnetwerk values (NaamNetwerk, NaamComponent)" +
+                        "('" + netwerk + "', '" + component.getNaam() + "')");
+
+                for (String mogelijkeComponent : mogelijkeComponenten) {
+                    if (mogelijkeComponent.equals(component.getNaam())) {
+                        teller++;
+                        aantal[index] = teller;
+                    }
+                }
+
+                Statement update1 = connection.createStatement();
+                boolean updateGelukt = update1.execute(
+                        "update ontwerpnetwerk set AantalGebruikt = " + aantal[index] + " where NaamComponent = `" + component.getNaam() + "`)");
+
+                if(insertGelukt) {
+                    System.out.println("insert gelukt" + component.getNaam());
+                }
+                if(updateGelukt){
+                    System.out.println("update gelukt" + component.getNaam());
+                }
+            } catch (SQLException sql) {
+                if (sql.getMessage().contains("Duplicate entry")) {
+                    System.out.println(sql.getMessage());
+                }
+            }
         }
 
         double beschikbaarheid = (beschikbaarheidDB * beschikbaarheidFirewall * beschikbaarheidWS)/10000;
@@ -101,14 +137,13 @@ public class Ontwerpnetwerk extends Netwerk{
         setBeschikbaarheidspercentage(beschikbaarheid);
         setKosten(kosten);
 
-//        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
-//        Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-//        boolean insertGelukt = statement.execute(
-//                "insert into ontwerpnetwerk (Beschikbaarheid, Kosten) values ("+ beschikbaarheid + ", "+ kosten +") where NaamNetwerk = '" + netwerk + "'");
-//
-//        if(insertGelukt) {
-//            System.out.println("gelukt");
-//            connection.close();
-//        }
+
+        Statement update2 = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
+        boolean updateGelukt = statement.execute(
+                "update ontwerpnetwerk set Beschikbaarheid = "+ beschikbaarheid + ", Kosten = " + kosten + " where NaamNetwerk = '" + netwerk + "'");
+        if(updateGelukt) {
+            System.out.println("gelukt");
+            connection.close();
+        }
     }
 }

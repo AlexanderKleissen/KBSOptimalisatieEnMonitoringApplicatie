@@ -9,7 +9,7 @@ import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class OptimalisatieDialog extends JDialog implements ActionListener {
+public class OptimalisatieDialog extends JDialog implements ActionListener{
     private OntwerpFrame ontwerpFrame;
     private JLabel minimaalTotaleBeschikbaarheid;
     private JTextField jtMinimaalTotaleBeschikbaarheid;  //hierin wordt minimaal gewenste beschikbaarheidspercentage opgegeven
@@ -29,7 +29,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     double kosten=0;
     double laagsteKosten=1000000000;
 
-    public OptimalisatieDialog(OntwerpFrame frame) /*throws SQLException*/ {
+    public OptimalisatieDialog(OntwerpFrame frame) throws SQLException {
         super(frame, false);
         this.ontwerpFrame = frame;
         setSize(1500, 1000);
@@ -483,7 +483,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e){
         minimaalTotaleBeschikbaarheid.setText("Minimaal totaal beschikbaarheidspercentage:");     // standaard labeltekst zonder melding
         try {
             if (e.getSource() == bereken) {
@@ -543,6 +543,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                            ontwerpnetwerk.groepen.add(databasegroep);
                            ontwerpnetwerk.groepen.add(webservergroep);
                            ontwerpnetwerk.groepen.add(firewall);
+                           ontwerpnetwerk.setCorrecteKostenEnBeschikbaarheid();
 
 
                            //ontwerpnetwerk wordt in database opgeslagen
@@ -608,6 +609,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                         ontwerpnetwerk.groepen.add(databasegroep);
                         ontwerpnetwerk.groepen.add(webservergroep);
                         ontwerpnetwerk.groepen.add(firewall);
+                        ontwerpnetwerk.setCorrecteKostenEnBeschikbaarheid();
 
                         for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
                             int k = 0;
@@ -720,6 +722,8 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         } catch(NumberFormatException nfe){
                 minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
                 // melding dat er een percentage ingevuld moet worden
+        } catch (SQLException sql){
+            sql.printStackTrace();
         }
     }
 }

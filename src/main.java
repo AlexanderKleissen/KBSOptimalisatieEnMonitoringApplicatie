@@ -83,5 +83,11 @@ public class main {
         //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 
 //        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
+
+        Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125", 90);
+        netwerk125.groepen.add(dbOntwerpComponenten);
+        netwerk125.groepen.add(wsOntwerpComponenten);
+        netwerk125.groepen.add(firewallOntwerpComponent);
+        netwerk125.setCorrecteKostenEnBeschikbaarheid();
     }
 }
