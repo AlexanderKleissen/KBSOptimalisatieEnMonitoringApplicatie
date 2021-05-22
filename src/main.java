@@ -1,37 +1,35 @@
-import java.io.IOException;
-import java.net.InetAddress;
 import java.sql.SQLException;
 
 public class main {
-    public static void main(String[] args) throws SQLException, IOException {
-        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "192.168.1.1");
-        Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 95, 7700, "192.168.1.1");
-        Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 90, 3200, "192.168.1.1");
-        Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 90, 3200, "192.168.1.1");
-        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense","Firewall", 99.998, 4000, "192.168.1.26");
+    public static void main(String[] args) throws SQLException {
+//        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "192.168.1.1");
+//        Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 95, 7700, "192.168.1.1");
+//        Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 90, 3200, "192.168.1.1");
+//        Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 90, 3200, "192.168.1.1");
+//        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense","Firewall", 99.998, 4000, "192.168.1.1");
 
-//        Monitoringcomponent db1 = new Monitoringcomponent("Database1", "database", "Online", 90, 80, 256, 20, 90.00);
-//        Monitoringcomponent db2 = new Monitoringcomponent("Database2","database" ,"Offline", 40, 45, 315, 20, 90.00);
-//        Monitoringcomponent db3 = new Monitoringcomponent("Database3", "database", "Online", 80, 80, 256, 20, 90.00);
-//        Monitoringcomponent db4 = new Monitoringcomponent("Database4", "database","Online", 120, 80, 256, 20, 95.00);
-//        Monitoringcomponent ws1 = new Monitoringcomponent("Webserver1", "database","Online", 120, 80, 256, 50, 90.00);
-//        Monitoringcomponent ws2 = new Monitoringcomponent("Webserver2", "webserver","Offline", 120, 80, 312, 50, 90.00);
-//        Monitoringcomponent ws3 = new Monitoringcomponent("Webserver3", "webserver","Online", 60, 120, 256, 50, 90.00);
-//        Monitoringcomponent ws4 = new Monitoringcomponent("Webserver4","webserver","Online", 120, 80, 256, 50, 90.00);
-//        Monitoringcomponent ws5 = new Monitoringcomponent("Webserver5","webserver","Offline", 120, 80, 256, 50, 80.00);
-//        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense1","firewall","Online", 2000, 30, 1256, 120, 99.99);
+        Monitoringcomponent db1 = new Monitoringcomponent("Database1", "database", "Online", 90, 80, 256, 20, 90.00);
+        Monitoringcomponent db2 = new Monitoringcomponent("Database2","database" ,"Offline", 40, 45, 315, 20, 90.00);
+        Monitoringcomponent db3 = new Monitoringcomponent("Database3", "database", "Online", 80, 80, 256, 20, 90.00);
+        Monitoringcomponent db4 = new Monitoringcomponent("Database4", "database","Online", 120, 80, 256, 20, 95.00);
+        Monitoringcomponent ws1 = new Monitoringcomponent("Webserver1", "database","Online", 120, 80, 256, 50, 90.00);
+        Monitoringcomponent ws2 = new Monitoringcomponent("Webserver2", "webserver","Offline", 120, 80, 312, 50, 90.00);
+        Monitoringcomponent ws3 = new Monitoringcomponent("Webserver3", "webserver","Online", 60, 120, 256, 50, 90.00);
+        Monitoringcomponent ws4 = new Monitoringcomponent("Webserver4","webserver","Online", 120, 80, 256, 50, 90.00);
+        Monitoringcomponent ws5 = new Monitoringcomponent("Webserver5","webserver","Offline", 120, 80, 256, 50, 80.00);
+        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense1","firewall","Online", 2000, 30, 1256, 120, 99.99);
 
         Groep db = new Groep("Databaseservers", 99.98);
         db.componenten.add(db1);
         db.componenten.add(db2);
-        //db.componenten.add(db3);
-        //db.componenten.add(db4);
+        db.componenten.add(db3);
+        db.componenten.add(db4);
         Groep ws = new Groep("Webservers", 99.99);
         ws.componenten.add(ws1);
         ws.componenten.add(ws2);
-        //ws.componenten.add(ws3);
-        //ws.componenten.add(ws4);
-        //ws.componenten.add(ws5);
+        ws.componenten.add(ws3);
+        ws.componenten.add(ws4);
+        ws.componenten.add(ws5);
         Groep firewall = new Groep("Firewall", 99.97);
         firewall.componenten.add(pfSense1);
 
@@ -80,7 +78,7 @@ public class main {
         netwerk3.groepen.add(dbOntwerpComponenten);
         netwerk3.groepen.add(wsOntwerpComponenten);
         netwerk3.groepen.add(firewallOntwerpComponent);
-//        netwerk3.setCorrecteKostenEnBeschikbaarheid();
+        netwerk3.setCorrecteKostenEnBeschikbaarheid();
 
         //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 
@@ -89,7 +87,7 @@ public class main {
         Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125", 90);
         netwerk125.groepen.add(dbOntwerpComponenten);
         netwerk125.groepen.add(wsOntwerpComponenten);
-//        netwerk125.groepen.add(firewallOntwerpComponent);
-//        netwerk125.setCorrecteKostenEnBeschikbaarheid();
+        netwerk125.groepen.add(firewallOntwerpComponent);
+        netwerk125.setCorrecteKostenEnBeschikbaarheid();
     }
 }
