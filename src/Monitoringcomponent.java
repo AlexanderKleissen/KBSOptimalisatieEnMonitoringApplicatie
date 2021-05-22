@@ -2,7 +2,6 @@ import java.sql.*;
 import java.text.DecimalFormat;
 
 public class Monitoringcomponent extends Component{
-    private String beschikbaarheidsstatus;
     private int beschikbaarheidsduur;
     private double processorbelasting;
     private double totaleDiskruimte;
@@ -15,7 +14,6 @@ public class Monitoringcomponent extends Component{
     //Constructors
     public Monitoringcomponent(String naam, String type, String beschikbaarheidsstatus, int beschikbaarheidsduur, int processorbelasting, int diskruimte, double periodiekeKosten, double beschikbaarheidspercentage) {
         super(naam, type, beschikbaarheidspercentage);
-        this.beschikbaarheidsstatus = beschikbaarheidsstatus;
         this.beschikbaarheidsduur = beschikbaarheidsduur;
         this.processorbelasting = processorbelasting;
         this.beschikbareDiskruimte = diskruimte;
@@ -34,7 +32,6 @@ public class Monitoringcomponent extends Component{
             ResultSet rs = statement.executeQuery("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = '" + naam + "'"); //Query uitvoeren
             rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
 
-            this.beschikbaarheidsstatus = "Online";
             this.processorbelasting = rs.getDouble(1);
             this.werkgeheugenVerbruik = rs.getDouble(2);
             this.totaleDiskruimte = rs.getDouble(3);
@@ -49,7 +46,6 @@ public class Monitoringcomponent extends Component{
             connection.close();
         } catch (SQLException e) {
             System.out.println(e);
-            this.beschikbaarheidsstatus = "Online";
             this.processorbelasting = 0;
             this.werkgeheugenVerbruik = 0;
             this.totaleDiskruimte = 0;
@@ -65,8 +61,8 @@ public class Monitoringcomponent extends Component{
 
 
     //Getters
-    public String getBeschikbaarheidsstatus() {
-        return beschikbaarheidsstatus;
+    public String getIpaddress() {
+        return ipaddress;
     }
 
     public int getBeschikbaarheidsduur() {
@@ -104,7 +100,6 @@ public class Monitoringcomponent extends Component{
             ResultSet rs = statement.executeQuery("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = '" + this.getNaam() + "'"); //Query uitvoeren
             rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
 
-            this.beschikbaarheidsstatus = "Online";
             this.processorbelasting = rs.getDouble(1);
             this.werkgeheugenVerbruik = rs.getDouble(2);
             this.totaleDiskruimte = rs.getDouble(3);

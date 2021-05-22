@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -145,7 +148,19 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 naam.setForeground(Color.white);
                 jPanel.add(naam);
 
-                status = new JLabel("Status: online");
+
+                try {
+                    InetAddress inet = InetAddress.getByName(monitoringcomponent.getIpaddress());
+                    if (inet.isReachable(500)) {
+                        status = new JLabel("Status: online");
+                    } else {
+                        status = new JLabel("Status: offline");
+                    }
+                } catch (UnknownHostException e) {
+                    status = new JLabel("Status: offline");
+                } catch (IOException e) {
+                    status = new JLabel("Status: offline");
+                }
                 status.setForeground(Color.white);
                 jPanel.add(status);
 
@@ -200,7 +215,18 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         javax.swing.Timer t = new javax.swing.Timer(5000, e1 -> {
             for (Monitoringcomponent monitoringcomponent: monitoringcomponents) {
                 monitoringcomponent.setGegevensUitDatabase();
-                status.setText("Online");//Gaat door middel van pingen behaald worden
+                try {
+                    InetAddress inet = InetAddress.getByName(monitoringcomponent.getIpaddress());
+                    if (inet.isReachable(500)) {
+                        status.setText("Status: online");
+                    } else {
+                        status.setText("Status: offline");
+                    }
+                } catch (UnknownHostException exception) {
+                    status.setText("Status: offline");
+                } catch (IOException exception) {
+                    status.setText("Status: offline");
+                }
                 processor.setText("CPU gebruik: " + monitoringcomponent.getProcessorbelasting() + "%");
                 werkgeheugen.setText("Werkgeheugen gebruik: " + monitoringcomponent.getWerkgeheugenVerbruik() + "%");
                 totaalgeheugen.setText("Totaal geheugen: " + monitoringcomponent.getTotaleDiskruimte() + " GB");
