@@ -6,11 +6,11 @@ public class main {
     public static void main(String[] args) throws SQLException {
         DatabaseConnectieErrorDialog databaseConnectieErrorDialog = new DatabaseConnectieErrorDialog();
 
-        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "192.168.1.1");
+        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense","Firewall", 99.998, 4000, "192.168.1.26");
+        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "192.168.1.26");
         Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 95, 7700, "192.168.1.1");
         Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 90, 3200, "192.168.1.1");
         Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 90, 3200, "192.168.1.1");
-        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense","Firewall", 99.998, 4000, "192.168.1.1");
 
 //        Monitoringcomponent db1 = new Monitoringcomponent("Database1", "database", "Online", 90, 80, 256, 20, 90.00);
 //        Monitoringcomponent db2 = new Monitoringcomponent("Database2","database" ,"Offline", 40, 45, 315, 20, 90.00);
@@ -23,24 +23,27 @@ public class main {
 //        Monitoringcomponent ws5 = new Monitoringcomponent("Webserver5","webserver","Offline", 120, 80, 256, 50, 80.00);
 //        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense1","firewall","Online", 2000, 30, 1256, 120, 99.99);
 
+
+        Groep firewall = new Groep("Firewall", 99.97);
+        firewall.componenten.add(pfSense1);
+
         Groep db = new Groep("Databaseservers", 99.98);
         db.componenten.add(db1);
         db.componenten.add(db2);
         //db.componenten.add(db3);
         //db.componenten.add(db4);
+
         Groep ws = new Groep("Webservers", 99.99);
         ws.componenten.add(ws1);
         ws.componenten.add(ws2);
         //ws.componenten.add(ws3);
         //ws.componenten.add(ws4);
         //ws.componenten.add(ws5);
-        Groep firewall = new Groep("Firewall", 99.97);
-        firewall.componenten.add(pfSense1);
 
         Monitoringnetwerk netwerk1 = new Monitoringnetwerk("Netwerk 1", 200, 99.99);
+        netwerk1.groepen.add(firewall);
         netwerk1.groepen.add(db);
         netwerk1.groepen.add(ws);
-        netwerk1.groepen.add(firewall);
 
         Monitoringnetwerk netwerk2 = new Monitoringnetwerk("Netwerk 2", 350, 90);
         Monitoringnetwerk netwerk4 = new Monitoringnetwerk("Netwerk 4", 350, 90);
@@ -82,7 +85,7 @@ public class main {
         netwerk3.groepen.add(dbOntwerpComponenten);
         netwerk3.groepen.add(wsOntwerpComponenten);
         netwerk3.groepen.add(firewallOntwerpComponent);
-        netwerk3.setCorrecteKostenEnBeschikbaarheid();
+//        netwerk3.setCorrecteKostenEnBeschikbaarheid();
 
         //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 

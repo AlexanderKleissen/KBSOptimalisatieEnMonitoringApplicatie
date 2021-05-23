@@ -140,6 +140,10 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         return ontwerpnetwerk;
     }
 
+    public void setMonitoringnetwerk(Monitoringnetwerk monitoringnetwerk) {
+        this.monitoringnetwerk = monitoringnetwerk;
+    }
+
     public boolean isGedruktOpOptimalisatieknop() {
         return gedruktOpOptimalisatieknop;
     }
@@ -180,7 +184,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                 dispose();
             }
         } else if (e.getSource()==jbMonitoren){
-            MonitoringFrame monitoringFrame = new MonitoringFrame();
+            MonitoringFrame monitoringFrame = new MonitoringFrame(monitoringnetwerk);
             dispose();
         } else if(e.getSource()==jbOptimaliseren){
             gedruktOpOptimalisatieknop = true;

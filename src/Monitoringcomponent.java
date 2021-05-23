@@ -1,7 +1,11 @@
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Monitoringcomponent extends Component{
     private int beschikbaarheidsduur;

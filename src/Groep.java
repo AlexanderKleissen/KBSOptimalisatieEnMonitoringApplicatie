@@ -1,3 +1,7 @@
+import javax.swing.*;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Groep {
