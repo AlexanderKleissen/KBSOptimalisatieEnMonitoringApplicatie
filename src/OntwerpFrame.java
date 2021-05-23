@@ -16,6 +16,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     private boolean gedruktOpOptimalisatieknop;
     private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
     private Color backClr2 = new Color(43, 43, 43); //de kleur van het midden
+    private Monitoringnetwerk monitoringnetwerk;
 
 
 

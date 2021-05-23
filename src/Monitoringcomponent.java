@@ -1,3 +1,5 @@
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+
 import java.sql.*;
 import java.text.DecimalFormat;
 
@@ -45,7 +47,6 @@ public class Monitoringcomponent extends Component{
             rs.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println(e);
             this.processorbelasting = 0;
             this.werkgeheugenVerbruik = 0;
             this.totaleDiskruimte = 0;

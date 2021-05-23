@@ -17,6 +17,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
     private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
     private Color backClr2 = new Color(43, 43, 43); //de kleur van het midden
     ArrayList<Monitoringcomponent> monitoringcomponents;
+    private Monitoringnetwerk monitoringnetwerk;
 
     private JLabel status;
     private JLabel processor;
@@ -79,6 +80,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
     public MonitoringFrame(Monitoringnetwerk netwerk) {
         this();
+        this.monitoringnetwerk = netwerk;
         //Panel voor midden van het scherm
         JPanel center = new JPanel(new BorderLayout());
         center.setBackground(backClr2);
