@@ -25,9 +25,16 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
     private ArrayList<Ontwerpcomponent> optimaleWaarden = new ArrayList<>();
     ArrayList<Ontwerpcomponent> serversHuidigeOplossing = new ArrayList<>();
     ArrayList<Ontwerpcomponent> serversBesteOplossing = new ArrayList<>();
-    double beschikbaarheid=0;
-    double kosten=0;
-    double laagsteKosten=1000000000;
+    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkHuidigeOplossing = new ArrayList<>();
+    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkBesteOplossing = new ArrayList<>();
+    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkEersteOplossing = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<Ontwerpcomponent>>> netwerkOplossingOpslag = new ArrayList<>();
+    private ArrayList<Ontwerpcomponent> besteOplossing = new ArrayList<>();
+    private double beschikbaarheid=0;
+    private double kosten=0;
+    private double laagsteKosten=10000000;
+    private double laagsteKostenNetwerk=100000000;
+    private int diepte = 100;//Het aantal servers van de opgeslagen oplossing
 
     public OptimalisatieDialog(OntwerpFrame frame) throws SQLException {
         super(frame, false);
@@ -400,13 +407,10 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
 
     /* De uitvoering van de oplossing: Alle rijen worden per kolom gecontroleerd met behulp van backtracking */
     private boolean uitvoering(ArrayList<Ontwerpcomponent> componenten, double minBeschikbaarheidspercentage) {
-        int nummer;
-
         /* Probeer alle rijen in de gegeven kolom */
         for (int i = 0; i < 3; i++) {
             /* De server wordt toegevoegd */
-            nummer=serversHuidigeOplossing.size();
-            serversHuidigeOplossing.add(nummer, componenten.get(i));
+            serversHuidigeOplossing.add(serversHuidigeOplossing.size(), componenten.get(i));
             beschikbaarheid=berekenBeschikbaarheid(serversHuidigeOplossing);
             this.kosten+=Double.parseDouble(componenten.get(i).getKosten());
 
@@ -415,29 +419,45 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
                 laagsteKosten=kosten;
                 kosten=0;
                 beschikbaarheid=0;
-                serversBesteOplossing=serversHuidigeOplossing;
+                diepte = serversHuidigeOplossing.size();
+                for(Ontwerpcomponent component: serversHuidigeOplossing){
+                    serversBesteOplossing.add(component);
+                }
                 serversHuidigeOplossing.clear();
-                uitvoering(componenten, minBeschikbaarheidspercentage);
-                return true;
+                if(uitvoering(componenten, minBeschikbaarheidspercentage)){
+                    return true;
+                }
             }
 
             //Als de kosten te hoog zijn, wordt een ander component geprobeert
             if(kosten<laagsteKosten){
                 /* Voer deze methode uit voor de volgende toevoeging */
-                uitvoering(componenten, minBeschikbaarheidspercentage);
-                return true;
+                if(uitvoering(componenten, minBeschikbaarheidspercentage)){
+                    return true;
+                }
             }
 
             /* Er komt geen oplossing uit deze positie, dus de server wordt verwijderd */
-            serversHuidigeOplossing.remove(nummer);
+            if(serversHuidigeOplossing.size()>0){
+                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
+            }
             //Als alle drie de servers niet tot een oplossing leiden, wordt er een stap teruggedaan en daar een andere server geprobeerd.
-            if(i==2){
-                nummer=serversHuidigeOplossing.size();
-                if(nummer==0){//Er zijn geen nieuwe oplossingen meer
+            //Ook als de oplossing niet goedkoper kan worden dan de huidige laagste kosten, wordt een stap teruggedaan
+            if(i==2 || serversHuidigeOplossing.size()>=diepte-1){
+                if(serversHuidigeOplossing.size()==0){//Er zijn geen nieuwe oplossingen meer
+                    laagsteKosten=10000000;
+                    kosten =0;
+                    diepte = serversHuidigeOplossing.size();
                     return true;
                 }
-                serversHuidigeOplossing.remove(nummer-1);
-                i=0;
+                int teller =0;
+                for(Ontwerpcomponent component: componenten){
+                    if(serversHuidigeOplossing.get(serversHuidigeOplossing.size()-1).getNaam().equals(component.getNaam())){
+                        i=teller+1;
+                        teller++;
+                    }
+                }
+                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
             }
         }
 
@@ -445,11 +465,178 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
         return false;
     }
 
-    private ArrayList<Ontwerpcomponent> optimaliseer(double minBeschikbaarheidspercentage){
-        /* Backtrackingalgoritme optimalisatie */
+    //Zelfde methode, maar dan om de op één na beste oplossing enz. te zoeken
+    private boolean uitvoering2(ArrayList<Ontwerpcomponent> componenten, double minBeschikbaarheidspercentage, double kostenBesteOplossing) {
+
+        /* Probeer alle server opties */
+        for (int i = 0; i < 3; i++) {
+            /* De server wordt toegevoegd */
+            serversHuidigeOplossing.add(serversHuidigeOplossing.size(), componenten.get(i));
+            beschikbaarheid=berekenBeschikbaarheid(serversHuidigeOplossing);
+            kosten+=Double.parseDouble(componenten.get(i).getKosten());
+
+            /* Controle of het beschikbaarheidspercentage al hoog genoeg is */
+            if (beschikbaarheid>=minBeschikbaarheidspercentage && kosten<laagsteKosten && kosten>kostenBesteOplossing) {
+                laagsteKosten=kosten;
+                kosten=0;
+                beschikbaarheid=0;
+                for(Ontwerpcomponent component: serversHuidigeOplossing){
+                    serversBesteOplossing.add(component);
+                }
+                serversHuidigeOplossing.clear();
+                if(uitvoering2(componenten, minBeschikbaarheidspercentage, kostenBesteOplossing)){
+                    return true;
+                }
+            }
+
+            //Als de kosten te hoog zijn, wordt een ander component geprobeert
+            if(kosten<laagsteKosten && kosten != kostenBesteOplossing){
+                /* Voer deze methode uit voor de volgende toevoeging */
+                if(uitvoering2(componenten, minBeschikbaarheidspercentage, kostenBesteOplossing)){
+                    return true;
+                }
+            }
+
+            /* Er komt geen oplossing uit deze positie, dus de server wordt verwijderd */
+            if(serversHuidigeOplossing.size()>0){
+                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
+            }
+
+            //Als alle drie de servers niet tot een oplossing leiden, wordt er een stap teruggedaan en daar een andere server geprobeerd.
+            if(i==2){
+                if(serversHuidigeOplossing.size()==0){//Er zijn geen nieuwe oplossingen meer
+                    laagsteKosten=10000000;
+                    kosten =0;
+                    return true;
+                }
+                int teller =0;
+                for(Ontwerpcomponent component: componenten){
+                    if(serversHuidigeOplossing.get(serversHuidigeOplossing.size()-1).getNaam().equals(component.getNaam())){
+                        i=teller+1;
+                        teller++;
+                    }
+                }
+                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
+            }
+        }
+
+        //Als er geen oplossingen te vinden zijn
+        return false;
+    }
+
+    private boolean uitvoeringHeleNetwerk(double minBeschikbaarheidspercentage){
+        double vorigeKosten;
+        /* Een andere oplossing proberen */
+        for (int i = 0; i < 2; i++) {
+            /* De beschikbaarheid en kosten van een groep worden berekend */
+            if (i == 0) {
+                //Webservers
+                if(netwerkHuidigeOplossing.get(0).equals(netwerkEersteOplossing.get(0))){
+                    uitvoering(webservers, minBeschikbaarheidspercentage);
+                    vorigeKosten=0;
+                    for(Ontwerpcomponent component: serversBesteOplossing){
+                        vorigeKosten+=Double.parseDouble(component.getKosten());
+                    }
+                }else{
+                    vorigeKosten=0;
+                    for(Ontwerpcomponent component: serversBesteOplossing){
+                        vorigeKosten+=Double.parseDouble(component.getKosten());
+                    }
+                    serversBesteOplossing.clear();
+                    uitvoering2(webservers, minBeschikbaarheidspercentage, vorigeKosten);
+                    vorigeKosten=0;
+                    for(Ontwerpcomponent component: serversBesteOplossing){
+                        vorigeKosten+=Double.parseDouble(component.getKosten());
+                    }
+                }
+                serversBesteOplossing.clear();
+                uitvoering2(webservers, minBeschikbaarheidspercentage, vorigeKosten);
+            }else{//dbservers
+                if(netwerkHuidigeOplossing.get(1).equals(netwerkEersteOplossing.get(1))){
+                    uitvoering(dbservers, minBeschikbaarheidspercentage);
+                    vorigeKosten=0;
+                    for(Ontwerpcomponent component: serversBesteOplossing){
+                        vorigeKosten+=Double.parseDouble(component.getKosten());
+                    }
+                }else{
+                    vorigeKosten=0;
+                    for(Ontwerpcomponent component: serversBesteOplossing){
+                        vorigeKosten+=Double.parseDouble(component.getKosten());
+                    }
+                    serversBesteOplossing.clear();
+                    uitvoering2(dbservers, minBeschikbaarheidspercentage, vorigeKosten);
+                    vorigeKosten=0;
+                    for(Ontwerpcomponent component: serversBesteOplossing){
+                        vorigeKosten+=Double.parseDouble(component.getKosten());
+                    }
+                }
+                serversBesteOplossing.clear();
+                uitvoering2(dbservers, minBeschikbaarheidspercentage, vorigeKosten);
+            }
+
+            //de vorige oplossing wordt opgeslagen om later naar terug te kunnen gaan
+            netwerkOplossingOpslag.add(new ArrayList<>());
+            for(ArrayList<Ontwerpcomponent> component: netwerkHuidigeOplossing){
+                netwerkOplossingOpslag.get(netwerkOplossingOpslag.size()-1).add(component);
+            }
+            //de huidige oplossing wordt aangepast door de zojuist berekende nieuwe waarden in te vullen
+            netwerkHuidigeOplossing.get(i).clear();
+            for(Ontwerpcomponent component: serversBesteOplossing){
+                netwerkHuidigeOplossing.get(i).add(component);
+            }
+
+            //berekenen beschikbaarheid
+            beschikbaarheid=berekenBeschikbaarheid(netwerkHuidigeOplossing.get(2), netwerkHuidigeOplossing.get(0), netwerkHuidigeOplossing.get(1));
+            for(ArrayList<Ontwerpcomponent> groep: netwerkHuidigeOplossing){
+                for(Ontwerpcomponent component: groep){
+                    kosten+= Double.parseDouble(component.getKosten());
+                }
+            }
+
+            /* Controle of het beschikbaarheidspercentage al hoog genoeg is */
+            if (beschikbaarheid>=minBeschikbaarheidspercentage && kosten<laagsteKostenNetwerk) {
+                laagsteKostenNetwerk=kosten;
+                kosten=0;
+                beschikbaarheid=0;
+                netwerkBesteOplossing.clear();
+                for(ArrayList<Ontwerpcomponent> groep: netwerkHuidigeOplossing){
+                    netwerkBesteOplossing.add(groep);
+                }
+                netwerkHuidigeOplossing=netwerkEersteOplossing;
+                if(uitvoeringHeleNetwerk(minBeschikbaarheidspercentage)){
+                    return true;
+                }
+            }
+
+            //Als de kosten te hoog zijn, wordt een andere oplossing geprobeert
+            if(kosten<laagsteKostenNetwerk){
+                /* Voer deze methode uit voor de volgende toevoeging */
+                if(uitvoeringHeleNetwerk(minBeschikbaarheidspercentage)){
+                    return true;
+                }
+            }
+
+            /* Er komt geen oplossing uit deze positie, dus de oplossing wordt verwijderd */
+            netwerkHuidigeOplossing = netwerkOplossingOpslag.get(netwerkOplossingOpslag.size() - 1);
+            netwerkOplossingOpslag.remove(netwerkOplossingOpslag.size() - 1);
+
+            //Als er geen oplossing uit komt, wordt een stap terug gedaan
+            if(i==1){
+                if(netwerkHuidigeOplossing.equals(netwerkEersteOplossing)){//Er zijn geen nieuwe oplossingen meer //misschien pas de tweede keer dat hij daar is???
+                    laagsteKostenNetwerk=10000000;
+                    kosten =0;
+                    return true;
+                }
+                netwerkHuidigeOplossing=netwerkOplossingOpslag.get(netwerkOplossingOpslag.size()-1);
+            }
+        }
+
+        //Als er geen oplossingen te vinden zijn
+        return false;
+    }
+
+    private void optimaliseer(double minBeschikbaarheidspercentage){
         double beschikbaarheidFirewalls = 0;
-        ArrayList<Ontwerpcomponent> besteOplossing = new ArrayList<>();
-        ArrayList<Ontwerpcomponent> huidigeOplossing = new ArrayList<>();
         ArrayList<Ontwerpcomponent> firewallsOplossing = new ArrayList<>();
         ArrayList<Ontwerpcomponent> webserversBesteOplossing = new ArrayList<>();
         ArrayList<Ontwerpcomponent> dbserversBesteOplossing = new ArrayList<>();
@@ -463,21 +650,49 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
         if (uitvoering(webservers, minBeschikbaarheidspercentage) == false) {
             //Er zijn geen oplossingen
         }else{
-            webserversBesteOplossing = serversBesteOplossing;
+            for(Ontwerpcomponent component: serversBesteOplossing){
+                webserversBesteOplossing.add(component);
+            }
             serversBesteOplossing.clear();
+            laagsteKosten = 10000000;
         }
 
         //dbservers toevoegen
         if (uitvoering(dbservers, minBeschikbaarheidspercentage) == false) {
             //Er zijn geen oplossingen
         }else{
-            dbserversBesteOplossing = serversBesteOplossing;
+            for(Ontwerpcomponent component: serversBesteOplossing){
+                dbserversBesteOplossing.add(component);
+            }
             serversBesteOplossing.clear();
+            laagsteKosten = 10000000;
         }
 
-        //hele netwerk              https://www.geeksforgeeks.org/n-queen-problem-backtracking-3/
-
-        return besteOplossing;
+        //hele netwerk
+        if(berekenBeschikbaarheid(firewallsOplossing, webserversBesteOplossing, dbserversBesteOplossing)>=minBeschikbaarheidspercentage){
+            for(Ontwerpcomponent firewall: firewallsOplossing){
+                besteOplossing.add(firewall);
+            }
+            for(Ontwerpcomponent webserver: webserversBesteOplossing){
+                besteOplossing.add(webserver);
+            }
+            for(Ontwerpcomponent dbserver: dbserversBesteOplossing){
+                besteOplossing.add(dbserver);
+            }
+        }else{
+            netwerkHuidigeOplossing.add(webserversBesteOplossing);
+            netwerkHuidigeOplossing.add(dbserversBesteOplossing);
+            netwerkHuidigeOplossing.add(firewallsOplossing);
+            netwerkEersteOplossing.add(webserversBesteOplossing);
+            netwerkEersteOplossing.add(dbserversBesteOplossing);
+            netwerkEersteOplossing.add(firewallsOplossing);
+            uitvoeringHeleNetwerk(minBeschikbaarheidspercentage);
+            for(ArrayList<Ontwerpcomponent> groep: netwerkBesteOplossing){
+                for(Ontwerpcomponent component: groep){
+                    besteOplossing.add(component);
+                }
+            }
+        }
     }
     //einde backtrackingalgoritme
 
@@ -489,10 +704,51 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
             if (e.getSource() == bereken) {
                 // ingevoerd percentage wordt van String naar Double omgezet
                 double ingevoerdPercentage = Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", "."));
-                //ruimte om te testen
 
                 //backtracking algoritme gebruiken om optimale waarden te bepalen
-               // optimaliseer(ingevoerdPercentage);
+               optimaliseer(ingevoerdPercentage);
+               //testcode
+//                uitvoering(webservers, ingevoerdPercentage);
+//                for(Ontwerpcomponent component: serversBesteOplossing){
+//                    System.out.println(component.getNaam());
+//                }
+//                System.out.println();
+//                serversBesteOplossing.clear();
+//                uitvoering2(webservers, ingevoerdPercentage, 13200);
+//                for(Ontwerpcomponent component: serversBesteOplossing){
+//                    System.out.println(component.getNaam());
+//                }
+//                serversBesteOplossing.clear();
+//                System.out.println();
+//                ArrayList<Ontwerpcomponent> firewalls = new ArrayList<>();
+//                firewalls.add(ontwerpcomponenten.get(0));
+//                ArrayList<Ontwerpcomponent> webserverTest = new ArrayList<>();
+//                webserverTest.add(webservers.get(0));
+//                webserverTest.add(webservers.get(0));
+//                webserverTest.add(webservers.get(2));
+//                ArrayList<Ontwerpcomponent> dbserverTest = new ArrayList<>();
+//                dbserverTest.add(webservers.get(0));
+//                dbserverTest.add(webservers.get(0));
+//                dbserverTest.add(webservers.get(1));
+//                netwerkHuidigeOplossing.clear();
+//                netwerkHuidigeOplossing.add(0,webserverTest);
+//                netwerkHuidigeOplossing.add(1,dbserverTest);
+//                netwerkHuidigeOplossing.add(2,firewalls);
+//                netwerkEersteOplossing.add(webserverTest);
+//                netwerkEersteOplossing.add(dbserverTest);
+//                netwerkEersteOplossing.add(firewalls);
+//                uitvoeringHeleNetwerk(ingevoerdPercentage);
+//                for(ArrayList<Ontwerpcomponent> groep: netwerkBesteOplossing){
+//                    for(Ontwerpcomponent component: groep){
+//                        System.out.println(component.getNaam());
+//                    }
+//                }
+//                System.out.println();
+//                optimaliseer(ingevoerdPercentage);
+//                System.out.println(besteOplossing);
+//                for(Ontwerpcomponent component: besteOplossing){
+//                    System.out.println(component.getNaam());
+//                }
             }
             if (e.getSource() == voegToe) {
 
