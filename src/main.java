@@ -49,7 +49,7 @@ public class main {
         Monitoringnetwerk netwerk4 = new Monitoringnetwerk("Netwerk 4", 350, 90);
         Monitoringnetwerk netwerk6 = new Monitoringnetwerk("Netwerk 6", 350, 90);
         Monitoringnetwerk netwerk7 = new Monitoringnetwerk("Netwerk 7", 350, 90);
-        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
+//        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         Ontwerpcomponent db5 = new Ontwerpcomponent("Database5", "database", 100,   99.90);
         Ontwerpcomponent db6 = new Ontwerpcomponent("Database6","database" ,400,  98.00);
@@ -85,13 +85,13 @@ public class main {
         netwerk3.groepen.add(dbOntwerpComponenten);
         netwerk3.groepen.add(wsOntwerpComponenten);
         netwerk3.groepen.add(firewallOntwerpComponent);
-//        netwerk3.setCorrecteKostenEnBeschikbaarheid();
+        netwerk3.setCorrecteKostenEnBeschikbaarheid();
 
-        //Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
+        Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
 
-//        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
+        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
 
-        Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125", 90);
+        Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125");
         netwerk125.groepen.add(dbOntwerpComponenten);
         netwerk125.groepen.add(wsOntwerpComponenten);
         netwerk125.groepen.add(firewallOntwerpComponent);
