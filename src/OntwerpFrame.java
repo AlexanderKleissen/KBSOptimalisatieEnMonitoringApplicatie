@@ -1,11 +1,8 @@
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import javax.swing.JFrame;
 
 public class OntwerpFrame extends JFrame implements ActionListener {
     DragAndDrop dragAndDrop = new DragAndDrop();
@@ -106,32 +103,29 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
-        //Panel voor componenten
-        JPanel componentenPanel = new JPanel();
-        componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
-        componentenPanel.setBackground(backClr2);
-        center.add(componentenPanel);
+        //Panel voor componenten met drag and drop
+        center.add(dragAndDrop, BorderLayout.CENTER);
 
         //Componenten info op het scherm
-        for(Groep groep: netwerk.groepen) {
-            for (Component component : groep.componenten) {
-                JPanel jPanel = new JPanel(new GridLayout(4, 1));
-                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
-                jPanel.setBackground(backClr2);
-                if(component instanceof Ontwerpcomponent) {
-                    JLabel naam = new JLabel("Naam: " + component.getNaam());
-                    naam.setForeground(Color.white);
-                    jPanel.add(naam);
-                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
-                    beschikbaarheid.setForeground(Color.white);
-                    jPanel.add(beschikbaarheid);
-                    JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
-                    kosten.setForeground(Color.white);
-                    jPanel.add(kosten);
-                    componentenPanel.add(jPanel);
-                }
-            }
-        }
+//        for(Groep groep: netwerk.groepen) {
+//            for (Component component : groep.componenten) {
+//                JPanel jPanel = new JPanel(new GridLayout(4, 1));
+//                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
+//                jPanel.setBackground(backClr2);
+//                if(component instanceof Ontwerpcomponent) {
+//                    JLabel naam = new JLabel("Naam: " + component.getNaam());
+//                    naam.setForeground(Color.white);
+//                    jPanel.add(naam);
+//                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
+//                    beschikbaarheid.setForeground(Color.white);
+//                    jPanel.add(beschikbaarheid);
+//                    JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
+//                    kosten.setForeground(Color.white);
+//                    jPanel.add(kosten);
+//                    componentenPanel.add(jPanel);
+//                }
+//            }
+//        }
         setVisible(true);
     }
 

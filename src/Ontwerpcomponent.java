@@ -1,8 +1,14 @@
-import java.sql.*;
+import javax.swing.*;
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 
 public class Ontwerpcomponent extends Component {
     private String kosten;
+    private Icon image;
 
     //Constructors
 //    public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage) {
@@ -12,11 +18,12 @@ public class Ontwerpcomponent extends Component {
 //        this.kosten = dfKosten;
 //    }
 
-    public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage){
+    public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage, String image){
         super(naam, type, beschikbaarheidspercentage);
         DecimalFormat df = new DecimalFormat("0.00");
         String dfKosten = df.format(kosten);
         this.kosten = dfKosten;
+        this.image = new ImageIcon(new ImageIcon(image).getImage().getScaledInstance(50,80, Image.SCALE_DEFAULT));
 
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");//Verbinding met database wordt gemaakt
@@ -39,5 +46,9 @@ public class Ontwerpcomponent extends Component {
 
     public String getKosten() {
         return kosten;
+    }
+
+    public Icon getImage() {
+        return image;
     }
 }
