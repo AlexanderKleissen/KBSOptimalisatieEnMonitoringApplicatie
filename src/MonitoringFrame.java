@@ -151,18 +151,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 naam.setForeground(Color.white);
                 jPanel.add(naam);
 
-                try {
-                    InetAddress inet = InetAddress.getByName(monitoringcomponent.getIpaddress());
-                    if (inet.isReachable(500)) {
-                        status.add(new JLabel("Status: online"));
-                    } else {
-                        status.add(new JLabel("Status: offline"));
-                    }
-                } catch (UnknownHostException e) {
-                    status.add(new JLabel("Status: offline"));
-                } catch (IOException e) {
-                    status.add(new JLabel("Status: offline"));
-                }
+                status.add(new JLabel("Status: proberen te verbinden..."));
                 status.get(arraylengte).setForeground(Color.white);
                 jPanel.add(status.get(arraylengte));
 
@@ -230,7 +219,6 @@ public class MonitoringFrame extends JFrame implements ActionListener {
             }
 
             for (Monitoringcomponent monitoringcomponent1: monitoringcomponenten) {
-                System.out.println(pfSenseStatus);
                 try {
                     InetAddress inet = InetAddress.getByName(monitoringcomponent1.getIpaddress());
                     if (inet.isReachable(500) && pfSenseStatus) {
