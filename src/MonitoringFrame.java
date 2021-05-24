@@ -203,7 +203,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        javax.swing.Timer t = new javax.swing.Timer(1000, e1 -> {
+        javax.swing.Timer t = new javax.swing.Timer(5000, e1 -> {
             arraylengte = 0;
             try {
                 for (Monitoringcomponent monitoringcomponent: monitoringcomponenten) {
