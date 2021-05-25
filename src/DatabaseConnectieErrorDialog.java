@@ -1,5 +1,3 @@
-import com.mysql.cj.xdevapi.Warning;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
