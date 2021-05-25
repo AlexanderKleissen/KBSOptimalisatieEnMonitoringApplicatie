@@ -31,7 +31,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
     private ArrayList<ArrayList<ArrayList<Ontwerpcomponent>>> netwerkOplossingOpslag = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> besteOplossing = new ArrayList<>();
     private double beschikbaarheid=0;
-    private double kosten=0;
+    private double kosten=0; 
     private double laagsteKosten=10000000;
     private double laagsteKostenNetwerk=100000000;
     private int diepte = 100;//Het aantal servers van de opgeslagen oplossing
