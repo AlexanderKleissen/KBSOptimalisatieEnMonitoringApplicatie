@@ -3,8 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -12,13 +11,14 @@ import java.util.ArrayList;
 public class MonitoringFrame extends JFrame implements ActionListener {
     private JComboBox<String> jcDropDownMenu;
     private String[] comboBoxContent;
-    private JButton jbMonitoren, jbOntwerpen; //buttons voor footer
+    private JButton jbMonitoren, jbOntwerpen, jbPfSenseLink; //buttons voor footer
     private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
     private Color backClr2 = new Color(43, 43, 43); //de kleur van het midden
     private ArrayList<Monitoringcomponent> monitoringcomponenten = new ArrayList<>();
     private Monitoringnetwerk monitoringnetwerk;
     private int arraylengte;
     private boolean pfSenseStatus;
+
     private ArrayList <JLabel> status = new ArrayList<>();
     private ArrayList <JLabel> processor = new ArrayList<>();
     private ArrayList <JLabel> werkgeheugen = new ArrayList<>();
@@ -155,44 +155,57 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 status.get(arraylengte).setForeground(Color.white);
                 jPanel.add(status.get(arraylengte));
 
-                JLabel enter1 = new JLabel("");
-                jPanel.add(enter1);
 
-                processor.add(new JLabel("CPU gebruik: " + monitoringcomponent.getProcessorbelasting() + "%"));
-                processor.get(arraylengte).setForeground(Color.white);
-                jPanel.add(processor.get(arraylengte));
+                if (!monitoringcomponent.getType().equals("Firewall")) {
+                    JLabel enter1 = new JLabel("");
+                    jPanel.add(enter1);
 
-                werkgeheugen.add(new JLabel("Werkgeheugen gebruik: " + monitoringcomponent.getWerkgeheugenVerbruik() + "%"));
-                werkgeheugen.get(arraylengte).setForeground(Color.white);
-                jPanel.add(werkgeheugen.get(arraylengte));
+                    processor.add(new JLabel("CPU gebruik: " + monitoringcomponent.getProcessorbelasting() + "%"));
+                    processor.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(processor.get(arraylengte-1));
 
-                totaalgeheugen.add(new JLabel("Totaal geheugen: " + monitoringcomponent.getTotaleDiskruimte() + " GB"));
-                totaalgeheugen.get(arraylengte).setForeground(Color.white);
-                jPanel.add(totaalgeheugen.get(arraylengte));
+                    werkgeheugen.add(new JLabel("Werkgeheugen gebruik: " + monitoringcomponent.getWerkgeheugenVerbruik() + "%"));
+                    werkgeheugen.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(werkgeheugen.get(arraylengte-1));
 
-                gebruiktegeheugen.add(new JLabel("Gebruikte geheugen: " + monitoringcomponent.getGebruikteDiskruimte() + " GB"));
-                gebruiktegeheugen.get(arraylengte).setForeground(Color.white);
-                jPanel.add(gebruiktegeheugen.get(arraylengte));
+                    totaalgeheugen.add(new JLabel("Totaal geheugen: " + monitoringcomponent.getTotaleDiskruimte() + " GB"));
+                    totaalgeheugen.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(totaalgeheugen.get(arraylengte-1));
 
-                beschikbaregeheugen.add(new JLabel("Beschikbare geheugen: " + monitoringcomponent.getBeschikbareDiskruimte() + " GB"));
-                beschikbaregeheugen.get(arraylengte).setForeground(Color.white);
-                jPanel.add(beschikbaregeheugen.get(arraylengte));
+                    gebruiktegeheugen.add(new JLabel("Gebruikte geheugen: " + monitoringcomponent.getGebruikteDiskruimte() + " GB"));
+                    gebruiktegeheugen.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(gebruiktegeheugen.get(arraylengte-1));
 
-                uptime.add(new JLabel("Uptime sinds laatste reboot: " + monitoringcomponent.getBeschikbaarheidsduur() + " minuten"));
-                uptime.get(arraylengte).setForeground(Color.white);
-                jPanel.add(uptime.get(arraylengte));
+                    beschikbaregeheugen.add(new JLabel("Beschikbare geheugen: " + monitoringcomponent.getBeschikbareDiskruimte() + " GB"));
+                    beschikbaregeheugen.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(beschikbaregeheugen.get(arraylengte-1));
 
-                JLabel enter2 = new JLabel("");
-                jPanel.add(enter2);
+                    uptime.add(new JLabel("Uptime sinds laatste reboot: " + monitoringcomponent.getBeschikbaarheidsduur() + " minuten"));
+                    uptime.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(uptime.get(arraylengte-1));
 
-                beschikbaarheid.add(new JLabel("Beschikbaarheid: " + monitoringcomponent.getBeschikbaarheidspercentage() + "%"));
-                beschikbaarheid.get(arraylengte).setForeground(Color.white);
-                jPanel.add(beschikbaarheid.get(arraylengte));
+                    JLabel enter2 = new JLabel("");
+                    jPanel.add(enter2);
 
-                kosten.add(new JLabel("Periodieke kosten: €" + monitoringcomponent.getPeriodiekeKosten() + " per jaar"));
-                kosten.get(arraylengte).setForeground(Color.white);
-                jPanel.add(kosten.get(arraylengte));
+                    beschikbaarheid.add(new JLabel("Beschikbaarheid: " + monitoringcomponent.getBeschikbaarheidspercentage() + "%"));
+                    beschikbaarheid.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(beschikbaarheid.get(arraylengte-1));
 
+                    kosten.add(new JLabel("Periodieke kosten: €" + monitoringcomponent.getPeriodiekeKosten() + " per jaar"));
+                    kosten.get(arraylengte-1).setForeground(Color.white);
+                    jPanel.add(kosten.get(arraylengte-1));
+                } else {
+                    JLabel enter = new JLabel("                                                                           ", SwingConstants.CENTER);
+                    enter.setForeground(Color.WHITE);
+                    jPanel.add(enter);
+
+                    jbPfSenseLink = new JButton("PfSense link");
+                    jbPfSenseLink.setPreferredSize(new Dimension(1,17));
+
+                    jbPfSenseLink.addActionListener(this);
+                    jPanel.add(jbPfSenseLink);
+                    jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                }
                 componentenPanel.add(jPanel);
                 arraylengte++;
             }
@@ -220,12 +233,26 @@ public class MonitoringFrame extends JFrame implements ActionListener {
 
             for (Monitoringcomponent monitoringcomponent1: monitoringcomponenten) {
                 try {
-                    InetAddress inet = InetAddress.getByName(monitoringcomponent1.getIpaddress());
-                    if (inet.isReachable(500) && pfSenseStatus) {
+                    boolean monitoringComponentBeschikbaar = false;
+
+                    if (monitoringcomponent1.getType().equals("HAL9001W")||monitoringcomponent1.getType().equals("HAL9002W")||monitoringcomponent1.getType().equals("HAL9003W")) {
+                        try (Socket socket = new Socket()) {
+                            socket.connect(new InetSocketAddress(monitoringcomponent1.getIpaddress(), 80), 500);
+                             monitoringComponentBeschikbaar = true;
+                        } catch (IOException exception) {
+                            monitoringComponentBeschikbaar = false;
+                        }
+                    } else {
+                        InetAddress inet = InetAddress.getByName(monitoringcomponent1.getIpaddress());
+                        monitoringComponentBeschikbaar = inet.isReachable(500);
+                    }
+
+
+                    if (monitoringComponentBeschikbaar && pfSenseStatus) {
                         status.get(arraylengte).setText("Status: online");
-                    } else if (!inet.isReachable(500) && pfSenseStatus) {
+                    } else if (!monitoringComponentBeschikbaar && pfSenseStatus) {
                         status.get(arraylengte).setText("Status: offline");
-                    } else if (!inet.isReachable(500) && !pfSenseStatus && !monitoringcomponent1.getType().equals("Firewall")) {
+                    } else if (!monitoringComponentBeschikbaar && !pfSenseStatus && !monitoringcomponent1.getType().equals("Firewall")) {
                         status.get(arraylengte).setText("Status: ?");
                     } else {
                         status.get(arraylengte).setText("Status: offline");
@@ -236,21 +263,23 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                     status.get(arraylengte).setText("Status: offline");
                 }
                 monitoringcomponent1.setGegevensUitDatabase();
-                processor.get(arraylengte).setText("CPU gebruik: " + monitoringcomponent1.getProcessorbelasting() + "%");
-                werkgeheugen.get(arraylengte).setText("Werkgeheugen gebruik: " + monitoringcomponent1.getWerkgeheugenVerbruik() + "%");
-                totaalgeheugen.get(arraylengte).setText("Totaal geheugen: " + monitoringcomponent1.getTotaleDiskruimte() + " GB");
-                gebruiktegeheugen.get(arraylengte).setText("Gebruikte geheugen: " + monitoringcomponent1.getGebruikteDiskruimte() + " GB");
-                beschikbaregeheugen.get(arraylengte).setText("Beschikbare geheugen: " + monitoringcomponent1.getBeschikbareDiskruimte() + " GB");
-                uptime.get(arraylengte).setText("Uptime sinds laatste reboot: " + monitoringcomponent1.getBeschikbaarheidsduur() + " minuten");
-                beschikbaarheid.get(arraylengte).setText("Beschikbaarheid: " + monitoringcomponent1.getBeschikbaarheidspercentage() + "%");
-                kosten.get(arraylengte).setText("Periodieke kosten: €" + monitoringcomponent1.getPeriodiekeKosten() + " per jaar");
+                if (!monitoringcomponent1.getType().equals("Firewall")) {
+                    processor.get(arraylengte-1).setText("CPU gebruik: " + monitoringcomponent1.getProcessorbelasting() + "%");
+                    werkgeheugen.get(arraylengte-1).setText("Werkgeheugen gebruik: " + monitoringcomponent1.getWerkgeheugenVerbruik() + "%");
+                    totaalgeheugen.get(arraylengte-1).setText("Totaal geheugen: " + monitoringcomponent1.getTotaleDiskruimte() + " GB");
+                    gebruiktegeheugen.get(arraylengte-1).setText("Gebruikte geheugen: " + monitoringcomponent1.getGebruikteDiskruimte() + " GB");
+                    beschikbaregeheugen.get(arraylengte-1).setText("Beschikbare geheugen: " + monitoringcomponent1.getBeschikbareDiskruimte() + " GB");
+                    uptime.get(arraylengte-1).setText("Uptime sinds laatste reboot: " + monitoringcomponent1.getBeschikbaarheidsduur() + " minuten");
+                    beschikbaarheid.get(arraylengte-1).setText("Beschikbaarheid: " + monitoringcomponent1.getBeschikbaarheidspercentage() + "%");
+                    kosten.get(arraylengte-1).setText("Periodieke kosten: €" + monitoringcomponent1.getPeriodiekeKosten() + " per jaar");
+                }
                 arraylengte++;
             }
         });
         t.start();
 
         if(e.getSource()==jcDropDownMenu) {
-//            System.out.println(jcDropDownMenu.getSelectedItem()); Kan gebruikt worden als testfunctie op welk dropdownmenu item geklikt is.
+//            System.out.println(jcDropDownMenu.getSelectedItem()); //Kan gebruikt worden als testfunctie op welk dropdownmenu item geklikt is.
         }
 
         if(jcDropDownMenu.getSelectedItem().equals("Programma sluiten")){
@@ -260,6 +289,21 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         if (e.getSource()==jbOntwerpen){
             dispose();
             OntwerpFrame ontwerpFrame = new OntwerpFrame();
+        }
+
+        if (e.getSource()==jbPfSenseLink) {
+            URI uri= null;
+            try {
+                uri = new URI("http://11.11.200.1");
+            } catch (URISyntaxException uriSyntaxException) {
+                uriSyntaxException.printStackTrace();
+            }
+
+            try {
+                Desktop.getDesktop().browse(uri);
+            } catch (IOException exception) {
+                System.out.println("De webpagina is niet beschikbaar");
+            }
         }
     }
 }
