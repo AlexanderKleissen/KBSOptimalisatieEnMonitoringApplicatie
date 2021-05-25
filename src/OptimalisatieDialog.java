@@ -706,49 +706,49 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
                 double ingevoerdPercentage = Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", "."));
 
                 //backtracking algoritme gebruiken om optimale waarden te bepalen
-               optimaliseer(ingevoerdPercentage);
+//               optimaliseer(ingevoerdPercentage);
                //testcode
-//                uitvoering(webservers, ingevoerdPercentage);
-//                for(Ontwerpcomponent component: serversBesteOplossing){
-//                    System.out.println(component.getNaam());
-//                }
-//                System.out.println();
-//                serversBesteOplossing.clear();
-//                uitvoering2(webservers, ingevoerdPercentage, 13200);
-//                for(Ontwerpcomponent component: serversBesteOplossing){
-//                    System.out.println(component.getNaam());
-//                }
-//                serversBesteOplossing.clear();
-//                System.out.println();
-//                ArrayList<Ontwerpcomponent> firewalls = new ArrayList<>();
-//                firewalls.add(ontwerpcomponenten.get(0));
-//                ArrayList<Ontwerpcomponent> webserverTest = new ArrayList<>();
-//                webserverTest.add(webservers.get(0));
-//                webserverTest.add(webservers.get(0));
-//                webserverTest.add(webservers.get(2));
-//                ArrayList<Ontwerpcomponent> dbserverTest = new ArrayList<>();
-//                dbserverTest.add(webservers.get(0));
-//                dbserverTest.add(webservers.get(0));
-//                dbserverTest.add(webservers.get(1));
-//                netwerkHuidigeOplossing.clear();
-//                netwerkHuidigeOplossing.add(0,webserverTest);
-//                netwerkHuidigeOplossing.add(1,dbserverTest);
-//                netwerkHuidigeOplossing.add(2,firewalls);
-//                netwerkEersteOplossing.add(webserverTest);
-//                netwerkEersteOplossing.add(dbserverTest);
-//                netwerkEersteOplossing.add(firewalls);
-//                uitvoeringHeleNetwerk(ingevoerdPercentage);
-//                for(ArrayList<Ontwerpcomponent> groep: netwerkBesteOplossing){
-//                    for(Ontwerpcomponent component: groep){
-//                        System.out.println(component.getNaam());
-//                    }
-//                }
-//                System.out.println();
-//                optimaliseer(ingevoerdPercentage);
-//                System.out.println(besteOplossing);
-//                for(Ontwerpcomponent component: besteOplossing){
-//                    System.out.println(component.getNaam());
-//                }
+                uitvoering(webservers, ingevoerdPercentage);
+                for(Ontwerpcomponent component: serversBesteOplossing){
+                    System.out.println(component.getNaam());
+                }
+                System.out.println();
+                serversBesteOplossing.clear();
+                uitvoering2(webservers, ingevoerdPercentage, 13200);
+                for(Ontwerpcomponent component: serversBesteOplossing){
+                    System.out.println(component.getNaam());
+                }
+                serversBesteOplossing.clear();
+                System.out.println();
+                ArrayList<Ontwerpcomponent> firewalls = new ArrayList<>();
+                firewalls.add(ontwerpcomponenten.get(0));
+                ArrayList<Ontwerpcomponent> webserverTest = new ArrayList<>();
+                webserverTest.add(webservers.get(0));
+                webserverTest.add(webservers.get(0));
+                webserverTest.add(webservers.get(2));
+                ArrayList<Ontwerpcomponent> dbserverTest = new ArrayList<>();
+                dbserverTest.add(webservers.get(0));
+                dbserverTest.add(webservers.get(0));
+                dbserverTest.add(webservers.get(1));
+                netwerkHuidigeOplossing.clear();
+                netwerkHuidigeOplossing.add(0,webserverTest);
+                netwerkHuidigeOplossing.add(1,dbserverTest);
+                netwerkHuidigeOplossing.add(2,firewalls);
+                netwerkEersteOplossing.add(webserverTest);
+                netwerkEersteOplossing.add(dbserverTest);
+                netwerkEersteOplossing.add(firewalls);
+                uitvoeringHeleNetwerk(ingevoerdPercentage);
+                for(ArrayList<Ontwerpcomponent> groep: netwerkBesteOplossing){
+                    for(Ontwerpcomponent component: groep){
+                        System.out.println(component.getNaam());
+                    }
+                }
+                System.out.println();
+                optimaliseer(ingevoerdPercentage);
+                System.out.println(besteOplossing);
+                for(Ontwerpcomponent component: besteOplossing){
+                    System.out.println(component.getNaam());
+                }
             }
             if (e.getSource() == voegToe) {
 

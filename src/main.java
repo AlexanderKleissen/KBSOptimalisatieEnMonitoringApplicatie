@@ -85,7 +85,7 @@ public class main {
         netwerk3.groepen.add(firewallOntwerpComponent);
 //        netwerk3.setCorrecteKostenEnBeschikbaarheid();
 
-        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3); 
+        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
 
 //        Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125", 90);
 //        netwerk125.groepen.add(dbOntwerpComponenten);

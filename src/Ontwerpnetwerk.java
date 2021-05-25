@@ -24,7 +24,7 @@ public class Ontwerpnetwerk extends Netwerk{
         groepen = new ArrayList<>();
         ontwerpNetwerken.add(this);
     }
-
+  
     //Getters en setters
     public static ArrayList<Ontwerpnetwerk> getOntwerpNetwerken() {
         return ontwerpNetwerken;
