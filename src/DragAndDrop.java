@@ -10,23 +10,24 @@ public class DragAndDrop extends JPanel {
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
     private ArrayList<JLabel> images = new ArrayList<>();
     Ontwerpcomponent firewallpfSense = new Ontwerpcomponent("pfSense", "firewall", 4000, 99.998, "firewallImage.png");
-    Ontwerpcomponent HAL9001DB = new Ontwerpcomponent("HAL9001DB", "database", 5100,  90, "dbserverImage.png");
-    Ontwerpcomponent HAL9002DB = new Ontwerpcomponent("HAL9002DB", "database", 7700,  95, "dbserverImage.png");
-    Ontwerpcomponent HAL9003DB = new Ontwerpcomponent("HAL9003DB", "database", 12200,  98, "dbserverImage.png");
-    Ontwerpcomponent HAL9001W = new Ontwerpcomponent("HAL9001W", "webserver", 2200,  80, "webserverImage.png");
-    Ontwerpcomponent HAL9002W = new Ontwerpcomponent("HAL9002W", "webserver", 3200,  90, "webserverImage.png");
-    Ontwerpcomponent HAL9003W = new Ontwerpcomponent("HAL9003W", "webserver", 5100,  95, "webserverImage.png");
+    Ontwerpcomponent HAL9001DB = new Ontwerpcomponent("HAL9001DB", "database", 5100,  90, "dbserverImage1.png");
+    Ontwerpcomponent HAL9002DB = new Ontwerpcomponent("HAL9002DB", "database", 7700,  95, "dbserverImage2.png");
+    Ontwerpcomponent HAL9003DB = new Ontwerpcomponent("HAL9003DB", "database", 12200,  98, "dbserverImage3.png");
+    Ontwerpcomponent HAL9001W = new Ontwerpcomponent("HAL9001W", "webserver", 2200,  80, "webserverImage1.png");
+    Ontwerpcomponent HAL9002W = new Ontwerpcomponent("HAL9002W", "webserver", 3200,  90, "webserverImage2.png");
+    Ontwerpcomponent HAL9003W = new Ontwerpcomponent("HAL9003W", "webserver", 5100,  95, "webserverImage3.png");
     private ArrayList<Ontwerpcomponent> design = new ArrayList<>();
     private ArrayList<Point> designLocations = new ArrayList<>();
+    Ontwerpcomponent gekozenComponent;
+    JLabel gekozenImage;
 
     JLabel jlDbserverImage1, jlDbserverImage2, jlDbserverImage3, jlWebserverImage1, jlWebserverImage2, jlWebserverImage3, jlFirewallImage;
 
-    Point xydb1, xydb2, xydb3, xyw1, xyw2, xyw3, xyfw;
-    Point prevPtdb1, prevPtdb2, prevPtdb3, prevPtw1, prevPtw2, prevPtw3, prevPtfire;
-    Point currentpt;
+    Point location, prevPt, currentpt;
     private Color backClr2 = new Color(43, 43, 43);
     ClickListener clickListener = new ClickListener();
     DragListener dragListener = new DragListener();
+    JPanel paintPanel = new JPanel();
 
     DragAndDrop() {
         this.setLayout(new BorderLayout());
@@ -59,7 +60,6 @@ public class DragAndDrop extends JPanel {
 
         //panel voor de mogelijke componenten
         JPanel imageOpslag = new JPanel(new GridLayout(4, 2, 10, 0));
-        add(imageOpslag, BorderLayout.EAST);
         imageOpslag.setBorder(new LineBorder(Color.LIGHT_GRAY, 3));
         imageOpslag.setBackground(backClr2);
         imageOpslag.add(jlDbserverImage1);
@@ -69,65 +69,76 @@ public class DragAndDrop extends JPanel {
         imageOpslag.add(jlWebserverImage2);
         imageOpslag.add(jlWebserverImage3);
         imageOpslag.add(jlFirewallImage);
+        add(imageOpslag, BorderLayout.EAST);
 
-        this.addMouseListener(clickListener);
-        this.addMouseMotionListener(dragListener);
+        //click and draglistener toevoegen
         jlDbserverImage1.addMouseListener(clickListener);
         jlDbserverImage1.addMouseMotionListener(dragListener);
+        jlDbserverImage2.addMouseListener(clickListener);
+        jlDbserverImage2.addMouseMotionListener(dragListener);
+        jlDbserverImage3.addMouseListener(clickListener);
+        jlDbserverImage3.addMouseMotionListener(dragListener);
+        jlWebserverImage1.addMouseListener(clickListener);
+        jlWebserverImage1.addMouseMotionListener(dragListener);
+        jlWebserverImage2.addMouseListener(clickListener);
+        jlWebserverImage2.addMouseMotionListener(dragListener);
+        jlWebserverImage3.addMouseListener(clickListener);
+        jlWebserverImage3.addMouseMotionListener(dragListener);
+        jlFirewallImage.addMouseListener(clickListener);
+        jlFirewallImage.addMouseMotionListener(dragListener);
+        this.addMouseListener(clickListener);
 
         setVisible(true);
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-//        if(xydb1!=null){
-//            jlDbserverImage1.getIcon().paintIcon(this, g, (int) xydb1.getX(), (int) xydb1.getY());
-//        }
+        int i=0;
         for(Ontwerpcomponent component: design){
-            for(int i=0;i<design.size();i++){
-                component.getImage().paintIcon(this, g, (int) designLocations.get(i).getX(), (int) designLocations.get(i).getY());
-            }
+            component.getImage().paintIcon(this, g, (int) designLocations.get(i).getX(), (int) designLocations.get(i).getY());
+            i++;
         }
-
     }
+
 
     private class ClickListener extends MouseAdapter {//https://docs.oracle.com/javase/tutorial/uiswing/events/mouselistener.html
         public void mousePressed(MouseEvent e) {
-            if(xydb1==null){
-                //locaties van de images
-                xydb1 = new Point(jlDbserverImage1.getLocationOnScreen());
-            }
 
-            if(e.getSource()==jlDbserverImage1){
-                currentpt=xydb1;
-                if(e.getClickCount()==2){
-                    JOptionPane.showMessageDialog(jlDbserverImage1, "Naam: "+ontwerpcomponenten.get(1).getNaam()+"\nType: "+ontwerpcomponenten.get(1).getType()+"\nBeschikbaarheid: "+ontwerpcomponenten.get(1).getBeschikbaarheidspercentage()+"% \nKosten: €"+ontwerpcomponenten.get(1).getKosten(), ontwerpcomponenten.get(1).getNaam(), JOptionPane.INFORMATION_MESSAGE);
-                }else{
-                    prevPtdb1 = e.getPoint();
-                    Ontwerpcomponent ontwerpcomponent = ontwerpcomponenten.get(1);
-                    design.add(ontwerpcomponent);
-                    designLocations.add(currentpt);
-                    JLabel jLabel = new JLabel(ontwerpcomponent.getImage());
-                    jLabel.addMouseListener(clickListener);
-                    jLabel.addMouseMotionListener(dragListener);
+            //locaties van de images
+            for(JLabel image: images){
+                if(image == e.getSource()){
+                    location=image.getLocationOnScreen();
+                    gekozenImage=image;
+                    for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten){
+                        if (ontwerpcomponent.getImage().equals(image.getIcon())){
+                            gekozenComponent=ontwerpcomponent;
+                        }
+                    }
                 }
             }
+
+            currentpt=location;
+            if(e.getClickCount()==2){
+                JOptionPane.showMessageDialog(gekozenImage, "Naam: "+gekozenComponent.getNaam()+"\nType: "+gekozenComponent.getType()+"\nBeschikbaarheid: "+gekozenComponent.getBeschikbaarheidspercentage()+"% \nKosten: €"+gekozenComponent.getKosten(), gekozenComponent.getNaam(), JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                prevPt= e.getPoint();
+                Ontwerpcomponent component = new Ontwerpcomponent(gekozenComponent.getNaam(), gekozenComponent.getType(), Double.parseDouble(gekozenComponent.getKosten()), Double.parseDouble(gekozenComponent.getBeschikbaarheidspercentage()), gekozenComponent.getImage()) ;
+                design.add(component);
+                designLocations.add(currentpt);
+            }
+
         }
     }
 
     private class DragListener extends MouseMotionAdapter {
         public void mouseDragged(MouseEvent e) {
             currentpt = e.getPoint();
-            if(e.getSource()==jlDbserverImage1){
 
-                xydb1.translate(
-                        (int) (currentpt.getX() - prevPtdb1.getX()),
-                        (int) (currentpt.getY() - prevPtdb1.getY())
-                );
-                prevPtdb1 = currentpt;
-            }
-
-
+            location.translate(
+                    (int) (currentpt.getX() - prevPt.getX()),
+                    (int) (currentpt.getY() - prevPt.getY())
+            );
+            prevPt = currentpt;
 
             repaint();
         }
