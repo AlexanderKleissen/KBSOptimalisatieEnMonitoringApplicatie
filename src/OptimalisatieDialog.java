@@ -795,7 +795,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
                    // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
                    Ontwerpnetwerk ontwerpNetwerkMetDezelfdeBeschikbaarheid = null;
                    for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
-                       if (ontwerpnetwerk1.getBeschikbaarheidspercentage().replaceAll(",", ".").equals(beschikbaarheidspercentage)) {
+                       if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
                            ontwerpNetwerkMetDezelfdeBeschikbaarheid = ontwerpnetwerk1;
                        }
                    }
@@ -806,13 +806,10 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
                            // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu voorbeelddata gebruikt
 
                            String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
-                           Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%",
-                                   totaleBedrag, beschikbaarheidspercentage);
+                           Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%", totaleBedrag, beschikbaarheidspercentage);
                            ontwerpnetwerk.groepen.add(databasegroep);
                            ontwerpnetwerk.groepen.add(webservergroep);
                            ontwerpnetwerk.groepen.add(firewall);
-                        //   ontwerpnetwerk.setCorrecteKostenEnBeschikbaarheid();
-
 
                            //ontwerpnetwerk wordt in database opgeslagen
                            for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
@@ -858,7 +855,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
                     // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
                     Ontwerpnetwerk ontwerpNetwerkMetZelfdeBeschikbaarheid = null;
                     for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
-                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().replaceAll(",", ".").equals(beschikbaarheidspercentage)) {
+                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
                             ontwerpNetwerkMetZelfdeBeschikbaarheid = ontwerpnetwerk1;
                         }
                     }
@@ -870,8 +867,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
                         //ontwerpnetwerk moet in database opgeslagen worden
 
                         String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
-                        Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%",
-                                totaleBedrag, beschikbaarheidspercentage);
+                        Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%", totaleBedrag, beschikbaarheidspercentage);
                         ontwerpnetwerk.groepen.add(databasegroep);
                         ontwerpnetwerk.groepen.add(webservergroep);
                         ontwerpnetwerk.groepen.add(firewall);
@@ -918,7 +914,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
                     // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
                     Ontwerpnetwerk ontwerpNetwerkMetZelfdeBeschikbaarheid = null;
                     for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
-                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().replaceAll(",", ".").equals(beschikbaarheidspercentage)) {
+                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
                             ontwerpNetwerkMetZelfdeBeschikbaarheid = ontwerpnetwerk1;
                         }
                     }
@@ -987,7 +983,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener{
         } catch(NumberFormatException nfe){
                 minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
                 // melding dat er een percentage ingevuld moet worden
-        } catch (SQLException sql){
+        } catch (SQLException sql) {
             sql.printStackTrace();
         }
     }
