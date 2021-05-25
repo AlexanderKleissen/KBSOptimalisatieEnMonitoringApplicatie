@@ -53,8 +53,8 @@ public class Ontwerpcomponent extends Component {
 
         if(!mogelijkeComponenten.contains(this.getNaam())){
             Statement statement2 = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-            boolean insertGelukt = statement2.execute("insert into component_ontwerpen values ('"+ this.getNaam() + "', '" + this.getType() + "', '" +
-                    Double.parseDouble(this.kosten.replaceAll(",", ".")) + "' , '" + Double.parseDouble(this.getBeschikbaarheidspercentage().replaceAll(",",".")) + "')");
+            boolean insertGelukt = statement2.execute("insert into component_ontwerpen values ('"
+                    + this.getNaam() + "', '" + this.getType() + "', '" + kosten + "' , '" + this.getBeschikbaarheidspercentage() + "')");
 
             if (insertGelukt) {
                 System.out.println("gelukt");
