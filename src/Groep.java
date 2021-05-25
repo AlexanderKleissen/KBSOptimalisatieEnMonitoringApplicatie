@@ -17,6 +17,11 @@ public class Groep {
         this.componenten = new ArrayList();
     }
 
+    public Groep(String type) {
+        this.type = type;
+        this.componenten = new ArrayList<>();
+    }
+
 
     public String getType() {
         return type;

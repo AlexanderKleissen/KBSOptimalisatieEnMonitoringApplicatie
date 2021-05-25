@@ -1,12 +1,12 @@
 import javax.naming.CommunicationException;
 import javax.xml.crypto.Data;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class main {
     public static void main(String[] args) throws SQLException {
         DatabaseConnectieErrorDialog databaseConnectieErrorDialog = new DatabaseConnectieErrorDialog();
 
-        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense","Firewall", 99.998, 4000, "192.168.1.26");
+        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense", "Firewall", 99.998, 4000, "192.168.1.26");
         Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "192.168.1.26");
         Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 95, 7700, "192.168.1.26");
         Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 90, 3200, "192.168.1.131");
@@ -22,7 +22,6 @@ public class main {
 //        Monitoringcomponent ws4 = new Monitoringcomponent("Webserver4","webserver","Online", 120, 80, 256, 50, 90.00);
 //        Monitoringcomponent ws5 = new Monitoringcomponent("Webserver5","webserver","Offline", 120, 80, 256, 50, 80.00);
 //        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense1","firewall","Online", 2000, 30, 1256, 120, 99.99);
-
 
         Groep firewall = new Groep("Firewall", 99.97);
         firewall.componenten.add(pfSense1);
@@ -45,56 +44,47 @@ public class main {
         netwerk1.groepen.add(db);
         netwerk1.groepen.add(ws);
 
-        Monitoringnetwerk netwerk2 = new Monitoringnetwerk("Netwerk 2", 350, 90);
-        Monitoringnetwerk netwerk4 = new Monitoringnetwerk("Netwerk 4", 350, 90);
-        Monitoringnetwerk netwerk6 = new Monitoringnetwerk("Netwerk 6", 350, 90);
-        Monitoringnetwerk netwerk7 = new Monitoringnetwerk("Netwerk 7", 350, 90);
 //        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
-        Ontwerpcomponent db5 = new Ontwerpcomponent("Database5", "database", 100,   99.90);
-        Ontwerpcomponent db6 = new Ontwerpcomponent("Database6","database" ,400,  98.00);
-        Ontwerpcomponent db7 = new Ontwerpcomponent("Database7", "database", 300,  99.98);
-        Ontwerpcomponent db8 = new Ontwerpcomponent("Database8", "database",120,   99.96);
-        Ontwerpcomponent ws6 = new Ontwerpcomponent("Webserver6", "database",930,   99.93);
-        Ontwerpcomponent ws7 = new Ontwerpcomponent("Webserver7", "webserver",125,   99.99);
-        Ontwerpcomponent ws8 = new Ontwerpcomponent("Webserver8", "webserver", 980,  99.91);
-        Ontwerpcomponent ws9 = new Ontwerpcomponent("Webserver9","webserver", 470,  99.89);
-        Ontwerpcomponent ws10 = new Ontwerpcomponent("Webserver10","webserver", 390,   90.00);
-        Ontwerpcomponent pfSense2 = new Ontwerpcomponent("pfSense2","firewall",230, 99.99);
-
-//        Ontwerpcomponent db9 = new Ontwerpcomponent("Database9", "HAL9001DB", "database", 100, 99.0);
+        OntwerpFrame ontwerpFrame = new OntwerpFrame();
 
 
-        Groep dbOntwerpComponenten = new Groep("OntwerpDatabaseservers", 99.99);
-        dbOntwerpComponenten.componenten.add(db5);
-        dbOntwerpComponenten.componenten.add(db6);
-        dbOntwerpComponenten.componenten.add(db7);
-        dbOntwerpComponenten.componenten.add(db8);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
 
-        Groep wsOntwerpComponenten = new Groep("OntwerpWebservers", 99.98);
-        wsOntwerpComponenten.componenten.add(ws6);
-        wsOntwerpComponenten.componenten.add(ws7);
-        wsOntwerpComponenten.componenten.add(ws8);
-        wsOntwerpComponenten.componenten.add(ws9);
-        wsOntwerpComponenten.componenten.add(ws10);
+        Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
 
-        Groep firewallOntwerpComponent = new Groep("OntwerpFirewall", 99.99);
-        firewallOntwerpComponent.componenten.add(pfSense2);
+        while (rs.next()) {
+            if (!Ontwerpnetwerk.getOntwerpNetwerken().contains(ontwerpnetwerk)) {
+                ontwerpnetwerk = new Ontwerpnetwerk(rs.getString("NaamNetwerk"), rs.getDouble("Kosten"),
+                        rs.getDouble("Beschikbaarheid"));
+            }
 
-        Ontwerpnetwerk netwerk3 = new Ontwerpnetwerk("Ontwerpnetwerk uit main", 999, 99.99, 99.98);
-        netwerk3.groepen.add(dbOntwerpComponenten);
-        netwerk3.groepen.add(wsOntwerpComponenten);
-        netwerk3.groepen.add(firewallOntwerpComponent);
-        netwerk3.setCorrecteKostenEnBeschikbaarheid();
+            for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
+                if (ontwerpcomponent.getNaam().equals(rs.getString("NaamComponent"))) {
+                    for (int i = 0; i < rs.getInt("AantalGebruikt"); i++) {
+                        if (ontwerpcomponent.getType().equals("firewall")) {
+                            Groep firewallgroep = new Groep("firewall");
+                            firewallgroep.componenten.add(ontwerpcomponent);
+                            ontwerpnetwerk.groepen.add(firewallgroep);
+                        }
 
-        Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
+                        if (ontwerpcomponent.getType().equals("webserver")) {
+                            Groep webservergroep = new Groep("webserver");
+                            webservergroep.componenten.add(ontwerpcomponent);
+                            ontwerpnetwerk.groepen.add(webservergroep);
+                        }
 
-        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
-
-        Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125");
-        netwerk125.groepen.add(dbOntwerpComponenten);
-        netwerk125.groepen.add(wsOntwerpComponenten);
-        netwerk125.groepen.add(firewallOntwerpComponent);
-        netwerk125.setCorrecteKostenEnBeschikbaarheid();
+                        if (ontwerpcomponent.getType().equals("database")) {
+                            Groep databasegroep = new Groep("database");
+                            databasegroep.componenten.add(ontwerpcomponent);
+                            ontwerpnetwerk.groepen.add(databasegroep);
+                        }
+                    }
+                }
+            }
+        }
+        statement.close();
     }
 }
