@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 public class Ontwerpnetwerk extends Netwerk {
     private String kosten;
-    private double opgegevenBeschikbaarheid;
     private static ArrayList<Ontwerpnetwerk> ontwerpNetwerken = new ArrayList<>();
 
     //Constructors
-    public Ontwerpnetwerk(String naam, double kosten, double opgegevenBeschikbaarheid, double beschikbaarheidspercentage) {
+    public Ontwerpnetwerk(String naam, double kosten, double beschikbaarheidspercentage) {
         super(naam, beschikbaarheidspercentage, new ArrayList<>());
         DecimalFormat df = new DecimalFormat("0.00");
         String dfKosten = df.format(kosten);
         this.kosten = dfKosten;
-        this.opgegevenBeschikbaarheid = opgegevenBeschikbaarheid;
         groepen = new ArrayList<>();
         ontwerpNetwerken.add(this);
     }
@@ -23,6 +21,12 @@ public class Ontwerpnetwerk extends Netwerk {
         groepen = new ArrayList<>();
         ontwerpNetwerken.add(this);
     }
+
+    public Ontwerpnetwerk() {
+           super(null, 0, new ArrayList<>());
+           groepen = new ArrayList<>();
+           ontwerpNetwerken.add(this);
+       }
 
     //Getters en setters
     public static ArrayList<Ontwerpnetwerk> getOntwerpNetwerken() {
@@ -39,9 +43,6 @@ public class Ontwerpnetwerk extends Netwerk {
         this.kosten = dfKosten;
     }
 
-    public void setOpgegevenBeschikbaarheid(double opgegevenBeschikbaarheid) {
-        this.opgegevenBeschikbaarheid = opgegevenBeschikbaarheid;
-    }
 
     //omdat we groepen gebruiken, kun je de kosten en beschikbaarheid pas achteraf berekenen en in database zetten, dus dat wordt hier gedaan
     public void setCorrecteKostenEnBeschikbaarheid() throws SQLException {

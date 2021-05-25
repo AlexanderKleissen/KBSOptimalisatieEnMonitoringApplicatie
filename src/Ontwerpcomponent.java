@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Ontwerpcomponent extends Component {
     private String kosten;
+    private static ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
     private Icon image;
 
     //Constructors
@@ -14,7 +15,8 @@ public class Ontwerpcomponent extends Component {
         DecimalFormat df = new DecimalFormat("0.00");
         String dfKosten = df.format(kosten);
         this.kosten = dfKosten;
-        naarDatabase();
+        ontwerpcomponenten.add(this);
+    //    naarDatabase();
     }
 
 
@@ -24,7 +26,8 @@ public class Ontwerpcomponent extends Component {
         String dfKosten = df.format(kosten);
         this.kosten = dfKosten;
         this.image = new ImageIcon(new ImageIcon(image).getImage().getScaledInstance(50,80, Image.SCALE_DEFAULT));
-        naarDatabase();
+        ontwerpcomponenten.add(this);
+     //   naarDatabase();
     }
 
     //Getters en setters
@@ -36,6 +39,10 @@ public class Ontwerpcomponent extends Component {
 
     public Icon getImage() {
         return image;
+    }
+
+    public static ArrayList<Ontwerpcomponent> getOntwerpcomponenten() {
+        return ontwerpcomponenten;
     }
 
     private void naarDatabase() throws SQLException {

@@ -1,6 +1,6 @@
 import javax.naming.CommunicationException;
 import javax.xml.crypto.Data;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class main {
     public static void main(String[] args) throws SQLException {
@@ -81,20 +81,70 @@ public class main {
         Groep firewallOntwerpComponent = new Groep("OntwerpFirewall", 99.99);
         firewallOntwerpComponent.componenten.add(pfSense2);
 
-        Ontwerpnetwerk netwerk3 = new Ontwerpnetwerk("Ontwerpnetwerk uit main", 999, 99.99, 99.98);
-        netwerk3.groepen.add(dbOntwerpComponenten);
-        netwerk3.groepen.add(wsOntwerpComponenten);
-        netwerk3.groepen.add(firewallOntwerpComponent);
-        netwerk3.setCorrecteKostenEnBeschikbaarheid();
+//        Ontwerpnetwerk netwerk3 = new Ontwerpnetwerk("Ontwerpnetwerk uit main", 999, 99.99, 99.98);
+//        netwerk3.groepen.add(dbOntwerpComponenten);
+//        netwerk3.groepen.add(wsOntwerpComponenten);
+//        netwerk3.groepen.add(firewallOntwerpComponent);
+//        netwerk3.setCorrecteKostenEnBeschikbaarheid();
+//
+//        Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
+//
+//        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
+//
+//        Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125");
+//        netwerk125.groepen.add(dbOntwerpComponenten);
+//        netwerk125.groepen.add(wsOntwerpComponenten);
+//        netwerk125.groepen.add(firewallOntwerpComponent);
+//        netwerk125.setCorrecteKostenEnBeschikbaarheid();
 
-        Ontwerpnetwerk netwerk5 = new Ontwerpnetwerk("Netwerk 5", 999, 99.99, 99.98);
+        OntwerpFrame ontwerpFrame = new OntwerpFrame();
 
-        OntwerpFrame ontwerpFrame = new OntwerpFrame(netwerk3);
 
-        Ontwerpnetwerk netwerk125 = new Ontwerpnetwerk("netwerk125");
-        netwerk125.groepen.add(dbOntwerpComponenten);
-        netwerk125.groepen.add(wsOntwerpComponenten);
-        netwerk125.groepen.add(firewallOntwerpComponent);
-        netwerk125.setCorrecteKostenEnBeschikbaarheid();
+
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
+
+
+        while (rs.next()) {
+
+            Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
+
+            if(!Ontwerpnetwerk.getOntwerpNetwerken().contains(ontwerpnetwerk)) {
+                ontwerpnetwerk = new Ontwerpnetwerk(rs.getString("NaamNetwerk"), rs.getDouble("Kosten"),
+                        rs.getDouble("Beschikbaarheid"));
+            }
+
+                    for(Ontwerpcomponent ontwerpcomponent: Ontwerpcomponent.getOntwerpcomponenten()) {
+                        if(ontwerpcomponent.getNaam().equals(rs.getString("NaamComponent"))) {
+                            for(int i = 0; i < rs.getInt("AantalGebruikt"); i++) {
+                                if(ontwerpcomponent.getType().equals("firewall")) {
+                                    Groep firewallgroep = new Groep("firewall");
+                                    firewallgroep.componenten.add(ontwerpcomponent);
+                                    ontwerpnetwerk.groepen.add(firewallgroep);
+                                }
+
+                                if(ontwerpcomponent.getType().equals("webserver")) {
+                                    Groep webservergroep = new Groep("webserver");
+                                    webservergroep.componenten.add(ontwerpcomponent);
+                                    ontwerpnetwerk.groepen.add(webservergroep);
+                                }
+
+                                if(ontwerpcomponent.getType().equals("database")) {
+                                    Groep databasegroep = new Groep("database");
+                                    databasegroep.componenten.add(ontwerpcomponent);
+                                    ontwerpnetwerk.groepen.add(databasegroep);
+                                }
+                            }
+                        }
+                    }
+
+
+        }
+
+                    //public Ontwerpnetwerk(String naam, double kosten, double opgegevenBeschikbaarheid, double beschikbaarheidspercentage)
+
+                    statement.close();
+
+        }
     }
-}
