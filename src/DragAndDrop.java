@@ -4,27 +4,18 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DragAndDrop extends JPanel {
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
     private ArrayList<JLabel> images = new ArrayList<>();
-    Ontwerpcomponent firewallpfSense, HAL9001DB, HAL9002DB, HAL9003DB, HAL9001W, HAL9002W, HAL9003W;
-
-    {
-        try {
-            firewallpfSense = new Ontwerpcomponent("pfSense", "firewall", 4000, 99.998, "firewallImage.png");
-            HAL9001DB = new Ontwerpcomponent("HAL9001DB", "database", 5100,  90, "dbserverImage.png");
-            HAL9002DB = new Ontwerpcomponent("HAL9002DB", "database", 7700,  95, "dbserverImage.png");
-            HAL9003DB = new Ontwerpcomponent("HAL9003DB", "database", 12200,  98, "dbserverImage.png");
-            HAL9001W = new Ontwerpcomponent("HAL9001W", "webserver", 2200,  80, "webserverImage.png");
-            HAL9002W = new Ontwerpcomponent("HAL9002W", "webserver", 3200,  90, "webserverImage.png");
-            HAL9003W = new Ontwerpcomponent("HAL9003W", "webserver", 5100,  95, "webserverImage.png");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    Ontwerpcomponent firewallpfSense = new Ontwerpcomponent("pfSense", "firewall", 4000, 99.998, "firewallImage.png");
+    Ontwerpcomponent HAL9001DB = new Ontwerpcomponent("HAL9001DB", "database", 5100,  90, "dbserverImage.png");
+    Ontwerpcomponent HAL9002DB = new Ontwerpcomponent("HAL9002DB", "database", 7700,  95, "dbserverImage.png");
+    Ontwerpcomponent HAL9003DB = new Ontwerpcomponent("HAL9003DB", "database", 12200,  98, "dbserverImage.png");
+    Ontwerpcomponent HAL9001W = new Ontwerpcomponent("HAL9001W", "webserver", 2200,  80, "webserverImage.png");
+    Ontwerpcomponent HAL9002W = new Ontwerpcomponent("HAL9002W", "webserver", 3200,  90, "webserverImage.png");
+    Ontwerpcomponent HAL9003W = new Ontwerpcomponent("HAL9003W", "webserver", 5100,  95, "webserverImage.png");
 
     JLabel jlDbserverImage1, jlDbserverImage2, jlDbserverImage3, jlWebserverImage1, jlWebserverImage2, jlWebserverImage3, jlFirewallImage;
     Ontwerpcomponent gekozen;
