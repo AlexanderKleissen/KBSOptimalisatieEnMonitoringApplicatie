@@ -57,7 +57,7 @@ public class main {
 
         while (rs.next()) {
             if (!Ontwerpnetwerk.getOntwerpNetwerken().contains(ontwerpnetwerk)) {
-                ontwerpnetwerk = new Ontwerpnetwerk(rs.getString("NaamNetwerk"), rs.getDouble("Kosten"),
+                ontwerpnetwerk = new Ontwerpnetwerk(rs.getString("NaamNetwerk") + "%", rs.getDouble("Kosten"),
                         rs.getDouble("Beschikbaarheid"));
             }
 
