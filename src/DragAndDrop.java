@@ -16,12 +16,14 @@ public class DragAndDrop extends JPanel {
     Ontwerpcomponent HAL9001W = new Ontwerpcomponent("HAL9001W", "webserver", 2200,  80, "webserverImage.png");
     Ontwerpcomponent HAL9002W = new Ontwerpcomponent("HAL9002W", "webserver", 3200,  90, "webserverImage.png");
     Ontwerpcomponent HAL9003W = new Ontwerpcomponent("HAL9003W", "webserver", 5100,  95, "webserverImage.png");
+    private ArrayList<Ontwerpcomponent> design = new ArrayList<>();
+    private ArrayList<Point> designLocations = new ArrayList<>();
 
     JLabel jlDbserverImage1, jlDbserverImage2, jlDbserverImage3, jlWebserverImage1, jlWebserverImage2, jlWebserverImage3, jlFirewallImage;
-    Ontwerpcomponent gekozen;
 
     Point xydb1, xydb2, xydb3, xyw1, xyw2, xyw3, xyfw;
-    Point prevPt;
+    Point prevPtdb1, prevPtdb2, prevPtdb3, prevPtw1, prevPtw2, prevPtw3, prevPtfire;
+    Point currentpt;
     private Color backClr2 = new Color(43, 43, 43);
     ClickListener clickListener = new ClickListener();
     DragListener dragListener = new DragListener();
@@ -68,49 +70,65 @@ public class DragAndDrop extends JPanel {
         imageOpslag.add(jlWebserverImage3);
         imageOpslag.add(jlFirewallImage);
 
-
         this.addMouseListener(clickListener);
         this.addMouseMotionListener(dragListener);
         jlDbserverImage1.addMouseListener(clickListener);
-        imageOpslag.addMouseMotionListener(dragListener);
+        jlDbserverImage1.addMouseMotionListener(dragListener);
 
         setVisible(true);
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //locaties van de images
-        xydb1 = new Point(jlDbserverImage1.getX(), jlDbserverImage1.getY());//werkt niet
+//        if(xydb1!=null){
+//            jlDbserverImage1.getIcon().paintIcon(this, g, (int) xydb1.getX(), (int) xydb1.getY());
+//        }
+        for(Ontwerpcomponent component: design){
+            for(int i=0;i<design.size();i++){
+                component.getImage().paintIcon(this, g, (int) designLocations.get(i).getX(), (int) designLocations.get(i).getY());
+            }
+        }
 
-        jlDbserverImage1.getIcon().paintIcon(this, g, (int) xydb1.getX(), (int) xydb1.getY());
     }
 
     private class ClickListener extends MouseAdapter {//https://docs.oracle.com/javase/tutorial/uiswing/events/mouselistener.html
         public void mousePressed(MouseEvent e) {
+            if(xydb1==null){
+                //locaties van de images
+                xydb1 = new Point(jlDbserverImage1.getLocationOnScreen());
+            }
 
             if(e.getSource()==jlDbserverImage1){
+                currentpt=xydb1;
                 if(e.getClickCount()==2){
                     JOptionPane.showMessageDialog(jlDbserverImage1, "Naam: "+ontwerpcomponenten.get(1).getNaam()+"\nType: "+ontwerpcomponenten.get(1).getType()+"\nBeschikbaarheid: "+ontwerpcomponenten.get(1).getBeschikbaarheidspercentage()+"% \nKosten: €"+ontwerpcomponenten.get(1).getKosten(), ontwerpcomponenten.get(1).getNaam(), JOptionPane.INFORMATION_MESSAGE);
                 }else{
-                    prevPt = e.getPoint();
+                    prevPtdb1 = e.getPoint();
+                    Ontwerpcomponent ontwerpcomponent = ontwerpcomponenten.get(1);
+                    design.add(ontwerpcomponent);
+                    designLocations.add(currentpt);
+                    JLabel jLabel = new JLabel(ontwerpcomponent.getImage());
+                    jLabel.addMouseListener(clickListener);
+                    jLabel.addMouseMotionListener(dragListener);
                 }
             }
-
         }
     }
 
     private class DragListener extends MouseMotionAdapter {
         public void mouseDragged(MouseEvent e) {
-            Point currentpt = e.getPoint();
+            currentpt = e.getPoint();
             if(e.getSource()==jlDbserverImage1){
+
                 xydb1.translate(
-                        (int) (currentpt.getX() - prevPt.getX()),
-                        (int) (currentpt.getY() - prevPt.getY())
+                        (int) (currentpt.getX() - prevPtdb1.getX()),
+                        (int) (currentpt.getY() - prevPtdb1.getY())
                 );
+                prevPtdb1 = currentpt;
             }
 
 
-            prevPt = currentpt;
+
             repaint();
         }
     }

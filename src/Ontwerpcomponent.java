@@ -11,12 +11,12 @@ public class Ontwerpcomponent extends Component {
     private Icon image;
 
     //Constructors
-//    public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage) {
-//        super(naam, type, beschikbaarheidspercentage);
-//        DecimalFormat df = new DecimalFormat("0.00");
-//        String dfKosten = df.format(kosten);
-//        this.kosten = dfKosten;
-//    }
+    public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage) {
+        super(naam, type, beschikbaarheidspercentage);
+        DecimalFormat df = new DecimalFormat("0.00");
+        String dfKosten = df.format(kosten);
+        this.kosten = dfKosten;
+    }
 
     public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage, String image){
         super(naam, type, beschikbaarheidspercentage);
