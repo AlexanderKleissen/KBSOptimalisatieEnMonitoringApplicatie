@@ -58,49 +58,6 @@ public class main {
 
 
         OntwerpFrame ontwerpFrame = new OntwerpFrame();
-
-
-        ResultSet rs2 = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
-
-        Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
-
-        Groep firewallgroep = new Groep("firewallgroep");
-        Groep webservergroep = new Groep("webservergroep");
-        Groep databasegroep = new Groep("databasegroep");
-
-
-        //Ontwerpnetwerken uit database halen
-        while (rs2.next()) {
-            if (!Ontwerpnetwerk.getOntwerpNetwerken().contains(ontwerpnetwerk)) {
-                ontwerpnetwerk = new Ontwerpnetwerk(rs2.getString("NaamNetwerk") + "%", rs2.getDouble("Kosten"),
-                        rs2.getDouble("Beschikbaarheid"));
-            }
-
-            for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
-                if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
-                    for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
-                        if (ontwerpcomponent.getType().equals("Firewall")) {
-                            firewallgroep.componenten.add(ontwerpcomponent);
-
-                        }
-
-                        if (ontwerpcomponent.getType().equals("Webserver")) {
-                            webservergroep.componenten.add(ontwerpcomponent);
-
-                        }
-
-                        if (ontwerpcomponent.getType().equals("Database")) {
-                            databasegroep.componenten.add(ontwerpcomponent);
-                        }
-                    }
-                }
-            }
-        }
-        ontwerpnetwerk.groepen.add(firewallgroep);
-        ontwerpnetwerk.groepen.add(webservergroep);
-        ontwerpnetwerk.groepen.add(databasegroep);
-
-        connection.close();
-        statement.close();
+        Ontwerpnetwerk.uitDatabase();
     }
 }

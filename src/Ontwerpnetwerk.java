@@ -38,6 +38,129 @@ public class Ontwerpnetwerk extends Netwerk {
         this.kosten = dfKosten;
     }
 
+    public static void uitDatabase() throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Statement statement = connection.createStatement();
+        ResultSet rs2 = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
+
+        Ontwerpnetwerk ontwerpnetwerk = null;
+
+        Groep firewallgroep = new Groep("firewallgroep");
+        Groep webservergroep = new Groep("webservergroep");
+        Groep databasegroep = new Groep("databasegroep");
+
+        while (rs2.next()) {
+            String naamNetwerk = rs2.getString("NaamNetwerk") + "%";
+            Double kosten = rs2.getDouble("Kosten");
+            Double beschikbaarheid = rs2.getDouble("Beschikbaarheid");
+
+            ArrayList<Ontwerpnetwerk> bestaatAl = new ArrayList<>();
+            for(Ontwerpnetwerk ontwerpnetwerk2 : Ontwerpnetwerk.getOntwerpNetwerken()) {
+                if(ontwerpnetwerk2.getNaam().equals(naamNetwerk)) {
+                    bestaatAl.add(ontwerpnetwerk2);
+                }
+            }
+
+            if(bestaatAl.size() == 0) {
+                ontwerpnetwerk = new Ontwerpnetwerk(naamNetwerk, kosten, beschikbaarheid);
+            }
+
+            while (rs2.getString("NaamNetwerk").equals(ontwerpnetwerk.getNaam())) {
+
+                for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
+                    if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
+                        for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
+                            if (ontwerpcomponent.getType().equals("firewall")) {
+                                firewallgroep.componenten.add(ontwerpcomponent);
+
+                            }
+                             if (ontwerpcomponent.getType().equals("webserver")) {
+                                               webservergroep.componenten.add(ontwerpcomponent);
+
+                             }
+
+                             if (ontwerpcomponent.getType().equals("database")) {
+                                 databasegroep.componenten.add(ontwerpcomponent);
+                             }
+                        }
+                    }
+            }
+
+        }
+
+//        connection.close();
+//        statement.close();
+
+        }
+    }
+
+//        Groep firewallgroep = new Groep("firewallgroep");
+//        Groep webservergroep = new Groep("webservergroep");
+//        Groep databasegroep = new Groep("databasegroep");
+//
+//
+//        String naamNetwerk;
+//        Double kosten;
+//        Double beschikbaarheid;
+
+
+//        while (rs2.next()) {
+//            naamNetwerk = rs2.getString("NaamNetwerk") + "%";
+//            kosten = rs2.getDouble("Kosten");
+//            beschikbaarheid = rs2.getDouble("Beschikbaarheid");
+//
+//            for (Ontwerpnetwerk ontwerpnetwerk2 : Ontwerpnetwerk.getOntwerpNetwerken()) {
+//                if (ontwerpnetwerk2.getNaam().equals(naamNetwerk)) {
+//                    naamNetwerk = null;
+//                    kosten = 0.00;
+//                    beschikbaarheid = 0.000;
+//                }
+//            }
+//
+//            if (naamNetwerk != null) {
+//                Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamNetwerk, kosten, beschikbaarheid);
+//                ontwerpnetwerk.groepen.add(firewallgroep);
+//                ontwerpnetwerk.groepen.add(webservergroep);
+//                ontwerpnetwerk.groepen.add(databasegroep);
+//            }
+//
+//
+//
+//                for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
+//                    if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
+//                        for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
+//                            if (ontwerpcomponent.getType().equals("firewall")) {
+//                                firewallgroep.componenten.add(ontwerpcomponent);
+//
+//                            }
+//
+//                            if (ontwerpcomponent.getType().equals("webserver")) {
+//                                webservergroep.componenten.add(ontwerpcomponent);
+//
+//                            }
+//
+//                            if (ontwerpcomponent.getType().equals("database")) {
+//                                databasegroep.componenten.add(ontwerpcomponent);
+//                            }
+//                        }
+//                    }
+//
+//            }
+//        }
+//
+//
+//        //                        if(Ontwerpnetwerk.getOntwerpNetwerken().size() > 0) {
+//        //                        for(Ontwerpnetwerk ontwerpnetwerk: Ontwerpnetwerk.getOntwerpNetwerken()) {
+//        //                            if (ontwerpnetwerk.getNaam().equals(ontwerpnetwerk2.getNaam())) {
+//        //                                Ontwerpnetwerk.getOntwerpNetwerken().remove(ontwerpnetwerk2);
+//        //                            }
+//        //                        }
+//
+//
+//        connection.close();
+//        statement.close();
+//    }
+
     private void naarDatabase(double beschikbaarheid, double kosten) throws SQLException {
         ArrayList<Ontwerpcomponent> componentenNetwerk = new ArrayList<>();
         ArrayList<String> netwerkComponentenUitTabel = new ArrayList<>();
