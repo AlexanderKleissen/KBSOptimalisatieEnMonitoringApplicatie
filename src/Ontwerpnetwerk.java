@@ -15,7 +15,7 @@ public class Ontwerpnetwerk extends Netwerk {
         this.kosten = dfKosten;
         groepen = new ArrayList<>();
         ontwerpNetwerken.add(this);
-        naarDatabase(beschikbaarheidspercentage, kosten);
+    //    naarDatabase(beschikbaarheidspercentage, kosten);
     }
 
     public Ontwerpnetwerk() {

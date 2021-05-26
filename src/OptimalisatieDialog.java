@@ -85,23 +85,12 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         optimaleWaardenOntwerp.setPreferredSize(dimensie);
         optimaleWaardenOntwerp.setForeground(Color.white);
 
-        //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
-        while (rs.next()) {
-            ontwerpcomponenten.add(new Ontwerpcomponent(rs.getString("NaamComponent"), rs.getString("Type"),
-                    rs.getDouble("Kosten"), rs.getDouble("Beschikbaarheid")));
-
+        for(Ontwerpcomponent ontwerpcomponent: Ontwerpcomponent.getOntwerpcomponenten()) {
+            ontwerpcomponenten.add(ontwerpcomponent);
         }
 
-        for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
-            System.out.println(ontwerpcomponent.getNaam() + " " + ontwerpcomponent.getType() + " " + ontwerpcomponent.getKosten() +
-                    " " + ontwerpcomponent.getBeschikbaarheidspercentage());
-        }
 
-        statement.close();
-        connection.close();
+
         //de beschikbare ontwerpcomponenten (nu hard gecodeerd, in de toekomst uit database halen)
 
 //        Ontwerpcomponent firewallpfSense = new Ontwerpcomponent("pfSense", "firewall", 4000, 99.998, "firewallImage");

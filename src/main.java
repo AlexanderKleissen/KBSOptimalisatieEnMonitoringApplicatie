@@ -46,45 +46,61 @@ public class main {
 
 //        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
-        OntwerpFrame ontwerpFrame = new OntwerpFrame();
-        ontwerpFrame.add(netwerk1);
-
+        //Ontwerpcomponenten uit database halen
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
+        ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
+        while (rs.next()) {
+            Ontwerpcomponent ontwerpcomponent = new Ontwerpcomponent(rs.getString("NaamComponent"), rs.getString("Type"),
+                    rs.getDouble("Kosten"), rs.getDouble("Beschikbaarheid"));
+
+        }
+
+
+        OntwerpFrame ontwerpFrame = new OntwerpFrame();
+
+
+        ResultSet rs2 = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
 
         Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
 
-        while (rs.next()) {
+        Groep firewallgroep = new Groep("firewallgroep");
+        Groep webservergroep = new Groep("webservergroep");
+        Groep databasegroep = new Groep("databasegroep");
+
+
+        //Ontwerpnetwerken uit database halen
+        while (rs2.next()) {
             if (!Ontwerpnetwerk.getOntwerpNetwerken().contains(ontwerpnetwerk)) {
-                ontwerpnetwerk = new Ontwerpnetwerk(rs.getString("NaamNetwerk") + "%", rs.getDouble("Kosten"),
-                        rs.getDouble("Beschikbaarheid"));
+                ontwerpnetwerk = new Ontwerpnetwerk(rs2.getString("NaamNetwerk") + "%", rs2.getDouble("Kosten"),
+                        rs2.getDouble("Beschikbaarheid"));
             }
 
             for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
-                if (ontwerpcomponent.getNaam().equals(rs.getString("NaamComponent"))) {
-                    for (int i = 0; i < rs.getInt("AantalGebruikt"); i++) {
+                if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
+                    for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
                         if (ontwerpcomponent.getType().equals("firewall")) {
-                            Groep firewallgroep = new Groep("firewall");
                             firewallgroep.componenten.add(ontwerpcomponent);
-                            ontwerpnetwerk.groepen.add(firewallgroep);
+
                         }
 
                         if (ontwerpcomponent.getType().equals("webserver")) {
-                            Groep webservergroep = new Groep("webserver");
                             webservergroep.componenten.add(ontwerpcomponent);
-                            ontwerpnetwerk.groepen.add(webservergroep);
+
                         }
 
                         if (ontwerpcomponent.getType().equals("database")) {
-                            Groep databasegroep = new Groep("database");
                             databasegroep.componenten.add(ontwerpcomponent);
-                            ontwerpnetwerk.groepen.add(databasegroep);
                         }
                     }
                 }
             }
         }
+        ontwerpnetwerk.groepen.add(firewallgroep);
+        ontwerpnetwerk.groepen.add(webservergroep);
+        ontwerpnetwerk.groepen.add(databasegroep);
+
+        connection.close();
         statement.close();
     }
 }
