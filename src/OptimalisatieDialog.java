@@ -26,42 +26,38 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private ArrayList<Ontwerpcomponent> webservers = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> dbservers = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> optimaleWaarden = new ArrayList<>();
-    ArrayList<Ontwerpcomponent> serversHuidigeOplossing = new ArrayList<>();
-    ArrayList<Ontwerpcomponent> serversBesteOplossing = new ArrayList<>();
-    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkHuidigeOplossing = new ArrayList<>();
-    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkBesteOplossing = new ArrayList<>();
-    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkEersteOplossing = new ArrayList<>();
-    private ArrayList<ArrayList<ArrayList<Ontwerpcomponent>>> netwerkOplossingOpslag = new ArrayList<>();
-    private ArrayList<Ontwerpcomponent> besteOplossing = new ArrayList<>();
-    private double beschikbaarheid = 0;
-    private double kosten = 0;
-    private double laagsteKosten = 10000000;
-    private double laagsteKostenNetwerk = 100000000;
-    private int diepte = 100;//Het aantal servers van de opgeslagen oplossing
+//    ArrayList<Ontwerpcomponent> serversHuidigeOplossing = new ArrayList<>();
+//    ArrayList<Ontwerpcomponent> serversBesteOplossing = new ArrayList<>();
+//    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkHuidigeOplossing = new ArrayList<>();
+//    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkBesteOplossing = new ArrayList<>();
+//    private ArrayList<ArrayList<Ontwerpcomponent>> netwerkEersteOplossing = new ArrayList<>();
+//    private ArrayList<ArrayList<ArrayList<Ontwerpcomponent>>> netwerkOplossingOpslag = new ArrayList<>();
+//    private ArrayList<Ontwerpcomponent> besteOplossing = new ArrayList<>();
+//    private double beschikbaarheid = 0;
+//    private double kosten = 0;
+//    private double laagsteKosten = 10000000;
+//    private double laagsteKostenNetwerk = 100000000;
+//    private int diepte = 100;//Het aantal servers van de opgeslagen oplossing
 
     private static int maxLoop = 8;
-    private static int[] wbAantal = {0,0,0};
+    private static int[] aantalWebservers = {0,0,0};
 
-    private static double[] wbBeschikbaarheid = {0.9,0.8,0.95};
+    private static double[] webserverBeschikbaarheid = {0.9,0.8,0.95};
     private static double[] wbKosten = {3200,2200,5100};
     private static int maxWBSrt = 2;
-    private static int[] dbAantal = {0,0,0};
+    private static int[] aantalDatabases = {0,0,0};
 
-    private static double[] dbBeschikbaarheid = {0.9,0.95,0.98};
+    private static double[] databaseBeschikbaarheid = {0.9,0.95,0.98};
     private static double[] dbKosten = {5100,7700,12200};
     private static int maxDBSrt = 2;
     private static double minBeschikbaarheid = 0;
     private static double minKosten = Double.MAX_VALUE;
     private static int totaalTeller = 0;
-    private static String serverset;
+    private static String resultaat;
 
-    private int aantalHal9001DB;
-    private int aantalHal9002DB;
-    private int aantalHal9003DB;
+    private JTable tabel2;
 
-    private int aantalHal9001W;
-    private int aantalHal9002W;
-    private int aantalHal9003W;
+    private Object[][] data2;
 
 
     public OptimalisatieDialog(OntwerpFrame frame) throws SQLException {
@@ -71,6 +67,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         UIManager.getLookAndFeelDefaults().put("TextField.caretForeground", Color.white);
         setTitle("Monitoringapplicatie (optimaliseren)");
+        DatabaseConnectieErrorDialog databaseConnectieErrorDialog = new DatabaseConnectieErrorDialog();
 
         //Bovenste twee labels:
         Border witteRand = BorderFactory.createLineBorder(Color.WHITE, 1);                   //rand voor de meeste onderdelen
@@ -85,12 +82,23 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         optimaleWaardenOntwerp.setPreferredSize(dimensie);
         optimaleWaardenOntwerp.setForeground(Color.white);
 
-        for(Ontwerpcomponent ontwerpcomponent: Ontwerpcomponent.getOntwerpcomponenten()) {
-            ontwerpcomponenten.add(ontwerpcomponent);
+        //Ontwerpcomponenten uit database halen
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
+        while (rs.next()) {
+            ontwerpcomponenten.add(new Ontwerpcomponent(rs.getString("NaamComponent"), rs.getString("Type"),
+                    rs.getDouble("Kosten"), rs.getDouble("Beschikbaarheid")));
+
         }
 
+        for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
+            System.out.println(ontwerpcomponent.getNaam() + " " + ontwerpcomponent.getType() + " " + ontwerpcomponent.getKosten() +
+                    " " + ontwerpcomponent.getBeschikbaarheidspercentage());
+        }
 
-
+        statement.close();
+        connection.close();
         //de beschikbare ontwerpcomponenten (nu hard gecodeerd, in de toekomst uit database halen)
 
 //        Ontwerpcomponent firewallpfSense = new Ontwerpcomponent("pfSense", "firewall", 4000, 99.998, "firewallImage");
@@ -222,7 +230,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
         //rechter tabel:
         String[] kolomnamen2 = {"Naam component", "Type", "Kosten (€)", "Beschikbaarheid (%)", "Aantal"};
-        Object[][] data2 = new Object[ontwerpcomponenten.size()][5];
+        data2 = new Object[ontwerpcomponenten.size()][5];
 
         for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
             int index = ontwerpcomponenten.indexOf(ontwerpcomponent);
@@ -240,8 +248,16 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         }
 
 
-        JTable tabel2 = new JTable(data2, kolomnamen2);
-        tabel2.setEnabled(false);
+        tabel2 = new JTable(data2, kolomnamen2) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (row==0 && column == 4||row==1 && column == 4||row==1 && column == 4||row==2 && column == 4||row==3 && column == 4||row==4 && column == 4||row==5 && column == 4||row==6 && column == 4) {
+                    return true;
+                } else
+                    return false;
+            }
+        };
+        tabel2.isCellEditable(0,4);
         tabel2.setBackground(backClr2);
         tabel2.setForeground(Color.white);
 
@@ -415,343 +431,20 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
-    /* Het backtracking algoritme */
-
-    private double berekenBeschikbaarheid(ArrayList<Ontwerpcomponent> firewalls, ArrayList<Ontwerpcomponent> webservers, ArrayList<Ontwerpcomponent> dbservers) {
-        double beschikbaarheidTotaal = 1;
-        double beschikbaarheidFirewalls = 1;
-        double beschikbaarheidWebservers = 1;
-        double beschikbaarheidDbservers = 1;
-        for (Ontwerpcomponent firewall : firewalls) {
-            beschikbaarheidFirewalls = beschikbaarheidFirewalls * (1 - Double.parseDouble(firewall.getBeschikbaarheidspercentage().replaceAll(",", ".")) / 100);
-        }
-        beschikbaarheidFirewalls = 1 - beschikbaarheidFirewalls;
-        for (Ontwerpcomponent webserver : webservers) {
-            beschikbaarheidWebservers = beschikbaarheidWebservers * (1 - Double.parseDouble(webserver.getBeschikbaarheidspercentage().replaceAll(",", ".")) / 100);
-        }
-        beschikbaarheidWebservers = 1 - beschikbaarheidWebservers;
-        for (Ontwerpcomponent dbserver : dbservers) {
-            beschikbaarheidDbservers = beschikbaarheidDbservers * (1 - Double.parseDouble(dbserver.getBeschikbaarheidspercentage().replaceAll(",", ".")) / 100);
-        }
-        beschikbaarheidDbservers = 1 - beschikbaarheidDbservers;
-        beschikbaarheidTotaal = beschikbaarheidFirewalls * beschikbaarheidWebservers * beschikbaarheidDbservers;
-        return beschikbaarheidTotaal * 100;
-    }
-
-    private double berekenBeschikbaarheid(ArrayList<Ontwerpcomponent> componenten) {
-        double beschikbaarheid = 1;
-        for (Ontwerpcomponent component : componenten) {
-            beschikbaarheid = beschikbaarheid * (1 - Double.parseDouble(component.getBeschikbaarheidspercentage().replaceAll(",", ".")) / 100);
-        }
-        beschikbaarheid = 1 - beschikbaarheid;
-        return beschikbaarheid * 100;
-    }
-//
-//    /* De uitvoering van de oplossing: Alle rijen worden per kolom gecontroleerd met behulp van backtracking */
-//    private boolean uitvoering(ArrayList<Ontwerpcomponent> componenten, double minBeschikbaarheidspercentage) {
-//        /* Probeer alle rijen in de gegeven kolom */
-//        for (int i = 0; i < 3; i++) {
-//            /* De server wordt toegevoegd */
-//            serversHuidigeOplossing.add(serversHuidigeOplossing.size(), componenten.get(i));
-//            beschikbaarheid=berekenBeschikbaarheid(serversHuidigeOplossing);
-//            this.kosten+=Double.parseDouble(componenten.get(i).getKosten());
-//
-//            /* Controle of het beschikbaarheidspercentage al hoog genoeg is */
-//            if (beschikbaarheid>=minBeschikbaarheidspercentage && kosten<laagsteKosten) {
-//                laagsteKosten=kosten;
-//                kosten=0;
-//                beschikbaarheid=0;
-//                diepte = serversHuidigeOplossing.size();
-//                for(Ontwerpcomponent component: serversHuidigeOplossing){
-//                    serversBesteOplossing.add(component);
-//                }
-//                serversHuidigeOplossing.clear();
-//                if(uitvoering(componenten, minBeschikbaarheidspercentage)){
-//                    return true;
-//                }
-//            }
-//
-//            //Als de kosten te hoog zijn, wordt een ander component geprobeert
-//            if(kosten<laagsteKosten){
-//                /* Voer deze methode uit voor de volgende toevoeging */
-//                if(uitvoering(componenten, minBeschikbaarheidspercentage)){
-//                    return true;
-//                }
-//            }
-//
-//            /* Er komt geen oplossing uit deze positie, dus de server wordt verwijderd */
-//            if(serversHuidigeOplossing.size()>0){
-//                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
-//            }
-//            //Als alle drie de servers niet tot een oplossing leiden, wordt er een stap teruggedaan en daar een andere server geprobeerd.
-//            //Ook als de oplossing niet goedkoper kan worden dan de huidige laagste kosten, wordt een stap teruggedaan
-//            if(i==2 || serversHuidigeOplossing.size()>=diepte-1){
-//                if(serversHuidigeOplossing.size()==0){//Er zijn geen nieuwe oplossingen meer
-//                    laagsteKosten=10000000;
-//                    kosten =0;
-//                    diepte = serversHuidigeOplossing.size();
-//                    return true;
-//                }
-//                int teller =0;
-//                for(Ontwerpcomponent component: componenten){
-//                    if(serversHuidigeOplossing.get(serversHuidigeOplossing.size()-1).getNaam().equals(component.getNaam())){
-//                        i=teller+1;
-//                        teller++;
-//                    }
-//                }
-//                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
-//            }
-//        }
-//
-//        //Als er geen oplossingen te vinden zijn
-//        return false;
-//    }
-//
-//    //Zelfde methode, maar dan om de op één na beste oplossing enz. te zoeken
-//    private boolean uitvoering2(ArrayList<Ontwerpcomponent> componenten, double minBeschikbaarheidspercentage, double kostenBesteOplossing) {
-//
-//        /* Probeer alle server opties */
-//        for (int i = 0; i < 3; i++) {
-//            /* De server wordt toegevoegd */
-//            serversHuidigeOplossing.add(serversHuidigeOplossing.size(), componenten.get(i));
-//            beschikbaarheid=berekenBeschikbaarheid(serversHuidigeOplossing);
-//            kosten+=Double.parseDouble(componenten.get(i).getKosten());
-//
-//            /* Controle of het beschikbaarheidspercentage al hoog genoeg is */
-//            if (beschikbaarheid>=minBeschikbaarheidspercentage && kosten<laagsteKosten && kosten>kostenBesteOplossing) {
-//                laagsteKosten=kosten;
-//                kosten=0;
-//                beschikbaarheid=0;
-//                for(Ontwerpcomponent component: serversHuidigeOplossing){
-//                    serversBesteOplossing.add(component);
-//                }
-//                serversHuidigeOplossing.clear();
-//                if(uitvoering2(componenten, minBeschikbaarheidspercentage, kostenBesteOplossing)){
-//                    return true;
-//                }
-//            }
-//
-//            //Als de kosten te hoog zijn, wordt een ander component geprobeert
-//            if(kosten<laagsteKosten && kosten != kostenBesteOplossing){
-//                /* Voer deze methode uit voor de volgende toevoeging */
-//                if(uitvoering2(componenten, minBeschikbaarheidspercentage, kostenBesteOplossing)){
-//                    return true;
-//                }
-//            }
-//
-//            /* Er komt geen oplossing uit deze positie, dus de server wordt verwijderd */
-//            if(serversHuidigeOplossing.size()>0){
-//                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
-//            }
-//
-//            //Als alle drie de servers niet tot een oplossing leiden, wordt er een stap teruggedaan en daar een andere server geprobeerd.
-//            if(i==2){
-//                if(serversHuidigeOplossing.size()==0){//Er zijn geen nieuwe oplossingen meer
-//                    laagsteKosten=10000000;
-//                    kosten =0;
-//                    return true;
-//                }
-//                int teller =0;
-//                for(Ontwerpcomponent component: componenten){
-//                    if(serversHuidigeOplossing.get(serversHuidigeOplossing.size()-1).getNaam().equals(component.getNaam())){
-//                        i=teller+1;
-//                        teller++;
-//                    }
-//                }
-//                serversHuidigeOplossing.remove(serversHuidigeOplossing.size()-1);
-//            }
-//        }
-//
-//        //Als er geen oplossingen te vinden zijn
-//        return false;
-//    }
-//
-//    private boolean uitvoeringHeleNetwerk(double minBeschikbaarheidspercentage){
-//        double vorigeKosten;
-//        /* Een andere oplossing proberen */
-//        for (int i = 0; i < 2; i++) {
-//            /* De beschikbaarheid en kosten van een groep worden berekend */
-//            if (i == 0) {
-//                //Webservers
-//                if(netwerkHuidigeOplossing.get(0).equals(netwerkEersteOplossing.get(0))){
-//                    uitvoering(webservers, minBeschikbaarheidspercentage);
-//                    vorigeKosten=0;
-//                    for(Ontwerpcomponent component: serversBesteOplossing){
-//                        vorigeKosten+=Double.parseDouble(component.getKosten());
-//                    }
-//                }else{
-//                    vorigeKosten=0;
-//                    for(Ontwerpcomponent component: serversBesteOplossing){
-//                        vorigeKosten+=Double.parseDouble(component.getKosten());
-//                    }
-//                    serversBesteOplossing.clear();
-//                    uitvoering2(webservers, minBeschikbaarheidspercentage, vorigeKosten);
-//                    vorigeKosten=0;
-//                    for(Ontwerpcomponent component: serversBesteOplossing){
-//                        vorigeKosten+=Double.parseDouble(component.getKosten());
-//                    }
-//                }
-//                serversBesteOplossing.clear();
-//                uitvoering2(webservers, minBeschikbaarheidspercentage, vorigeKosten);
-//            }else{//dbservers
-//                if(netwerkHuidigeOplossing.get(1).equals(netwerkEersteOplossing.get(1))){
-//                    uitvoering(dbservers, minBeschikbaarheidspercentage);
-//                    vorigeKosten=0;
-//                    for(Ontwerpcomponent component: serversBesteOplossing){
-//                        vorigeKosten+=Double.parseDouble(component.getKosten());
-//                    }
-//                }else{
-//                    vorigeKosten=0;
-//                    for(Ontwerpcomponent component: serversBesteOplossing){
-//                        vorigeKosten+=Double.parseDouble(component.getKosten());
-//                    }
-//                    serversBesteOplossing.clear();
-//                    uitvoering2(dbservers, minBeschikbaarheidspercentage, vorigeKosten);
-//                    vorigeKosten=0;
-//                    for(Ontwerpcomponent component: serversBesteOplossing){
-//                        vorigeKosten+=Double.parseDouble(component.getKosten());
-//                    }
-//                }
-//                serversBesteOplossing.clear();
-//                uitvoering2(dbservers, minBeschikbaarheidspercentage, vorigeKosten);
-//            }
-//
-//            //de vorige oplossing wordt opgeslagen om later naar terug te kunnen gaan
-//            netwerkOplossingOpslag.add(new ArrayList<>());
-//            for(ArrayList<Ontwerpcomponent> component: netwerkHuidigeOplossing){
-//                netwerkOplossingOpslag.get(netwerkOplossingOpslag.size()-1).add(component);
-//            }
-//            //de huidige oplossing wordt aangepast door de zojuist berekende nieuwe waarden in te vullen
-//            netwerkHuidigeOplossing.get(i).clear();
-//            for(Ontwerpcomponent component: serversBesteOplossing){
-//                netwerkHuidigeOplossing.get(i).add(component);
-//            }
-//
-//            //berekenen beschikbaarheid
-//            beschikbaarheid=berekenBeschikbaarheid(netwerkHuidigeOplossing.get(2), netwerkHuidigeOplossing.get(0), netwerkHuidigeOplossing.get(1));
-//            for(ArrayList<Ontwerpcomponent> groep: netwerkHuidigeOplossing){
-//                for(Ontwerpcomponent component: groep){
-//                    kosten+= Double.parseDouble(component.getKosten());
-//                }
-//            }
-//
-//            /* Controle of het beschikbaarheidspercentage al hoog genoeg is */
-//            if (beschikbaarheid>=minBeschikbaarheidspercentage && kosten<laagsteKostenNetwerk) {
-//                laagsteKostenNetwerk=kosten;
-//                kosten=0;
-//                beschikbaarheid=0;
-//                netwerkBesteOplossing.clear();
-//                for(ArrayList<Ontwerpcomponent> groep: netwerkHuidigeOplossing){
-//                    netwerkBesteOplossing.add(groep);
-//                }
-//                netwerkHuidigeOplossing=netwerkEersteOplossing;
-//                if(uitvoeringHeleNetwerk(minBeschikbaarheidspercentage)){
-//                    return true;
-//                }
-//            }
-//
-//            //Als de kosten te hoog zijn, wordt een andere oplossing geprobeert
-//            if(kosten<laagsteKostenNetwerk){
-//                /* Voer deze methode uit voor de volgende toevoeging */
-//                if(uitvoeringHeleNetwerk(minBeschikbaarheidspercentage)){
-//                    return true;
-//                }
-//            }
-//
-//            /* Er komt geen oplossing uit deze positie, dus de oplossing wordt verwijderd */
-//            netwerkHuidigeOplossing = netwerkOplossingOpslag.get(netwerkOplossingOpslag.size() - 1);
-//            netwerkOplossingOpslag.remove(netwerkOplossingOpslag.size() - 1);
-//
-//            //Als er geen oplossing uit komt, wordt een stap terug gedaan
-//            if(i==1){
-//                if(netwerkHuidigeOplossing.equals(netwerkEersteOplossing)){//Er zijn geen nieuwe oplossingen meer //misschien pas de tweede keer dat hij daar is???
-//                    laagsteKostenNetwerk=10000000;
-//                    kosten =0;
-//                    return true;
-//                }
-//                netwerkHuidigeOplossing=netwerkOplossingOpslag.get(netwerkOplossingOpslag.size()-1);
-//            }
-//        }
-//
-//        //Als er geen oplossingen te vinden zijn
-//        return false;
-//    }
-//
-//    private void optimaliseer(double minBeschikbaarheidspercentage){
-//        double beschikbaarheidFirewalls = 0;
-//        ArrayList<Ontwerpcomponent> firewallsOplossing = new ArrayList<>();
-//        ArrayList<Ontwerpcomponent> webserversBesteOplossing = new ArrayList<>();
-//        ArrayList<Ontwerpcomponent> dbserversBesteOplossing = new ArrayList<>();
-//
-//        //firewalls toevoegen
-//        while(beschikbaarheidFirewalls<minBeschikbaarheidspercentage){
-//            firewallsOplossing.add(ontwerpcomponenten.get(0));//een nieuw component wordt toegevoegd
-//            beschikbaarheidFirewalls = berekenBeschikbaarheid(firewallsOplossing);
-//        }
-//        //webservers toevoegen
-//        if (uitvoering(webservers, minBeschikbaarheidspercentage) == false) {
-//            //Er zijn geen oplossingen
-//        }else{
-//            for(Ontwerpcomponent component: serversBesteOplossing){
-//                webserversBesteOplossing.add(component);
-//            }
-//            serversBesteOplossing.clear();
-//            laagsteKosten = 10000000;
-//        }
-//
-//        //dbservers toevoegen
-//        if (uitvoering(dbservers, minBeschikbaarheidspercentage) == false) {
-//            //Er zijn geen oplossingen
-//        }else{
-//            for(Ontwerpcomponent component: serversBesteOplossing){
-//                dbserversBesteOplossing.add(component);
-//            }
-//            serversBesteOplossing.clear();
-//            laagsteKosten = 10000000;
-//        }
-//
-//        //hele netwerk
-//        if(berekenBeschikbaarheid(firewallsOplossing, webserversBesteOplossing, dbserversBesteOplossing)>=minBeschikbaarheidspercentage){
-//            for(Ontwerpcomponent firewall: firewallsOplossing){
-//                besteOplossing.add(firewall);
-//            }
-//            for(Ontwerpcomponent webserver: webserversBesteOplossing){
-//                besteOplossing.add(webserver);
-//            }
-//            for(Ontwerpcomponent dbserver: dbserversBesteOplossing){
-//                besteOplossing.add(dbserver);
-//            }
-//        }else{
-//            netwerkHuidigeOplossing.add(webserversBesteOplossing);
-//            netwerkHuidigeOplossing.add(dbserversBesteOplossing);
-//            netwerkHuidigeOplossing.add(firewallsOplossing);
-//            netwerkEersteOplossing.add(webserversBesteOplossing);
-//            netwerkEersteOplossing.add(dbserversBesteOplossing);
-//            netwerkEersteOplossing.add(firewallsOplossing);
-//            uitvoeringHeleNetwerk(minBeschikbaarheidspercentage);
-//            for(ArrayList<Ontwerpcomponent> groep: netwerkBesteOplossing){
-//                for(Ontwerpcomponent component: groep){
-//                    besteOplossing.add(component);
-//                }
-//            }
-//        }
 
 
-    //einde backtrackingalgoritme
-
-    private static int LoopDB(int totaalSrvrDB, int srvnr){
+    private static int LoopDB(int totaalSrvrDB, int serverNummer){
         int teller = 0;
         while(teller<maxLoop-totaalSrvrDB){
-            dbAantal[srvnr]= teller;
+            aantalDatabases[serverNummer]= teller;
             teller++;
-            if (srvnr<maxDBSrt) {
-
-                LoopDB(teller+totaalSrvrDB,srvnr+1);
+            if (serverNummer<maxDBSrt) {
+                LoopDB(teller+totaalSrvrDB,serverNummer+1);
             }
 
-            if(srvnr==maxDBSrt) {
+            if(serverNummer==maxDBSrt) {
                 totaalTeller++;
-                System.out.println(totaalTeller + " W " + wbAantal[0] + "-" + wbAantal[1] + "-" + wbAantal[2] + "-" + "D " + dbAantal[0] + "-" + dbAantal[1] + "-" + dbAantal[2] + " ->" + BerekenBeschikbaarheid() + " - " + Berekenkosten() + " " + minKosten + serverset);
+                System.out.println(totaalTeller + " W " + aantalWebservers[0] + "-" + aantalWebservers[1] + "-" + aantalWebservers[2] + "-" + "D " + aantalDatabases[0] + "-" + aantalDatabases[1] + "-" + aantalDatabases[2] + " ->" + BerekenBeschikbaarheid() + " - " + Berekenkosten() + " " + minKosten + resultaat);
 
                 double berekendeBeschikbaarheid = BerekenBeschikbaarheid();
                 double berekendeKosten = Berekenkosten();
@@ -759,65 +452,81 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 if (berekendeBeschikbaarheid > minBeschikbaarheid) {
                     if (berekendeKosten < minKosten) {
                         minKosten = berekendeKosten;
-                        serverset = "F 1 W " + wbAantal[0] + "-" + wbAantal[1] + "-" + wbAantal[2] + "-" + "D " + dbAantal[0] + "-" + dbAantal[1] + "-" + dbAantal[2];
+                        resultaat = "F 1 W " + aantalWebservers[0] + "-" + aantalWebservers[1] + "-" + aantalWebservers[2] + "-" + "D " + aantalDatabases[0] + "-" + aantalDatabases[1] + "-" + aantalDatabases[2];
                     }
-                    return srvnr;
+                    return serverNummer;
                 }
             }
         }
-        return srvnr;
+        return serverNummer;
     }
 
-    private static int LoopWB(int totaalSrvrWB,int srvnr){
+    //berekent de juiste database aantal
+    private static int LoopWB(int totaalSrvrWB,int serverNummer){
         int teller = 0;
         while(teller<maxLoop-totaalSrvrWB){
-            wbAantal[srvnr]= teller;
-            if (srvnr<maxWBSrt) {
-                LoopWB(teller+totaalSrvrWB,srvnr+1);
+            aantalWebservers[serverNummer]= teller;
+            if (serverNummer<maxWBSrt) {
+                LoopWB(teller+totaalSrvrWB,serverNummer+1);
             }
-            if(srvnr==maxWBSrt){
+            if(serverNummer==maxWBSrt){
                 LoopDB(0,0);
-
             }
-
             teller++;
         }
-        return srvnr;
+        return serverNummer;
     }
 
+    //berekent beschikbaarheid van heel het ontwerp
     private static double BerekenBeschikbaarheid(){
         double beschikbaarheidFW = 1 - Math.pow((1 - 0.99998), 1);
-        double beschikbaarheidDB = 1 - Math.pow((1 - dbBeschikbaarheid[0]), dbAantal[0]) * Math.pow((1 - dbBeschikbaarheid[1]), dbAantal[1]) * Math.pow((1 - dbBeschikbaarheid[2]), dbAantal[2]);
-        double beschikbaarheidWB = 1 - Math.pow((1 - wbBeschikbaarheid[0]), wbAantal[0]) * Math.pow((1 - wbBeschikbaarheid[1]), wbAantal[1]) * Math.pow((1 - wbBeschikbaarheid[2]), wbAantal[2]);
+        double beschikbaarheidDB = 1 - Math.pow((1 - databaseBeschikbaarheid[0]), aantalDatabases[0]) * Math.pow((1 - databaseBeschikbaarheid[1]), aantalDatabases[1]) * Math.pow((1 - databaseBeschikbaarheid[2]), aantalDatabases[2]);
+        double beschikbaarheidWB = 1 - Math.pow((1 - webserverBeschikbaarheid[0]), aantalWebservers[0]) * Math.pow((1 - webserverBeschikbaarheid[1]), aantalWebservers[1]) * Math.pow((1 - webserverBeschikbaarheid[2]), aantalWebservers[2]);
         double totaleBeschikbaarheid = beschikbaarheidFW * beschikbaarheidDB * beschikbaarheidWB;
 
         return totaleBeschikbaarheid;
     }
 
+    //berekentkosten van heel het ontwerp
     private static double Berekenkosten(){
-        double kostenFW = 4000;
-        double kostenDB = (dbAantal[0] * dbKosten[0]) + (dbAantal[1] * dbKosten[1]) + (dbAantal[2] *dbKosten[2]);
-        double kostenWB = (wbAantal[0] * wbKosten[0]) + (wbAantal[1] * wbKosten[1]) + (wbAantal[2] * wbKosten[2]);
-        double totalekosten = kostenFW + kostenDB + kostenWB;
+        double kostenFirewalls = 4000;
+        double kostenDatabases = (aantalDatabases[0] * dbKosten[0]) + (aantalDatabases[1] * dbKosten[1]) + (aantalDatabases[2] *dbKosten[2]);
+        double kostenWebservers = (aantalWebservers[0] * wbKosten[0]) + (aantalWebservers[1] * wbKosten[1]) + (aantalWebservers[2] * wbKosten[2]);
+        double totalekosten = kostenFirewalls + kostenDatabases + kostenWebservers;
 
         return totalekosten;
     }
 
+
+
     @Override
     public void actionPerformed(ActionEvent e){
+        tabel2.isCellEditable(0,4);
+
         minimaalTotaleBeschikbaarheid.setText("Minimaal totaal beschikbaarheidspercentage:");     // standaard labeltekst zonder melding
         try {
             if (e.getSource() == bereken) {
                 // ingevoerd percentage wordt van String naar Double omgezet
-//                double ingevoerdPercentage = Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", "."));
                 minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", "."))/100);
                 LoopWB(0,0);
-                System.out.println(totaalTeller + " combinaties onderzocht " + minKosten + " - " + serverset);
+                System.out.println(totaalTeller + " combinaties onderzocht " + minKosten + " - " + resultaat);
 
-                char[] nummers = serverset.toCharArray();
+                char[] nummers = resultaat.toCharArray();
                 for(char nummer: nummers) {
                     System.out.println(nummer);
                 }
+                tabel2.setValueAt(nummers[14], 0,4);
+                tabel2.setValueAt(nummers[6], 1,4);
+                tabel2.setValueAt(nummers[16], 2,4);
+                tabel2.setValueAt(nummers[8], 3,4);
+                tabel2.setValueAt(nummers[18], 4,4);
+                tabel2.setValueAt(nummers[10], 5,4);
+                tabel2.setValueAt(nummers[2], 6,4);
+
+
+                beschikbaarheidspercentageLabel.setText(jtMinimaalTotaleBeschikbaarheid.getText());
+                totaleBedragLabel.setText("" + minKosten);
+
                 System.out.println("pfSense: " + nummers[2]);
                 System.out.println("Webserver 1: " + nummers[6]);
                 System.out.println("Webserver 2: " + nummers[8]);
@@ -825,272 +534,293 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 System.out.println("Database 1: " + nummers[14]);
                 System.out.println("Database 2: " + nummers[16]);
                 System.out.println("Database 3: " + nummers[18]);
-                
+            }
 
-                //backtracking algoritme gebruiken om optimale waarden te bepalen
+            if (e.getSource() == voegToe) {
+                String naamOntwerpnetwerk = "Ontwerpnetwerk " + beschikbaarheidspercentageLabel.getText();
+                beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText());
 
-               //testcode
-//                uitvoering(webservers, ingevoerdPercentage);
-//                for(Ontwerpcomponent component: serversBesteOplossing){
-//                    System.out.println(component.getNaam());
-//                }
-//                System.out.println();
-//                serversBesteOplossing.clear();
-//                uitvoering2(webservers, ingevoerdPercentage, 13200);
-//                for(Ontwerpcomponent component: serversBesteOplossing){
-//                    System.out.println(component.getNaam());
-//                }
-//                serversBesteOplossing.clear();
-//                System.out.println();
-//                ArrayList<Ontwerpcomponent> firewalls = new ArrayList<>();
-//                firewalls.add(ontwerpcomponenten.get(0));
-//                ArrayList<Ontwerpcomponent> webserverTest = new ArrayList<>();
-//                webserverTest.add(webservers.get(0));
-//                webserverTest.add(webservers.get(0));
-//                webserverTest.add(webservers.get(2));
-//                ArrayList<Ontwerpcomponent> dbserverTest = new ArrayList<>();
-//                dbserverTest.add(webservers.get(0));
-//                dbserverTest.add(webservers.get(0));
-//                dbserverTest.add(webservers.get(1));
-//                netwerkHuidigeOplossing.clear();
-//                netwerkHuidigeOplossing.add(0,webserverTest);
-//                netwerkHuidigeOplossing.add(1,dbserverTest);
-//                netwerkHuidigeOplossing.add(2,firewalls);
-//                netwerkEersteOplossing.add(webserverTest);
-//                netwerkEersteOplossing.add(dbserverTest);
-//                netwerkEersteOplossing.add(firewalls);
-//                uitvoeringHeleNetwerk(ingevoerdPercentage);
-//                for(ArrayList<Ontwerpcomponent> groep: netwerkBesteOplossing){
-//                    for(Ontwerpcomponent component: groep){
-//                        System.out.println(component.getNaam());
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+                Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "HAL9001DB" +"', '"+ tabel2.getValueAt(0,4) + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "HAL9001W" +"', '"+ tabel2.getValueAt(1,4) + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "HAL9002DB" +"', '"+ tabel2.getValueAt(2,4) + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "HAL9002W" +"', '"+ tabel2.getValueAt(3,4) + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "HAL9003DB" +"', '"+ tabel2.getValueAt(4,4) + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "HAL9003W" +"', '"+ tabel2.getValueAt(5,4) + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "pfSense" +"', '"+ tabel2.getValueAt(6,4) + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+
+
+
+                ResultSet rs2 = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
+
+                Groep firewallgroep = new Groep("firewallgroep");
+                Groep webservergroep = new Groep("webservergroep");
+                Groep databasegroep = new Groep("databasegroep");
+
+
+                Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
+
+//                while (rs2.next()) {
+//                    if (!Ontwerpnetwerk.getOntwerpNetwerken().contains(ontwerpnetwerk)) {
+//                        ontwerpnetwerk = new Ontwerpnetwerk(rs2.getString("NaamNetwerk") + "%", rs2.getDouble("Kosten"),
+//                                rs2.getDouble("Beschikbaarheid"));
+//                    }
+//
+//                    for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
+//                        if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
+//                            for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
+//                                if (ontwerpcomponent.getType().equals("Firewall")) {
+//                                    firewallgroep.componenten.add(ontwerpcomponent);
+//
+//                                }
+//
+//                                if (ontwerpcomponent.getType().equals("Webserver")) {
+//                                    webservergroep.componenten.add(ontwerpcomponent);
+//
+//                                }
+//
+//                                if (ontwerpcomponent.getType().equals("Database")) {
+//                                    databasegroep.componenten.add(ontwerpcomponent);
+//                                }
+//                            }
+//                        }
 //                    }
 //                }
-//                System.out.println();
-//                optimaliseer(ingevoerdPercentage);
-//                System.out.println(besteOplossing);
-//                for(Ontwerpcomponent component: besteOplossing){
-//                    System.out.println(component.getNaam());
-//                }
-            }
-            if (e.getSource() == voegToe) {
+//                ontwerpnetwerk.groepen.add(firewallgroep);
+//                ontwerpnetwerk.groepen.add(webservergroep);
+//                ontwerpnetwerk.groepen.add(databasegroep);
 
-                Groep databasegroep = new Groep("databases", 90);
-                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de databases
-                // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
-                Groep webservergroep = new Groep("webservers", 94);
-                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de webservers
-                // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
-                Groep firewall = new Groep("firewall", 99.998);
-
-                for (Ontwerpcomponent ontwerpcomponent : optimaleWaarden) {
-                    if (ontwerpcomponent.getType().equals("database")) {
-                        databasegroep.componenten.add(ontwerpcomponent);
-                    }
-                    if (ontwerpcomponent.getType().equals("webserver")) {
-                        webservergroep.componenten.add(ontwerpcomponent);
-                    }
-                    if (ontwerpcomponent.getType().equals("firewall")) {
-                        firewall.componenten.add(ontwerpcomponent);
-                    }
-                }
-
-                //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken
-                // nog geen ontwerpnetwerk had, wordt deze gesloten en wordt er een nieuw ontwerpframe met het
-                //nieuwe netwerk aangemaakt (wanneer er niet al een ontwerpnetwerk met dezelfde beschikbaarheid bestaat)
-                if(ontwerpFrame.getOntwerpnetwerk() == null) {
-
-
-                   // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
-                   Ontwerpnetwerk ontwerpNetwerkMetDezelfdeBeschikbaarheid = null;
-                   for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
-                       if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
-                           ontwerpNetwerkMetDezelfdeBeschikbaarheid = ontwerpnetwerk1;
-                       }
-                   }
-
-                   // wanneer er niet een ontwerp met dezelfde beschikbaarheid is, wordt er een nieuw ontwerpnetwerk gemaakt
-                       if (ontwerpNetwerkMetDezelfdeBeschikbaarheid == null) {
-                           //nieuw ontwerpnetwerk aanmaken
-                           // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu voorbeelddata gebruikt
-
-                           String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
-                           Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%", totaleBedrag, beschikbaarheidspercentage);
-                           ontwerpnetwerk.groepen.add(databasegroep);
-                           ontwerpnetwerk.groepen.add(webservergroep);
-                           ontwerpnetwerk.groepen.add(firewall);
-
-                           //ontwerpnetwerk wordt in database opgeslagen
-                           for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
-                               int k = 0;
-                               for (Ontwerpcomponent ontwerpcomponent2 : optimaleWaarden) {
-                                   if (ontwerpcomponent2.equals(ontwerpcomponent)) {
-                                       k++;
-                                   }
-                               }
-                               if(k != 0) {
-
-//                                   // Testcode of de juiste data in de database zal worden opgeslagen
-//                                   System.out.println(naamOntwerpnetwerk + " "
-//                                          + ontwerpcomponent.getNaam() + " " + k + " " + beschikbaarheidspercentage.getText() +
-//                                         " " + totaleBedrag.getText());
-
-                                   Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
-                                   Statement statement = connection.createStatement();
-                                   int gelukt = statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " +
-                                           "('"+ naamOntwerpnetwerk +"', '"+ ontwerpcomponent.getNaam()+"', '"+ k + "','"
-                                           + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
-                                   statement.close();
-                                   connection.close();
-                               }
-                           }
-
-                           ontwerpFrame.dispose();
-                           OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
-                       }
-
-                       // wanneer er wel een ontwerp met dezelfde beschikbaarheid is, wordt er geen nieuw ontwerpnetwerk aangemaakt,
-                       // maar wordt het al bestaande netwerk geopend
-                   else {
-                       ontwerpFrame.dispose();
-                       OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpNetwerkMetDezelfdeBeschikbaarheid);
-                    }
-                }
-
-                //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken al een ontwerpnetwerk heeft, wordt er een nieuw ontwerpframe met het nieuwe
-                //netwerk aangemaakt zonder het ontwerpframe eerst te sluiten (wanneer er niet al een ontwerpnetwerk met dezelfde beschikbaarheid bestaat)
-                if(ontwerpFrame.getOntwerpnetwerk() != null && !ontwerpFrame.isGedruktOpOptimalisatieknop()) {
-
-                    // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
-                    Ontwerpnetwerk ontwerpNetwerkMetZelfdeBeschikbaarheid = null;
-                    for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
-                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
-                            ontwerpNetwerkMetZelfdeBeschikbaarheid = ontwerpnetwerk1;
-                        }
-                    }
-
-                    // wanneer er niet een ontwerp met dezelfde beschikbaarheid is, wordt er een nieuw ontwerpnetwerk gemaakt
-                    if (ontwerpNetwerkMetZelfdeBeschikbaarheid == null) {
-                        //nieuw ontwerpnetwerk aanmaken
-                        // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu voorbeelddata gebruikt
-                        //ontwerpnetwerk moet in database opgeslagen worden
-
-                        String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
-                        Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%", totaleBedrag, beschikbaarheidspercentage);
-                        ontwerpnetwerk.groepen.add(databasegroep);
-                        ontwerpnetwerk.groepen.add(webservergroep);
-                        ontwerpnetwerk.groepen.add(firewall);
-                     //   ontwerpnetwerk.setCorrecteKostenEnBeschikbaarheid();
-
-                        for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
-                            int k = 0;
-                            for (Ontwerpcomponent ontwerpcomponent2 : optimaleWaarden) {
-                                if (ontwerpcomponent2.equals(ontwerpcomponent)) {
-                                    k++;
-                                }
-                            }
-                            if(k != 0) {
-
-                                // Testcode of de juiste data in de database zal worden opgeslagen
-//                          System.out.println(naamOntwerpnetwerk + " "
-//                          + ontwerpcomponent.getNaam() + " " + k + " " + beschikbaarheidspercentage.getText() +
-//                          " " + totaleBedrag.getText());
-
-                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
-                        Statement statement = connection.createStatement();
-                        int gelukt = statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " +
-                        "('"+ naamOntwerpnetwerk +"', '"+ ontwerpcomponent.getNaam()+"', '"+ k + "','"
-                        + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
-
-                        statement.close();
-                        connection.close();
-                            }
-                        }
-
-                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
-                    }
-                    // wanneer er wel een ontwerp met dezelfde beschikbaarheid is, wordt er geen nieuw ontwerpnetwerk aangemaakt,
-                    // maar wordt het al bestaande netwerk geopend
-                    else {
-                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpNetwerkMetZelfdeBeschikbaarheid);
-                    }
-                }
-
-                //wanneer je een al bestaand ontwerpnetwerk wilt optimaliseren, wordt het bestaande ontwerpnetwerk geüpdatet
-                //(wanneer er niet al een ontwerpnetwerk met dezelfde beschikbaarheid bestaat)
-                if(ontwerpFrame.getOntwerpnetwerk() != null && ontwerpFrame.isGedruktOpOptimalisatieknop()) {
-
-                    // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
-                    Ontwerpnetwerk ontwerpNetwerkMetZelfdeBeschikbaarheid = null;
-                    for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
-                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
-                            ontwerpNetwerkMetZelfdeBeschikbaarheid = ontwerpnetwerk1;
-                        }
-                    }
-
-                    // wanneer er niet een ontwerp met dezelfde beschikbaarheid is, wordt het ontwerpnetwerk geüpdatet
-                    // ontwerpnetwerk moet in database geüpdatet worden
-                    if (ontwerpNetwerkMetZelfdeBeschikbaarheid == null) {
-                        String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
-                        ontwerpFrame.getOntwerpnetwerk().setNaam(naamOntwerpnetwerk + "%");
-                        ontwerpFrame.getOntwerpnetwerk().setKosten(totaleBedrag);
-                        ontwerpFrame.getOntwerpnetwerk().setBeschikbaarheidspercentage(beschikbaarheidspercentage);
-                        ontwerpFrame.getOntwerpnetwerk().groepen.set(0, databasegroep);
-                        ontwerpFrame.getOntwerpnetwerk().groepen.set(1, webservergroep);
-                        ontwerpFrame.getOntwerpnetwerk().groepen.set(2, firewall);
-
-                        for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
-                            int k = 0;
-                            for (Ontwerpcomponent ontwerpcomponent2 : optimaleWaarden) {
-                                if (ontwerpcomponent2.equals(ontwerpcomponent)) {
-                                    k++;
-                                }
-                            }
-                            if(k != 0) {
-
-//                                // Testcode of de juiste data in de database zal worden geüpdatet
-//                                System.out.println(naamOntwerpnetwerk + " "
-//                                       + ontwerpcomponent.getNaam() + " " + k + " " + beschikbaarheidspercentage.getText() +
-//                                      " " + totaleBedrag.getText() + " vervangt ontwerpnetwerk met beschikbaarheidspercentage van: "
-//                                        + ontwerpFrame.getOntwerpnetwerk().getBeschikbaarheidspercentage());
-//
-                                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
-                                PreparedStatement statement = connection.prepareStatement("UPDATE Ontwerpnetwerk SET NaamNetwerk = '"+naamOntwerpnetwerk+" ',' NaamComponent = "+ontwerpcomponent.getNaam()
-                                        +" ',' AantalGebruikt = "+k+" ',' Beschikbaarheid = "+beschikbaarheidspercentage
-                                        +" ',' Kosten = "+ totaleBedrag+ "' WHERE Beschikbaarheid = ? ");
-
-                                statement.setString(1, ontwerpFrame.getOntwerpnetwerk().getBeschikbaarheidspercentage());
-
-                                int gelukt = statement.executeUpdate();
-
-                                statement.close();
-                                connection.close();
-
-                            }
-                        }
-
-
-
-
-                        ontwerpFrame.setGedruktOpOptimalisatieknop(false);
-                        Ontwerpnetwerk geoptimaliseerdOntwerpnetwerk = ontwerpFrame.getOntwerpnetwerk();
-                        ontwerpFrame.dispose();
-                        OntwerpFrame ontwerpFrame = new OntwerpFrame(geoptimaliseerdOntwerpnetwerk);
-
-                    }
-                    else {
-                        // wanneer er wel eerder een ontwerp met dezelfde beschikbaarheid is, wordt het ontwerpnetwerk niet geüpdatet,
-                        // maar wordt het al bestaande netwerk geopend
-                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpNetwerkMetZelfdeBeschikbaarheid);
-                        }
-
-                    }
-                }
+                connection.close();
+                statement.close();
 
                 dispose();
 
+//                rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
+//                System.out.println(tabel2.getValueAt(0, 4));
+//
+//                String naamOntwerpnetwerk = "Ontwerpnetwerk " + beschikbaarheidspercentageLabel.getText();
+//
+//                ResultSet rs = statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('"+ naamOntwerpnetwerk +"', '"+ "HAL9001DB" +"', '"+ aantalHal9001DB + "','" + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+
+
+//                Groep databasegroep = new Groep("databases", 90);
+//                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de databases
+//                // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
+//                Groep webservergroep = new Groep("webservers", 94);
+//                // beschikbaarheidspercentage moet bekend worden naar aanleiding van de webservers
+//                // die uit optimalisatiefunctie komen, nu voorbeelddata gebruikt
+//                Groep firewall = new Groep("firewall", 99.998);
+//
+//                for (Ontwerpcomponent ontwerpcomponent : optimaleWaarden) {
+//                    if (ontwerpcomponent.getType().equals("database")) {
+//                        databasegroep.componenten.add(ontwerpcomponent);
+//                    }
+//                    if (ontwerpcomponent.getType().equals("webserver")) {
+//                        webservergroep.componenten.add(ontwerpcomponent);
+//                    }
+//                    if (ontwerpcomponent.getType().equals("firewall")) {
+//                        firewall.componenten.add(ontwerpcomponent);
+//                    }
+//                }
+//
+//                //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken
+//                // nog geen ontwerpnetwerk had, wordt deze gesloten en wordt er een nieuw ontwerpframe met het
+//                //nieuwe netwerk aangemaakt (wanneer er niet al een ontwerpnetwerk met dezelfde beschikbaarheid bestaat)
+//                if(ontwerpFrame.getOntwerpnetwerk() == null) {
+//
+//
+//                    // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
+//                    Ontwerpnetwerk ontwerpNetwerkMetDezelfdeBeschikbaarheid = null;
+//                    for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
+//                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
+//                            ontwerpNetwerkMetDezelfdeBeschikbaarheid = ontwerpnetwerk1;
+//                        }
+//                    }
+//
+//                    // wanneer er niet een ontwerp met dezelfde beschikbaarheid is, wordt er een nieuw ontwerpnetwerk gemaakt
+//                    if (ontwerpNetwerkMetDezelfdeBeschikbaarheid == null) {
+//                        //nieuw ontwerpnetwerk aanmaken
+//                        // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu voorbeelddata gebruikt
+//
+//                        String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
+//                        Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%", totaleBedrag, beschikbaarheidspercentage);
+//                        ontwerpnetwerk.groepen.add(databasegroep);
+//                        ontwerpnetwerk.groepen.add(webservergroep);
+//                        ontwerpnetwerk.groepen.add(firewall);
+//
+//                        //ontwerpnetwerk wordt in database opgeslagen
+//                        for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
+//                            int k = 0;
+//                            for (Ontwerpcomponent ontwerpcomponent2 : optimaleWaarden) {
+//                                if (ontwerpcomponent2.equals(ontwerpcomponent)) {
+//                                    k++;
+//                                }
+//                            }
+//                            if(k != 0) {
+//
+////                                   // Testcode of de juiste data in de database zal worden opgeslagen
+////                                   System.out.println(naamOntwerpnetwerk + " "
+////                                          + ontwerpcomponent.getNaam() + " " + k + " " + beschikbaarheidspercentage.getText() +
+////                                         " " + totaleBedrag.getText());
+//
+//                                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+//                                Statement statement = connection.createStatement();
+//                                int gelukt = statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " +
+//                                        "('"+ naamOntwerpnetwerk +"', '"+ ontwerpcomponent.getNaam()+"', '"+ k + "','"
+//                                        + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+//                                statement.close();
+//                                connection.close();
+//                            }
+//                        }
+//
+//                        ontwerpFrame.dispose();
+//                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
+//                    }
+//
+//                    // wanneer er wel een ontwerp met dezelfde beschikbaarheid is, wordt er geen nieuw ontwerpnetwerk aangemaakt,
+//                    // maar wordt het al bestaande netwerk geopend
+//                    else {
+//                        ontwerpFrame.dispose();
+//                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpNetwerkMetDezelfdeBeschikbaarheid);
+//                    }
+//                }
+//
+//                //als het ontwerpframe van waaruit je een nieuw ontwerp wil aanmaken al een ontwerpnetwerk heeft, wordt er een nieuw ontwerpframe met het nieuwe
+//                //netwerk aangemaakt zonder het ontwerpframe eerst te sluiten (wanneer er niet al een ontwerpnetwerk met dezelfde beschikbaarheid bestaat)
+//                if(ontwerpFrame.getOntwerpnetwerk() != null && !ontwerpFrame.isGedruktOpOptimalisatieknop()) {
+//
+//                    // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
+//                    Ontwerpnetwerk ontwerpNetwerkMetZelfdeBeschikbaarheid = null;
+//                    for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
+//                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
+//                            ontwerpNetwerkMetZelfdeBeschikbaarheid = ontwerpnetwerk1;
+//                        }
+//                    }
+//
+//                    // wanneer er niet een ontwerp met dezelfde beschikbaarheid is, wordt er een nieuw ontwerpnetwerk gemaakt
+//                    if (ontwerpNetwerkMetZelfdeBeschikbaarheid == null) {
+//                        //nieuw ontwerpnetwerk aanmaken
+//                        // kosten en beschikbaarheidspercentage zijn bekend naar aanleiding van optimalisatiefunctie, nu voorbeelddata gebruikt
+//                        //ontwerpnetwerk moet in database opgeslagen worden
+//
+//                        String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
+//                        Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamOntwerpnetwerk + "%", totaleBedrag, beschikbaarheidspercentage);
+//                        ontwerpnetwerk.groepen.add(databasegroep);
+//                        ontwerpnetwerk.groepen.add(webservergroep);
+//                        ontwerpnetwerk.groepen.add(firewall);
+//                        //   ontwerpnetwerk.setCorrecteKostenEnBeschikbaarheid();
+//
+//                        for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
+//                            int k = 0;
+//                            for (Ontwerpcomponent ontwerpcomponent2 : optimaleWaarden) {
+//                                if (ontwerpcomponent2.equals(ontwerpcomponent)) {
+//                                    k++;
+//                                }
+//                            }
+//                            if(k != 0) {
+//
+//                                // Testcode of de juiste data in de database zal worden opgeslagen
+////                          System.out.println(naamOntwerpnetwerk + " "
+////                          + ontwerpcomponent.getNaam() + " " + k + " " + beschikbaarheidspercentage.getText() +
+////                          " " + totaleBedrag.getText());
+//
+//                                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+//                                Statement statement = connection.createStatement();
+//                                int gelukt = statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " +
+//                                        "('"+ naamOntwerpnetwerk +"', '"+ ontwerpcomponent.getNaam()+"', '"+ k + "','"
+//                                        + beschikbaarheidspercentage+ "', '"+ totaleBedrag +"' )");
+//
+//                                statement.close();
+//                                connection.close();
+//                            }
+//                        }
+//
+//                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpnetwerk);
+//                    }
+//                    // wanneer er wel een ontwerp met dezelfde beschikbaarheid is, wordt er geen nieuw ontwerpnetwerk aangemaakt,
+//                    // maar wordt het al bestaande netwerk geopend
+//                    else {
+//                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpNetwerkMetZelfdeBeschikbaarheid);
+//                    }
+//                }
+//
+//                //wanneer je een al bestaand ontwerpnetwerk wilt optimaliseren, wordt het bestaande ontwerpnetwerk geüpdatet
+//                //(wanneer er niet al een ontwerpnetwerk met dezelfde beschikbaarheid bestaat)
+//                if(ontwerpFrame.getOntwerpnetwerk() != null && ontwerpFrame.isGedruktOpOptimalisatieknop()) {
+//
+//                    // bepalen of er al een ontwerp met dezelfde beschikbaarheid is
+//                    Ontwerpnetwerk ontwerpNetwerkMetZelfdeBeschikbaarheid = null;
+//                    for(Ontwerpnetwerk ontwerpnetwerk1: Ontwerpnetwerk.getOntwerpNetwerken()) {
+//                        if (ontwerpnetwerk1.getBeschikbaarheidspercentage().equals(totaleBeschikbaarheidNetwerkTekst)) {
+//                            ontwerpNetwerkMetZelfdeBeschikbaarheid = ontwerpnetwerk1;
+//                        }
+//                    }
+//
+//                    // wanneer er niet een ontwerp met dezelfde beschikbaarheid is, wordt het ontwerpnetwerk geüpdatet
+//                    // ontwerpnetwerk moet in database geüpdatet worden
+//                    if (ontwerpNetwerkMetZelfdeBeschikbaarheid == null) {
+//                        String naamOntwerpnetwerk = "Ontwerpnetwerk " + totaleBeschikbaarheidNetwerkTekst;
+//                        ontwerpFrame.getOntwerpnetwerk().setNaam(naamOntwerpnetwerk + "%");
+//                        ontwerpFrame.getOntwerpnetwerk().setKosten(totaleBedrag);
+//                        ontwerpFrame.getOntwerpnetwerk().setBeschikbaarheidspercentage(beschikbaarheidspercentage);
+//                        ontwerpFrame.getOntwerpnetwerk().groepen.set(0, databasegroep);
+//                        ontwerpFrame.getOntwerpnetwerk().groepen.set(1, webservergroep);
+//                        ontwerpFrame.getOntwerpnetwerk().groepen.set(2, firewall);
+//
+//                        for(Ontwerpcomponent ontwerpcomponent: ontwerpcomponenten) {
+//                            int k = 0;
+//                            for (Ontwerpcomponent ontwerpcomponent2 : optimaleWaarden) {
+//                                if (ontwerpcomponent2.equals(ontwerpcomponent)) {
+//                                    k++;
+//                                }
+//                            }
+//                            if(k != 0) {
+//
+////                                // Testcode of de juiste data in de database zal worden geüpdatet
+////                                System.out.println(naamOntwerpnetwerk + " "
+////                                       + ontwerpcomponent.getNaam() + " " + k + " " + beschikbaarheidspercentage.getText() +
+////                                      " " + totaleBedrag.getText() + " vervangt ontwerpnetwerk met beschikbaarheidspercentage van: "
+////                                        + ontwerpFrame.getOntwerpnetwerk().getBeschikbaarheidspercentage());
+////
+//                                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+//                                PreparedStatement statement = connection.prepareStatement("UPDATE Ontwerpnetwerk SET NaamNetwerk = '"+naamOntwerpnetwerk+" ',' NaamComponent = "+ontwerpcomponent.getNaam()
+//                                        +" ',' AantalGebruikt = "+k+" ',' Beschikbaarheid = "+beschikbaarheidspercentage
+//                                        +" ',' Kosten = "+ totaleBedrag+ "' WHERE Beschikbaarheid = ? ");
+//
+//                                statement.setString(1, ontwerpFrame.getOntwerpnetwerk().getBeschikbaarheidspercentage());
+//
+//                                int gelukt = statement.executeUpdate();
+//
+//                                statement.close();
+//                                connection.close();
+//
+//                            }
+//                        }
+//
+//
+//
+//
+//                        ontwerpFrame.setGedruktOpOptimalisatieknop(false);
+//                        Ontwerpnetwerk geoptimaliseerdOntwerpnetwerk = ontwerpFrame.getOntwerpnetwerk();
+//                        ontwerpFrame.dispose();
+//                        OntwerpFrame ontwerpFrame = new OntwerpFrame(geoptimaliseerdOntwerpnetwerk);
+//
+//                    }
+//                    else {
+//                        // wanneer er wel eerder een ontwerp met dezelfde beschikbaarheid is, wordt het ontwerpnetwerk niet geüpdatet,
+//                        // maar wordt het al bestaande netwerk geopend
+//                        OntwerpFrame ontwerpFrame = new OntwerpFrame(ontwerpNetwerkMetZelfdeBeschikbaarheid);
+//                    }
+//
+//                }
+//            }
+//
+//                dispose();
+            }
         } catch(NumberFormatException nfe){
-                minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
-                // melding dat er een percentage ingevuld moet worden
+            minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
+            // melding dat er een percentage ingevuld moet worden
         } catch (SQLException sql) {
             sql.printStackTrace();
         }

@@ -79,17 +79,17 @@ public class main {
             for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
                 if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
                     for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
-                        if (ontwerpcomponent.getType().equals("firewall")) {
+                        if (ontwerpcomponent.getType().equals("Firewall")) {
                             firewallgroep.componenten.add(ontwerpcomponent);
 
                         }
 
-                        if (ontwerpcomponent.getType().equals("webserver")) {
+                        if (ontwerpcomponent.getType().equals("Webserver")) {
                             webservergroep.componenten.add(ontwerpcomponent);
 
                         }
 
-                        if (ontwerpcomponent.getType().equals("database")) {
+                        if (ontwerpcomponent.getType().equals("Database")) {
                             databasegroep.componenten.add(ontwerpcomponent);
                         }
                     }
