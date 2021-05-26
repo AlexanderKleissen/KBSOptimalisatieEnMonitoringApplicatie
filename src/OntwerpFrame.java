@@ -101,13 +101,11 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
-
         //Panel voor componenten
         JPanel componentenPanel = new JPanel();
         componentenPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
         componentenPanel.setBackground(backClr2);
         center.add(componentenPanel);
-
 
         //Componenten info op het scherm
         for(Groep groep: netwerk.groepen) {
@@ -125,12 +123,11 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                     JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
                     kosten.setForeground(Color.white);
                     jPanel.add(kosten);
-        //                   center.add(jPanel);
                     componentenPanel.add(jPanel);
                 }
             }
         }
-                setVisible(true);
+        setVisible(true);
     }
 
 

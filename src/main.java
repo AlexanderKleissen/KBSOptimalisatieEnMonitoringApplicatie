@@ -1,5 +1,3 @@
-import javax.naming.CommunicationException;
-import javax.xml.crypto.Data;
 import java.sql.*;
 
 public class main {
@@ -56,7 +54,6 @@ public class main {
 
         }
 
-
         OntwerpFrame ontwerpFrame = new OntwerpFrame();
 
 
@@ -102,5 +99,10 @@ public class main {
 
         connection.close();
         statement.close();
+
+        ontwerpFrame.add(netwerk1);
+
+        Ontwerpnetwerk.getNetwerkenUitDatabase();
+
     }
 }
