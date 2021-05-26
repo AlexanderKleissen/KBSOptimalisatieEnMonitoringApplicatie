@@ -18,6 +18,7 @@ public class Ontwerpnetwerk extends Netwerk {
     //    naarDatabase(beschikbaarheidspercentage, kosten);
     }
 
+
     public Ontwerpnetwerk() {
            super(null, 0, new ArrayList<>());
            groepen = new ArrayList<>();
