@@ -87,6 +87,7 @@ public class DragAndDrop extends JPanel {
         jlFirewallImage.addMouseListener(clickListener);
         jlFirewallImage.addMouseMotionListener(dragListener);
         this.addMouseListener(clickListener);
+        this.addMouseMotionListener(dragListener);
 
         setVisible(true);
     }
@@ -96,6 +97,7 @@ public class DragAndDrop extends JPanel {
         int i=0;
         for(Ontwerpcomponent component: design){
             component.getImage().paintIcon(this, g, (int) designLocations.get(i).getX(), (int) designLocations.get(i).getY());
+
             i++;
         }
     }
@@ -126,7 +128,6 @@ public class DragAndDrop extends JPanel {
                 design.add(component);
                 designLocations.add(currentpt);
             }
-
         }
     }
 
