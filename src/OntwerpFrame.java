@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class OntwerpFrame extends JFrame implements ActionListener {
-    DragAndDrop dragAndDrop = new DragAndDrop();
     private JComboBox<String> jcDropDownMenu;
     private String[] comboBoxContent;
     private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
@@ -60,7 +59,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         footer.add(jbMonitoren);
 
         getContentPane().setBackground(backClr2);
-        this.add(dragAndDrop);
         setVisible(true);
     }
 
@@ -103,8 +101,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         summary.add(totaleKosten);
         summary.add(totaleBeschikbaarheid);
 
-        //Panel voor componenten met drag and drop
-        center.add(dragAndDrop, BorderLayout.CENTER);
 
         //Componenten info op het scherm
 //        for(Groep groep: netwerk.groepen) {
@@ -188,5 +184,9 @@ public class OntwerpFrame extends JFrame implements ActionListener {
                 throwables.printStackTrace();
             }
         }
+    }
+
+    public void add(Monitoringnetwerk netwerk) {
+        this.monitoringnetwerk = netwerk;
     }
 }

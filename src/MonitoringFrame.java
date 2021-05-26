@@ -289,6 +289,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         if (e.getSource()==jbOntwerpen){
             dispose();
             OntwerpFrame ontwerpFrame = new OntwerpFrame();
+            ontwerpFrame.add(monitoringnetwerk);
         }
 
         if (e.getSource()==jbPfSenseLink) {

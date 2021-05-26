@@ -47,7 +47,7 @@ public class main {
 //        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         OntwerpFrame ontwerpFrame = new OntwerpFrame();
-
+        ontwerpFrame.add(netwerk1);
 
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
         Statement statement = connection.createStatement();
