@@ -88,7 +88,28 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         for(Ontwerpcomponent ontwerpcomponent: Ontwerpcomponent.getOntwerpcomponenten()) {
             ontwerpcomponenten.add(ontwerpcomponent);
         }
-        
+
+
+
+        //de beschikbare ontwerpcomponenten (nu hard gecodeerd, in de toekomst uit database halen)
+
+//        Ontwerpcomponent firewallpfSense = new Ontwerpcomponent("pfSense", "firewall", 4000, 99.998, "firewallImage");
+//        Ontwerpcomponent HAL9001DB = new Ontwerpcomponent("HAL9001DB", "database", 5100,  90, "dbserverImage");
+//        Ontwerpcomponent HAL9002DB = new Ontwerpcomponent("HAL9002DB", "database", 7700,  95, "dbserverImage");
+//        Ontwerpcomponent HAL9003DB = new Ontwerpcomponent("HAL9003DB", "database", 12200,  98, "dbserverImage");
+//        Ontwerpcomponent HAL9001W = new Ontwerpcomponent("HAL9001W", "webserver", 2200,  80, "webserverImage");
+//        Ontwerpcomponent HAL9002W = new Ontwerpcomponent("HAL9002W", "webserver", 3200,  90, "webserverImage");
+//        Ontwerpcomponent HAL9003W = new Ontwerpcomponent("HAL9003W", "webserver", 5100,  95, "webserverImage");
+
+        //De componenten toevoegen aan de arraylist van ontwerpcomponenten
+//        ontwerpcomponenten.add(firewallpfSense);
+//        ontwerpcomponenten.add(HAL9001DB);
+//        ontwerpcomponenten.add(HAL9002DB);
+//        ontwerpcomponenten.add(HAL9003DB);
+//        ontwerpcomponenten.add(HAL9001W);
+//        ontwerpcomponenten.add(HAL9002W);
+//        ontwerpcomponenten.add(HAL9003W);
+
         for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
             if (ontwerpcomponent.getType().equals("database")) {
                 dbservers.add(ontwerpcomponent);
@@ -97,6 +118,13 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 webservers.add(ontwerpcomponent);
             }
         }
+//        dbservers.add(HAL9001DB);
+//        dbservers.add(HAL9002DB);
+//        dbservers.add(HAL9003DB);
+//        webservers.add(HAL9001W);
+//        webservers.add(HAL9002W);
+//        webservers.add(HAL9003W);
+
 
         //Linker tabel:
         String[] kolomnamen = {"Naam component", "Type", "Kosten (€)", "Beschikbaarheid (%)"};     //een array met kolomnamen
