@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class OntwerpFrame extends JFrame implements ActionListener {
     private JComboBox<String> jcDropDownMenu;
     private String[] comboBoxContent;
-    private JButton jbMonitoren, jbOntwerpen, jbOptimaliseren; //buttons
+    private JButton jbMonitoren, jbOntwerpen; //buttons
     private Ontwerpnetwerk ontwerpnetwerk;
     private boolean gedruktOpOptimalisatieknop;
     private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
@@ -28,7 +28,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         this.add(header, BorderLayout.NORTH);
 
         //dropdownmenu
-        comboBoxContent = new String[] {"Nieuw ontwerp", "Open ontwerp", "Optimaliseer ontwerp" , "Sluit ontwerp", "Programma sluiten"}; //Array voor de teksten binnen de JComboBox
+        comboBoxContent = new String[] {"Nieuw ontwerp", "Open ontwerp", "Sluit ontwerp", "Programma sluiten"}; //Array voor de teksten binnen de JComboBox
 
         jcDropDownMenu = new JComboBox<>(comboBoxContent);
         jcDropDownMenu.addActionListener(this);
@@ -77,13 +77,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         JPanel onderkantCenter = new JPanel(new BorderLayout());
         onderkantCenter.setBackground(backClr2);
         center.add(onderkantCenter, BorderLayout.SOUTH);
-
-        //Optimaliseer ontwerp-knop
-        jbOptimaliseren = new JButton("Optimaliseer ontwerp");
-        jbOptimaliseren.addActionListener(this);
-        jbOptimaliseren.setForeground(Color.white);
-        jbOptimaliseren.setBackground(backClr2);
-        onderkantCenter.add(jbOptimaliseren, BorderLayout.WEST);
 
         //Summary veld rechtsonderin
         JPanel summary = new JPanel(new GridLayout(2,1));
@@ -185,13 +178,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         } else if (e.getSource()==jbMonitoren){
             MonitoringFrame monitoringFrame = new MonitoringFrame(monitoringnetwerk);
             dispose();
-        } else if(e.getSource()==jbOptimaliseren){
-            gedruktOpOptimalisatieknop = true;
-            try {
-                OptimalisatieDialog optimalisatieDialog = new OptimalisatieDialog(this);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
         }
     }
 
