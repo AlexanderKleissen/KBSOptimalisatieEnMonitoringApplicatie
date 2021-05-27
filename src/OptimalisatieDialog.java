@@ -614,6 +614,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
 
+                //maakt van het ontwerp ook een ontwerpnetwerk zodat het in gezien kan worden door de gebruiker
                 Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
                 ontwerpnetwerk.setNaam(naamOntwerpnetwerk);
 

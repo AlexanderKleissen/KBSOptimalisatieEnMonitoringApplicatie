@@ -112,8 +112,14 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
 
         while (rs.next()) {
-            totaleBeschikbaarheid.setText("Totale beschikbaarheid: " + rs.getDouble(4) + "%");
-            totaleKosten.setText("Totale kosten: €" + rs.getDouble(5));
+            DecimalFormat drieDecimalen = new DecimalFormat("0.000");
+            DecimalFormat tweeDecimalen = new DecimalFormat("0.00");
+
+            double totaleBeschikbaarheidText = rs.getDouble(4);
+            double totaleKostenText = rs.getDouble(5);
+
+            totaleBeschikbaarheid.setText("Totale beschikbaarheid: " + drieDecimalen.format(totaleBeschikbaarheidText));
+            totaleKosten.setText("Totale kosten: €" + tweeDecimalen.format(totaleKostenText));
 
             int aantalComponenten = rs.getInt(3);
             while (aantalComponenten > 0) {
