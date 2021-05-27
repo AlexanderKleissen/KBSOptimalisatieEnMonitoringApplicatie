@@ -530,69 +530,73 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         try {
 
             if (e.getSource() == bereken) {
-                // ingevoerd percentage wordt van String naar Double omgezet
-                minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100);
-                LoopWB(0, 0);
-                System.out.println(totaalTeller + " combinaties onderzocht " + minKosten + " - " + resultaat);
+                if (!vulNaamIn.equals("")) {
+                    // ingevoerd percentage wordt van String naar Double omgezet
+                    minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100);
+                    LoopWB(0, 0);
+                    System.out.println(totaalTeller + " combinaties onderzocht " + minKosten + " - " + resultaat);
 //                totaleBedragLabel.setText(minKosten+ "");
 
-                char[] nummers = resultaat.toCharArray();
+                    char[] nummers = resultaat.toCharArray();
 
-                //hier worden de waardes in de tabel er in gezet op basis van het resultaat van het algoritme
-                tabel2.setValueAt(nummers[14], 0, 4);
-                tabel2.setValueAt(nummers[6], 1, 4);
-                tabel2.setValueAt(nummers[16], 2, 4);
-                tabel2.setValueAt(nummers[8], 3, 4);
-                tabel2.setValueAt(nummers[18], 4, 4);
-                tabel2.setValueAt(nummers[10], 5, 4);
-                tabel2.setValueAt(nummers[2], 6, 4);
+                    //hier worden de waardes in de tabel er in gezet op basis van het resultaat van het algoritme
+                    tabel2.setValueAt(nummers[14], 0, 4);
+                    tabel2.setValueAt(nummers[6], 1, 4);
+                    tabel2.setValueAt(nummers[16], 2, 4);
+                    tabel2.setValueAt(nummers[8], 3, 4);
+                    tabel2.setValueAt(nummers[18], 4, 4);
+                    tabel2.setValueAt(nummers[10], 5, 4);
+                    tabel2.setValueAt(nummers[2], 6, 4);
 
-                //de inhoud van de tabel is een object, dus er moet eerst een string van gemaakt worden en dan kan er pas een Int van worden gemaakt
-                int rijEen = Integer.parseInt(tabel2.getValueAt(0, 4).toString());
-                int rijTwee = Integer.parseInt(tabel2.getValueAt(1, 4).toString());
-                int rijDrie = Integer.parseInt(tabel2.getValueAt(2, 4).toString());
-                int rijVier = Integer.parseInt(tabel2.getValueAt(3, 4).toString());
-                int rijVijf = Integer.parseInt(tabel2.getValueAt(4, 4).toString());
-                int rijZes = Integer.parseInt(tabel2.getValueAt(5, 4).toString());
+                    //de inhoud van de tabel is een object, dus er moet eerst een string van gemaakt worden en dan kan er pas een Int van worden gemaakt
+                    int rijEen = Integer.parseInt(tabel2.getValueAt(0, 4).toString());
+                    int rijTwee = Integer.parseInt(tabel2.getValueAt(1, 4).toString());
+                    int rijDrie = Integer.parseInt(tabel2.getValueAt(2, 4).toString());
+                    int rijVier = Integer.parseInt(tabel2.getValueAt(3, 4).toString());
+                    int rijVijf = Integer.parseInt(tabel2.getValueAt(4, 4).toString());
+                    int rijZes = Integer.parseInt(tabel2.getValueAt(5, 4).toString());
 
-                //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
-                double beschikbaarRijEen = Math.pow((1 - 0.9), rijEen);
-                double beschikbaarRijDrie = Math.pow((1 - 0.95), rijDrie);
-                double beschikbaarRijVijf = Math.pow((1 - 0.98), rijVijf);
-                if (beschikbaarRijEen == 0) {
-                    beschikbaarRijEen = 1;
+                    //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
+                    double beschikbaarRijEen = Math.pow((1 - 0.9), rijEen);
+                    double beschikbaarRijDrie = Math.pow((1 - 0.95), rijDrie);
+                    double beschikbaarRijVijf = Math.pow((1 - 0.98), rijVijf);
+                    if (beschikbaarRijEen == 0) {
+                        beschikbaarRijEen = 1;
+                    }
+                    if (beschikbaarRijDrie == 0) {
+                        beschikbaarRijEen = 1;
+                    }
+                    if (beschikbaarRijVijf == 0) {
+                        beschikbaarRijEen = 1;
+                    }
+
+                    //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
+                    double beschikbaarRijTwee = Math.pow((1 - 0.9), rijTwee);
+                    double beschikbaarRijVier = Math.pow((1 - 0.95), rijVier);
+                    double beschikbaarRijZes = Math.pow((1 - 0.98), rijZes);
+
+                    if (beschikbaarRijTwee == 0) {
+                        beschikbaarRijTwee = 1;
+                    }
+                    if (beschikbaarRijVier == 0) {
+                        beschikbaarRijVier = 1;
+                    }
+                    if (beschikbaarRijZes == 0) {
+                        beschikbaarRijZes = 1;
+                    }
+
+                    //berekenen beschikbaarheid van huidig ontwerp
+                    double beschikbaarheidWB = 1 - (beschikbaarRijTwee * beschikbaarRijVier * beschikbaarRijZes);
+                    double beschikbaarheidFW = 1 - Math.pow((1 - 0.99998), 1);
+                    double beschikbaarheidDB = 1 - (beschikbaarRijEen * beschikbaarRijDrie * beschikbaarRijVijf);
+                    double beschikbaarheidNetwerk = beschikbaarheidFW * beschikbaarheidDB * beschikbaarheidWB;
+
+                    DecimalFormat df = new DecimalFormat("0.000");
+                    String beschikbaarheidnetwerk = df.format(beschikbaarheidNetwerk * 100);
+                    beschikbaarheidspercentageLabel.setText("" + beschikbaarheidnetwerk);
+                } else {
+                    componentToeVoegFoutmelding.setText("<html><font color = 'red'>U heeft nog geen naam ingevuld of de opgegeven naam bestaat al<font/><html/>");
                 }
-                if (beschikbaarRijDrie == 0) {
-                    beschikbaarRijEen = 1;
-                }
-                if (beschikbaarRijVijf == 0) {
-                    beschikbaarRijEen = 1;
-                }
-
-                //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
-                double beschikbaarRijTwee = Math.pow((1 - 0.9), rijTwee);
-                double beschikbaarRijVier = Math.pow((1 - 0.95), rijVier);
-                double beschikbaarRijZes = Math.pow((1 - 0.98), rijZes);
-
-                if (beschikbaarRijTwee == 0) {
-                    beschikbaarRijTwee = 1;
-                }
-                if (beschikbaarRijVier == 0) {
-                    beschikbaarRijVier = 1;
-                }
-                if (beschikbaarRijZes == 0) {
-                    beschikbaarRijZes = 1;
-                }
-
-                //berekenen beschikbaarheid van huidig ontwerp
-                double beschikbaarheidWB = 1 - (beschikbaarRijTwee * beschikbaarRijVier * beschikbaarRijZes);
-                double beschikbaarheidFW = 1 - Math.pow((1 - 0.99998), 1);
-                double beschikbaarheidDB = 1 - (beschikbaarRijEen * beschikbaarRijDrie * beschikbaarRijVijf);
-                double beschikbaarheidNetwerk = beschikbaarheidFW * beschikbaarheidDB * beschikbaarheidWB;
-
-                DecimalFormat df = new DecimalFormat("0.000");
-                String beschikbaarheidnetwerk = df.format(beschikbaarheidNetwerk * 100);
-                beschikbaarheidspercentageLabel.setText("" + beschikbaarheidnetwerk);
             }
         } catch (NumberFormatException exception) {
             minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");

@@ -47,6 +47,7 @@ public class main {
 
 
         OntwerpFrame ontwerpFrame = new OntwerpFrame();
+        ontwerpFrame.add(netwerk1);
 
         try {
             ResultSet rs2 = statement.executeQuery("SELECT distinct NaamNetwerk FROM ontwerpnetwerk");
