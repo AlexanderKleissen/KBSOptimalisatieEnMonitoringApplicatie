@@ -36,7 +36,7 @@ public class main {
      //   MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
@@ -44,7 +44,7 @@ public class main {
                     rs.getDouble("Kosten"), rs.getDouble("Beschikbaarheid"));
 
         }
-
+        rs.close();
 
         OntwerpFrame ontwerpFrame = new OntwerpFrame();
         ontwerpFrame.add(netwerk1);
@@ -56,9 +56,11 @@ public class main {
             Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
             ontwerpnetwerk.setNaam(rs2.getString(1));
             }
+            rs2.close();
 
         } catch (SQLException e) {
             System.out.println(e);
         }
+        connection.close();
     }
 }

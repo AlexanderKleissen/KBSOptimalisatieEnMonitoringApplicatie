@@ -29,14 +29,12 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> webservers = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> dbservers = new ArrayList<>();
-    private ArrayList<Ontwerpcomponent> optimaleWaarden = new ArrayList<>();
-    private static double totaleBeschikbaarheid;
-    private static int maxLoop = 8;
+    private static int maxLoop = 15;
     private static int[] aantalWebservers = {0,0,0};
     private JLabel componentToeVoegFoutmelding;
     private static double[] webserverBeschikbaarheid = {0.8,0.9,0.95};
     private static double[] wbKosten = {2200,3200,5100};
-    private static int maxWBSrt = 2;
+    private static int maxWB = 2;
     private static int[] aantalDatabases = {0,0,0};
     private static double[] databaseBeschikbaarheid = {0.9,0.95,0.98};
     private static double[] dbKosten = {5100,7700,12200};
@@ -75,7 +73,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         optimaleWaardenOntwerp.setForeground(Color.white);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
@@ -450,14 +448,14 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     }
 
 
-
-    private static int LoopDB(int totaalSrvrDB, int serverNummer){
+    //berekenh het juiste database aantal
+    private static int berekenDB(int totaalSrvrDB, int serverNummer){
         int teller = 0;
         while(teller<maxLoop-totaalSrvrDB){
             aantalDatabases[serverNummer]= teller;
             teller++;
             if (serverNummer<maxDBSrt) {
-                LoopDB(teller+totaalSrvrDB,serverNummer+1);
+                berekenDB(teller+totaalSrvrDB,serverNummer+1);
             }
 
             if(serverNummer==maxDBSrt) {
@@ -479,16 +477,16 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         return serverNummer;
     }
 
-    //berekent de juiste database aantal
-    private static int LoopWB(int totaalSrvrWB,int serverNummer){
+    //berekent het juiste webserver aantal
+    private static int berekenWB(int totaalSrvrWB,int serverNummer){
         int teller = 0;
         while(teller<maxLoop-totaalSrvrWB){
             aantalWebservers[serverNummer]= teller;
-            if (serverNummer<maxWBSrt) {
-                LoopWB(teller+totaalSrvrWB,serverNummer+1);
+            if (serverNummer<maxWB) {
+                berekenWB(teller+totaalSrvrWB,serverNummer+1);
             }
-            if(serverNummer==maxWBSrt){
-                LoopDB(0,0);
+            if(serverNummer==maxWB){
+                berekenDB(0,0);
             }
             teller++;
         }
@@ -519,52 +517,52 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e){
-        tabel2.isCellEditable(0,4);
-
         minimaalTotaleBeschikbaarheid.setText("Minimaal totaal beschikbaarheidspercentage:");     // standaard labeltekst zonder melding
         try {
-
             if (e.getSource() == bereken) {
-                if (!vulNaamIn.equals("")) {
-                    // ingevoerd percentage wordt van String naar Double omgezet
-                    minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100);
-                    LoopWB(0, 0);
-                    System.out.println(totaalTeller + " combinaties onderzocht " + minKosten + " - " + resultaat);
-//                totaleBedragLabel.setText(minKosten+ "");
+                // ingevoerd percentage wordt van String naar Double omgezet
+                minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100);
+                berekenWB(0, 0);
+                System.out.println(totaalTeller + " combinaties onderzocht " + minKosten + " - " + resultaat);
+                totaalTeller = 0;
+                maxLoop++;
+                minKosten = Double.MAX_VALUE;
+                char[] nummers = resultaat.toCharArray();
 
-                    char[] nummers = resultaat.toCharArray();
+                System.out.println((Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100));
+//                    minimaalTotaleBeschikbaarheid = 0
 
-                    //hier worden de waardes in de tabel er in gezet op basis van het resultaat van het algoritme
-                    tabel2.setValueAt(nummers[14], 0, 4);
-                    tabel2.setValueAt(nummers[6], 1, 4);
-                    tabel2.setValueAt(nummers[16], 2, 4);
-                    tabel2.setValueAt(nummers[8], 3, 4);
-                    tabel2.setValueAt(nummers[18], 4, 4);
-                    tabel2.setValueAt(nummers[10], 5, 4);
-                    tabel2.setValueAt(nummers[2], 6, 4);
 
-                    //de inhoud van de tabel is een object, dus er moet eerst een string van gemaakt worden en dan kan er pas een Int van worden gemaakt
-                    int rijEen = Integer.parseInt(tabel2.getValueAt(0, 4).toString());
-                    int rijTwee = Integer.parseInt(tabel2.getValueAt(1, 4).toString());
-                    int rijDrie = Integer.parseInt(tabel2.getValueAt(2, 4).toString());
-                    int rijVier = Integer.parseInt(tabel2.getValueAt(3, 4).toString());
-                    int rijVijf = Integer.parseInt(tabel2.getValueAt(4, 4).toString());
-                    int rijZes = Integer.parseInt(tabel2.getValueAt(5, 4).toString());
+                //hier worden de waardes in de tabel er in gezet op basis van het resultaat van het algoritme
+                tabel2.setValueAt(nummers[14], 0, 4);
+                tabel2.setValueAt(nummers[6], 1, 4);
+                tabel2.setValueAt(nummers[16], 2, 4);
+                tabel2.setValueAt(nummers[8], 3, 4);
+                tabel2.setValueAt(nummers[18], 4, 4);
+                tabel2.setValueAt(nummers[10], 5, 4);
+                tabel2.setValueAt(nummers[2], 6, 4);
 
-                    //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
-                    double beschikbaarRijEen = Math.pow((1 - 0.9), rijEen);
-                    double beschikbaarRijDrie = Math.pow((1 - 0.95), rijDrie);
-                    double beschikbaarRijVijf = Math.pow((1 - 0.98), rijVijf);
-                    if (beschikbaarRijEen == 0) {
-                        beschikbaarRijEen = 1;
-                    }
-                    if (beschikbaarRijDrie == 0) {
-                        beschikbaarRijEen = 1;
-                    }
-                    if (beschikbaarRijVijf == 0) {
-                        beschikbaarRijEen = 1;
-                    }
+                //de inhoud van de tabel is een object, dus er moet eerst een string van gemaakt worden en dan kan er pas een Int van worden gemaakt
+                int rijEen = Integer.parseInt(tabel2.getValueAt(0, 4).toString());
+                int rijTwee = Integer.parseInt(tabel2.getValueAt(1, 4).toString());
+                int rijDrie = Integer.parseInt(tabel2.getValueAt(2, 4).toString());
+                int rijVier = Integer.parseInt(tabel2.getValueAt(3, 4).toString());
+                int rijVijf = Integer.parseInt(tabel2.getValueAt(4, 4).toString());
+                int rijZes = Integer.parseInt(tabel2.getValueAt(5, 4).toString());
 
+                //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
+                double beschikbaarRijEen = Math.pow((1 - 0.9), rijEen);
+                double beschikbaarRijDrie = Math.pow((1 - 0.95), rijDrie);
+                double beschikbaarRijVijf = Math.pow((1 - 0.98), rijVijf);
+                if (beschikbaarRijEen == 0) {
+                    beschikbaarRijEen = 1;
+                }
+                if (beschikbaarRijDrie == 0) {
+                    beschikbaarRijEen = 1;
+                }
+                if (beschikbaarRijVijf == 0) {
+                    beschikbaarRijEen = 1;
+                }
 
 
                 //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
@@ -572,28 +570,31 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 double beschikbaarRijVier = Math.pow((1 - 0.90), rijVier);
                 double beschikbaarRijZes = Math.pow((1 - 0.95), rijZes);
 
-                    if (beschikbaarRijTwee == 0) {
-                        beschikbaarRijTwee = 1;
-                    }
-                    if (beschikbaarRijVier == 0) {
-                        beschikbaarRijVier = 1;
-                    }
-                    if (beschikbaarRijZes == 0) {
-                        beschikbaarRijZes = 1;
-                    }
+                if (beschikbaarRijTwee == 0) {
+                    beschikbaarRijTwee = 1;
+                }
+                if (beschikbaarRijVier == 0) {
+                    beschikbaarRijVier = 1;
+                }
+                if (beschikbaarRijZes == 0) {
+                    beschikbaarRijZes = 1;
+                }
 
 
-                    //berekenen beschikbaarheid van huidig ontwerp
-                    double beschikbaarheidWB = 1 - (beschikbaarRijTwee * beschikbaarRijVier * beschikbaarRijZes);
-                    double beschikbaarheidFW = 1 - Math.pow((1 - 0.99998), 1);
-                    double beschikbaarheidDB = 1 - (beschikbaarRijEen * beschikbaarRijDrie * beschikbaarRijVijf);
-                    double beschikbaarheidNetwerk = beschikbaarheidFW * beschikbaarheidDB * beschikbaarheidWB;
+                //berekenen beschikbaarheid van huidig ontwerp
+                double beschikbaarheidWB = 1 - (beschikbaarRijTwee * beschikbaarRijVier * beschikbaarRijZes);
+                double beschikbaarheidFW = 1 - Math.pow((1 - 0.99998), 1);
+                double beschikbaarheidDB = 1 - (beschikbaarRijEen * beschikbaarRijDrie * beschikbaarRijVijf);
+                double beschikbaarheidNetwerk = beschikbaarheidFW * beschikbaarheidDB * beschikbaarheidWB;
 
-                    DecimalFormat df = new DecimalFormat("0.000");
-                    String beschikbaarheidnetwerk = df.format(beschikbaarheidNetwerk * 100);
-                    beschikbaarheidspercentageLabel.setText("" + beschikbaarheidnetwerk);
-                } else {
-                    componentToeVoegFoutmelding.setText("<html><font color = 'red'>U heeft nog geen naam ingevuld of de opgegeven naam bestaat al<font/><html/>");
+                DecimalFormat df = new DecimalFormat("0.000");
+                String beschikbaarheidnetwerk = df.format(beschikbaarheidNetwerk * 100);
+                beschikbaarheidspercentageLabel.setText("" + beschikbaarheidnetwerk);
+
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        aantalDatabases[j] = 0;  // put your value here.
+                    }
                 }
             }
         } catch (NumberFormatException exception) {
@@ -606,7 +607,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText().replaceAll(",", "."));
 
                 //query's worden uitgevoerd om het netwerkontwerp in de database op te slaan.
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18"); //Verbinding met database wordt gemaakt
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
                 Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
