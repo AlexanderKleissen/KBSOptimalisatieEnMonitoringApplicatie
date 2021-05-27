@@ -525,7 +525,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         minimaalTotaleBeschikbaarheid.setText("Minimaal totaal beschikbaarheidspercentage:");     // standaard labeltekst zonder melding
         try {
             if (e.getSource() == bereken) {
-                if (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()) > 0 && Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()) < 99.992) {
+                if (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()) > 0 && Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()) < 99.996) {
                 // ingevoerd percentage wordt van String naar Double omgezet
                 minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100);
                 berekenWB(0, 0);
@@ -605,7 +605,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                         aantalDatabases[j] = 0;  // put your value here.
                     }
                 } else {
-                    minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Het percentage moet tussen de 0 en 99.992 zitten<font/><html/>");
+                    minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'>Hier is geen optimale waarde voor<font/><html/>");
                 }
             }
         } catch (NumberFormatException exception) {
