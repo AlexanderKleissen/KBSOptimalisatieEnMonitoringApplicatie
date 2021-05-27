@@ -41,7 +41,7 @@ public class Ontwerpnetwerk extends Netwerk {
     }
 
     public static void uitDatabase() throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1");
         Statement statement = connection.createStatement();
         ResultSet rs2 = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
 
@@ -165,7 +165,7 @@ public class Ontwerpnetwerk extends Netwerk {
     private void naarDatabase(double beschikbaarheid, double kosten) throws SQLException {
         ArrayList<Ontwerpcomponent> componentenNetwerk = new ArrayList<>();
         ArrayList<String> netwerkComponentenUitTabel = new ArrayList<>();
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+        Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1"); //Verbinding met database wordt gemaakt
 
         for (Groep groep : groepen) { //hiermee worden alle componenten van het netwerk verzamelt
             for (Component component : groep.componenten) {

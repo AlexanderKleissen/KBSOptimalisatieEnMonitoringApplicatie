@@ -28,7 +28,7 @@ public class Monitoringcomponent extends Component{
         this.ipaddress = ipaddress;
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18"); //Verbinding met database wordt gemaakt
+            Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1"); //Verbinding met database wordt gemaakt
             Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
             ResultSet rs = statement.executeQuery("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = '" + naam + "'"); //Query uitvoeren
             rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
@@ -95,7 +95,7 @@ public class Monitoringcomponent extends Component{
 
     public void setGegevensUitDatabase() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18"); //Verbinding met database wordt gemaakt
+            Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1"); //Verbinding met database wordt gemaakt
             Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
             ResultSet rs = statement.executeQuery("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = '" + this.getNaam() + "'"); //Query uitvoeren
             rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.

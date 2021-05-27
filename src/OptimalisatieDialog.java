@@ -29,7 +29,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> webservers = new ArrayList<>();
     private ArrayList<Ontwerpcomponent> dbservers = new ArrayList<>();
-    private static int maxLoop = 15;
+    private static int maxLoop = 8;
     private static int[] aantalWebservers = {0,0,0};
     private JLabel componentToeVoegFoutmelding;
     private static double[] webserverBeschikbaarheid = {0.8,0.9,0.95};
@@ -73,7 +73,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         optimaleWaardenOntwerp.setForeground(Color.white);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
@@ -448,7 +448,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     }
 
 
-    //berekenh het juiste database aantal
+    //bereken het juiste database aantal
     private static int berekenDB(int totaalSrvrDB, int serverNummer){
         int teller = 0;
         while(teller<maxLoop-totaalSrvrDB){
@@ -462,7 +462,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
             if(serverNummer==maxDBSrt) {
                 totaalTeller++;
                 //De print kan gebruikt worden om te testen wat het algoritme doet
-                //System.out.println(totaalTeller + " W " + aantalWebservers[0] + "-" + aantalWebservers[1] + "-" + aantalWebservers[2] + "-" + "D " + aantalDatabases[0] + "-" + aantalDatabases[1] + "-" + aantalDatabases[2] + " ->" + BerekenBeschikbaarheid() + " - " + Berekenkosten() + " " + minKosten + resultaat);
+                System.out.println(totaalTeller + " W " + aantalWebservers[0] + "-" + aantalWebservers[1] + "-" + aantalWebservers[2] + "-" + "D " + aantalDatabases[0] + "-" + aantalDatabases[1] + "-" + aantalDatabases[2] + " ->" + BerekenBeschikbaarheid() + " - " + Berekenkosten() + " " + minKosten + resultaat);
                 totaleBedragLabel.setText(minKosten + "");
                 double berekendeBeschikbaarheid = BerekenBeschikbaarheid();
                 double berekendeKosten = Berekenkosten();
@@ -610,15 +610,15 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText().replaceAll(",", "."));
 
                 //query's worden uitgevoerd om het netwerkontwerp in de database op te slaan.
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+                Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1"); //Verbinding met database wordt gemaakt
                 Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002DB" + "', '" + tabel2.getValueAt(2, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002W" + "', '" + tabel2.getValueAt(3, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003DB" + "', '" + tabel2.getValueAt(4, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002DB" + "', '" + tabel2.getValueAt(2, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002W" + "', '" + tabel2.getValueAt(3, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003DB" + "', '" + tabel2.getValueAt(4, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
 
                 //maakt van het ontwerp ook een ontwerpnetwerk zodat het in gezien kan worden door de gebruiker
                 Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();

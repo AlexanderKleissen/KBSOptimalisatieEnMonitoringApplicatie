@@ -10,11 +10,11 @@ public class main {
     public static void main(String[] args) throws SQLException {
         DatabaseConnectieErrorDialog databaseConnectieErrorDialog = new DatabaseConnectieErrorDialog();
 
-        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense", "Firewall", 99.998, 4000, "192.168.1.26");
-        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "192.168.1.26");
-        Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 95, 7700, "192.168.1.26");
-        Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 90, 3200, "192.168.1.131");
-        Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 90, 3200, "192.168.1.131");
+        Monitoringcomponent pfSense1 = new Monitoringcomponent("pfSense", "Firewall", 99.998, 4000, "11.11.200.1");
+        Monitoringcomponent db1 = new Monitoringcomponent("DB1", "HAL9002DB", 95, 7700, "11.11.20.2");
+        Monitoringcomponent db2 = new Monitoringcomponent("DB2", "HAL9002DB", 95, 7700, "11.11.20.3");
+        Monitoringcomponent ws1 = new Monitoringcomponent("WS1", "HAL9002W", 90, 3200, "11.11.2.2");
+        Monitoringcomponent ws2 = new Monitoringcomponent("WS2", "HAL9002W", 90, 3200, "11.11.2.3");
 
 
         Groep firewall = new Groep("Firewall", 99.97);
@@ -36,7 +36,7 @@ public class main {
      //   MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
