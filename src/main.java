@@ -33,10 +33,10 @@ public class main {
         netwerk1.groepen.add(db);
         netwerk1.groepen.add(ws);
 
-//        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
+     //   MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
@@ -47,6 +47,7 @@ public class main {
 
 
         OntwerpFrame ontwerpFrame = new OntwerpFrame();
+        ontwerpFrame.add(netwerk1);
 
         try {
             ResultSet rs2 = statement.executeQuery("SELECT distinct NaamNetwerk FROM ontwerpnetwerk");

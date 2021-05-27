@@ -9,7 +9,7 @@ public class DatabaseConnectieErrorDialog extends JDialog implements ActionListe
 
    DatabaseConnectieErrorDialog() {
        try {
-           Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+           Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18"); //Verbinding met database wordt gemaakt
            connection.close();
        } catch (SQLException e) {
            JOptionPane.showMessageDialog(this, "Kan geen verbinding maken met de database", "Database connectie error", JOptionPane.ERROR_MESSAGE);

@@ -48,7 +48,7 @@ public class Ontwerpcomponent extends Component {
     private void naarDatabase() throws SQLException {
         ArrayList<String> mogelijkeComponenten = new ArrayList<>(); //welke componenten al bestaan zodat je alleen nieuwe componenten toevoegt
 
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");//Verbinding met database wordt gemaakt
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18");//Verbinding met database wordt gemaakt
 
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("select NaamComponent from component_ontwerpen");

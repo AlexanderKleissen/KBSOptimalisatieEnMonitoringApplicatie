@@ -105,7 +105,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
 
 
     try {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18"); //Verbinding met database wordt gemaakt
         Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
         //ResultSet rs = statement.executeQuery("select * from ontwerpnetwerk where NaamNetwerk = '" + netwerk.getNaam() +"'"); //Query uitvoeren
         ResultSet rs = statement.executeQuery("select * from ontwerpnetwerk where NaamNetwerk = '" + netwerk.getNaam() + "'");

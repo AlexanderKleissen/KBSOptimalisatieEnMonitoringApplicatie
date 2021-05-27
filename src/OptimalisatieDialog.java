@@ -75,7 +75,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         optimaleWaardenOntwerp.setForeground(Color.white);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
@@ -147,57 +147,52 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         //De optimale componenten naar aanleiding van optimalisatiefunctie toevoegen aan de arraylist van optimaleWaarden
         //Nu een voorbeeld van een optimaal ontwerp met een beschikbaarheid van 99.990% gebruikt.
 
-        for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
-            if (ontwerpcomponent.getNaam().equals("HAL9001DB")) {
-                for (int i = 0; i < 3; i++) {
-                    optimaleWaarden.add(ontwerpcomponent);
-                }
-            }
-            if (ontwerpcomponent.getNaam().equals("HAL9002DB")) {
-                optimaleWaarden.add(ontwerpcomponent);
-            }
-
-            if (ontwerpcomponent.getNaam().equals("HAL9003DB")) {
-                optimaleWaarden.add(ontwerpcomponent);
-            }
-
-            if (ontwerpcomponent.getNaam().equals("HAL9001W")) {
-                optimaleWaarden.add(ontwerpcomponent);
-            }
-
-            if (ontwerpcomponent.getNaam().equals("HAL9002W")) {
-                for (int k = 0; k < 4; k++) {
-                    optimaleWaarden.add(ontwerpcomponent);
-                }
-            }
-
-            if (ontwerpcomponent.getNaam().equals("HAL9003W")) {
-                optimaleWaarden.add(ontwerpcomponent);
-            }
-
-            if (ontwerpcomponent.getNaam().equals("pfSense")) {
-                optimaleWaarden.add(ontwerpcomponent);
-            }
-        }
+//        for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
+//            if (ontwerpcomponent.getNaam().equals("HAL9001DB")) {
+//                for (int i = 0; i < 3; i++) {
+//                    optimaleWaarden.add(ontwerpcomponent);
+//                }
+//            }
+//            if (ontwerpcomponent.getNaam().equals("HAL9002DB")) {
+//                optimaleWaarden.add(ontwerpcomponent);
+//            }
+//
+//            if (ontwerpcomponent.getNaam().equals("HAL9003DB")) {
+//                optimaleWaarden.add(ontwerpcomponent);
+//            }
+//
+//            if (ontwerpcomponent.getNaam().equals("HAL9001W")) {
+//                optimaleWaarden.add(ontwerpcomponent);
+//            }
+//
+//            if (ontwerpcomponent.getNaam().equals("HAL9002W")) {
+//                for (int k = 0; k < 4; k++) {
+//                    optimaleWaarden.add(ontwerpcomponent);
+//                }
+//            }
+//
+//            if (ontwerpcomponent.getNaam().equals("HAL9003W")) {
+//                optimaleWaarden.add(ontwerpcomponent);
+//            }
+//
+//            if (ontwerpcomponent.getNaam().equals("pfSense")) {
+//                optimaleWaarden.add(ontwerpcomponent);
+//            }
+//        }
 
         //rechter tabel:
         String[] kolomnamen2 = {"Naam component", "Type", "Kosten (€)", "Beschikbaarheid (%)", "Aantal"};
         data2 = new Object[ontwerpcomponenten.size()][5];
 
-        for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
-            int index = ontwerpcomponenten.indexOf(ontwerpcomponent);
-            int k = 0;
-            for (Ontwerpcomponent ontwerpcomponent2 : optimaleWaarden) {
-                if (ontwerpcomponent2.equals(ontwerpcomponent)) {
-                    k++;
-                    data2[index][0] = ontwerpcomponent.getNaam();
-                    data2[index][1] = ontwerpcomponent.getType();
-                    data2[index][2] = ontwerpcomponent.getKosten();
-                    data2[index][3] = ontwerpcomponent.getBeschikbaarheidspercentage();
-                    data2[index][4] = 0;
-                }
-            }
-        }
+        int m = 0;
+               for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
+                   data2[m][0] = ontwerpcomponent.getNaam();
+                   data2[m][1] = ontwerpcomponent.getType();
+                   data2[m][2] = ontwerpcomponent.getKosten();
+                   data2[m][3] = ontwerpcomponent.getBeschikbaarheidspercentage();
+                   data2[m][4] = 0;
+                   m++;
+               }
 
 
         tabel2 = new JTable(data2, kolomnamen2) {
@@ -355,9 +350,9 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         totaleKosten.setForeground(Color.white);
 
 
-        for (Ontwerpcomponent ontwerpcomponent : optimaleWaarden) {
-            totaleBedrag += Double.parseDouble(ontwerpcomponent.getKosten().replaceAll(",", "."));
-        }
+//        for (Ontwerpcomponent ontwerpcomponent : optimaleWaarden) {
+//            totaleBedrag += Double.parseDouble(ontwerpcomponent.getKosten().replaceAll(",", "."));
+//        }
 
         DecimalFormat df2 = new DecimalFormat("0.00");
 
@@ -570,9 +565,9 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 }
 
                 //het (1-beschikbaarheid A) deel van de formule per rij uitrekenen
-                double beschikbaarRijTwee = Math.pow((1 - 0.9), rijTwee);
-                double beschikbaarRijVier = Math.pow((1 - 0.95), rijVier);
-                double beschikbaarRijZes = Math.pow((1 - 0.98), rijZes);
+                double beschikbaarRijTwee = Math.pow((1 - 0.80), rijTwee);
+                double beschikbaarRijVier = Math.pow((1 - 0.90), rijVier);
+                double beschikbaarRijZes = Math.pow((1 - 0.95), rijZes);
 
                 if (beschikbaarRijTwee == 0) {
                     beschikbaarRijTwee = 1;
@@ -601,10 +596,10 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         try {
             if (e.getSource() == voegToe) {
                 String naamOntwerpnetwerk = vulNaamIn.getText();
-                beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText());
+                beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText().replaceAll(",", "."));
 
                 //query's worden uitgevoerd om het netwerkontwerp in de database op te slaan.
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18"); //Verbinding met database wordt gemaakt
                 Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
@@ -623,9 +618,9 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
                 dispose();
             }
-        } catch(NumberFormatException nfe){
-            minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
-            // melding dat er een percentage ingevuld moet worden
+//        } catch(NumberFormatException nfe){
+//            minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
+//            // melding dat er een percentage ingevuld moet worden
         } catch (SQLIntegrityConstraintViolationException exception) {
             componentToeVoegFoutmelding.setText("<html><font color = 'red'>U heeft nog geen naam ingevuld of de opgegeven naam bestaat al<font/><html/>");
         } catch (SQLException sql) {
