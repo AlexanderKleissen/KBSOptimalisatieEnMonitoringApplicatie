@@ -13,6 +13,7 @@ public class DatabaseConnectieErrorDialog extends JDialog implements ActionListe
            connection.close();
        } catch (SQLException e) {
            JOptionPane.showMessageDialog(this, "Kan geen verbinding maken met de database", "Database connectie error", JOptionPane.ERROR_MESSAGE);
+           System.out.println(e);
        }
     }
 

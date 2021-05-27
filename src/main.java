@@ -1,6 +1,10 @@
 import javax.naming.CommunicationException;
 import javax.xml.crypto.Data;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 
 public class main {
     public static void main(String[] args) throws SQLException {
@@ -32,7 +36,7 @@ public class main {
 //        MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
@@ -44,6 +48,16 @@ public class main {
 
         OntwerpFrame ontwerpFrame = new OntwerpFrame();
 
-        Ontwerpnetwerk.uitDatabase();
+        try {
+            ResultSet rs2 = statement.executeQuery("SELECT distinct NaamNetwerk FROM ontwerpnetwerk");
+            ArrayList<String> componentOntwerpenLijst = new ArrayList();
+            while (rs2.next()) {
+            Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
+            ontwerpnetwerk.setNaam(rs2.getString(1));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }
 }

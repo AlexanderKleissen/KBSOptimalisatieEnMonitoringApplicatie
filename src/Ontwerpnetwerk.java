@@ -22,6 +22,7 @@ public class Ontwerpnetwerk extends Netwerk {
     public Ontwerpnetwerk() {
            super(null, 0, new ArrayList<>());
            groepen = new ArrayList<>();
+           ontwerpNetwerken.add(this);
     }
 
     //Getters en setters
@@ -67,20 +68,19 @@ public class Ontwerpnetwerk extends Netwerk {
             }
 
             while (rs2.getString("NaamNetwerk").equals(ontwerpnetwerk.getNaam())) {
-
                 for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
                     if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
                         for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
-                            if (ontwerpcomponent.getType().equals("firewall")) {
+                            if (ontwerpcomponent.getType().equals("Firewall")) {
                                 firewallgroep.componenten.add(ontwerpcomponent);
 
                             }
-                             if (ontwerpcomponent.getType().equals("webserver")) {
+                             if (ontwerpcomponent.getType().equals("Webserver")) {
                                                webservergroep.componenten.add(ontwerpcomponent);
 
                              }
 
-                             if (ontwerpcomponent.getType().equals("database")) {
+                             if (ontwerpcomponent.getType().equals("Database")) {
                                  databasegroep.componenten.add(ontwerpcomponent);
                              }
                         }

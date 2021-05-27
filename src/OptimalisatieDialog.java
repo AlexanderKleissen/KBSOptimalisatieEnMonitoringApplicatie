@@ -505,7 +505,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         double beschikbaarheidFW = 1 - Math.pow((1 - 0.99998), 1);
         double beschikbaarheidDB = 1 - Math.pow((1 - databaseBeschikbaarheid[0]), aantalDatabases[0]) * Math.pow((1 - databaseBeschikbaarheid[1]), aantalDatabases[1]) * Math.pow((1 - databaseBeschikbaarheid[2]), aantalDatabases[2]);
         double beschikbaarheidWB = 1 - Math.pow((1 - webserverBeschikbaarheid[0]), aantalWebservers[0]) * Math.pow((1 - webserverBeschikbaarheid[1]), aantalWebservers[1]) * Math.pow((1 - webserverBeschikbaarheid[2]), aantalWebservers[2]);
-        totaleBeschikbaarheid = beschikbaarheidFW * beschikbaarheidDB * beschikbaarheidWB;
+        double totaleBeschikbaarheid = beschikbaarheidFW * beschikbaarheidDB * beschikbaarheidWB;
 
         return totaleBeschikbaarheid;
     }
@@ -537,9 +537,6 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 //                totaleBedragLabel.setText(minKosten+ "");
 
                 char[] nummers = resultaat.toCharArray();
-                for (char nummer : nummers) {
-                    System.out.println(nummer);
-                }
 
                 //hier worden de waardes in de tabel er in gezet op basis van het resultaat van het algoritme
                 tabel2.setValueAt(nummers[14], 0, 4);
@@ -600,6 +597,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         } catch (NumberFormatException exception) {
             minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
         }
+
         try {
             if (e.getSource() == voegToe) {
                 String naamOntwerpnetwerk = vulNaamIn.getText();
@@ -616,45 +614,8 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
                 statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
 
-
-                ResultSet rs2 = statement.executeQuery("SELECT * FROM ontwerpnetwerk");
-
                 Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
-
-                Groep firewallgroep = new Groep("firewallgroep");
-                Groep webservergroep = new Groep("webservergroep");
-                Groep databasegroep = new Groep("databasegroep");
-
-                //Ontwerpnetwerpen uit database halen
-                while (rs2.next()) {
-                    if (!Ontwerpnetwerk.getOntwerpNetwerken().contains(ontwerpnetwerk)) {
-                        ontwerpnetwerk = new Ontwerpnetwerk(rs2.getString("NaamNetwerk") + "%", rs2.getDouble("Kosten"),
-                                rs2.getDouble("Beschikbaarheid"));
-                    }
-
-                    for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
-                        if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
-                            for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
-                                if (ontwerpcomponent.getType().equals("Firewall")) {
-                                    firewallgroep.componenten.add(ontwerpcomponent);
-
-                                }
-
-                                if (ontwerpcomponent.getType().equals("Webserver")) {
-                                    webservergroep.componenten.add(ontwerpcomponent);
-
-                                }
-
-                                if (ontwerpcomponent.getType().equals("Database")) {
-                                    databasegroep.componenten.add(ontwerpcomponent);
-                                }
-                            }
-                        }
-                    }
-                }
-                ontwerpnetwerk.groepen.add(firewallgroep);
-                ontwerpnetwerk.groepen.add(webservergroep);
-                ontwerpnetwerk.groepen.add(databasegroep);
+                ontwerpnetwerk.setNaam(naamOntwerpnetwerk);
 
                 connection.close();
                 statement.close();

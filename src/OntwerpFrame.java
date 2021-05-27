@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.DecimalFormat;
 
 public class OntwerpFrame extends JFrame implements ActionListener {
     private JComboBox<String> jcDropDownMenu;
@@ -65,9 +66,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     public OntwerpFrame(Ontwerpnetwerk netwerk){
         this();
 
-        //netwerk aan frame koppelen
-        this.ontwerpnetwerk = netwerk;
-
         //Panel voor midden van het scherm
         JPanel center = new JPanel(new BorderLayout());
         center.setBackground(backClr2);
@@ -86,13 +84,6 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         summary.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,0,7,20), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white), BorderFactory.createEmptyBorder(5,5,5,5))));
         summary.setBackground(backClr2);
         onderkantCenter.add(summary, BorderLayout.EAST);
-        JLabel totaleKosten = new JLabel("Totale kosten: €" + netwerk.getKosten());
-        totaleKosten.setForeground(Color.white);
-
-        JLabel totaleBeschikbaarheid = new JLabel("Totale beschikbaarheid: " + netwerk.getBeschikbaarheidspercentage() + "%");
-        totaleBeschikbaarheid.setForeground(Color.white);
-        summary.add(totaleKosten);
-        summary.add(totaleBeschikbaarheid);
 
 
         //Panel voor componenten
@@ -101,28 +92,126 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         componentenPanel.setBackground(backClr2);
         center.add(componentenPanel);
 
+        //netwerk aan frame koppelen
+        this.ontwerpnetwerk = netwerk;
 
-        //Componenten info op het scherm
-        for(Groep groep: netwerk.groepen) {
-            for (Component component : groep.componenten) {
+        JLabel totaleBeschikbaarheid = new JLabel();
+        totaleBeschikbaarheid.setForeground(Color.white);
+        summary.add(totaleBeschikbaarheid);
+
+        JLabel totaleKosten = new JLabel();
+        totaleKosten.setForeground(Color.white);
+        summary.add(totaleKosten);
+
+
+    try {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+        Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
+        //ResultSet rs = statement.executeQuery("select * from ontwerpnetwerk where NaamNetwerk = '" + netwerk.getNaam() +"'"); //Query uitvoeren
+        ResultSet rs = statement.executeQuery("select * from ontwerpnetwerk where NaamNetwerk = '" + netwerk.getNaam() + "'");
+        //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
+
+        while (rs.next()) {
+            totaleBeschikbaarheid.setText("Totale beschikbaarheid: " + rs.getDouble(4) + "%");
+            totaleKosten.setText("Totale kosten: €" + rs.getDouble(5));
+
+            int aantalComponenten = rs.getInt(3);
+            while (aantalComponenten > 0) {
                 JPanel jPanel = new JPanel(new GridLayout(4, 1));
                 jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
                 jPanel.setBackground(backClr2);
-                if(component instanceof Ontwerpcomponent) {
-                    JLabel naam = new JLabel("Naam: " + component.getNaam());
-                    naam.setForeground(Color.white);
-                    jPanel.add(naam);
-                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
+
+                JLabel naam = new JLabel("Naam: " + rs.getString(2));
+                naam.setForeground(Color.white);
+                jPanel.add(naam);
+
+                if (rs.getString(2).equals("HAL9001DB")) {
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: 90%");
                     beschikbaarheid.setForeground(Color.white);
                     jPanel.add(beschikbaarheid);
-                    JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
+                    JLabel kosten = new JLabel("Kosten: €5100,-");
                     kosten.setForeground(Color.white);
                     jPanel.add(kosten);
-        //                   center.add(jPanel);
-                    componentenPanel.add(jPanel);
+                } else if (rs.getString(2).equals("HAL9002DB")) {
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: 95%");
+                    beschikbaarheid.setForeground(Color.white);
+                    jPanel.add(beschikbaarheid);
+                    JLabel kosten = new JLabel("Kosten: €7700,-");
+                    kosten.setForeground(Color.white);
+                    jPanel.add(kosten);
+                } else if (rs.getString(2).equals("HAL9003DB")) {
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: 95%");
+                    beschikbaarheid.setForeground(Color.white);
+                    jPanel.add(beschikbaarheid);
+                    JLabel kosten = new JLabel("Kosten: €12200,-");
+                    kosten.setForeground(Color.white);
+                    jPanel.add(kosten);
+                } else if (rs.getString(2).equals("HAL9001W")) {
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: 80%");
+                    beschikbaarheid.setForeground(Color.white);
+                    jPanel.add(beschikbaarheid);
+                    JLabel kosten = new JLabel("Kosten: €2200,-");
+                    kosten.setForeground(Color.white);
+                    jPanel.add(kosten);
+                } else if (rs.getString(2).equals("HAL9002W")) {
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: 90%");
+                    beschikbaarheid.setForeground(Color.white);
+                    jPanel.add(beschikbaarheid);
+                    JLabel kosten = new JLabel("Kosten: €3200,-");
+                    kosten.setForeground(Color.white);
+                    jPanel.add(kosten);
+                } else if (rs.getString(2).equals("HAL9003W")) {
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: 95%");
+                    beschikbaarheid.setForeground(Color.white);
+                    jPanel.add(beschikbaarheid);
+                    JLabel kosten = new JLabel("Kosten: €5100,-");
+                    kosten.setForeground(Color.white);
+                    jPanel.add(kosten);
+                } else if (rs.getString(2).equals("pfSense")) {
+                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: 99,998%");
+                    beschikbaarheid.setForeground(Color.white);
+                    jPanel.add(beschikbaarheid);
+                    JLabel kosten = new JLabel("Kosten: €4000,-");
+                    kosten.setForeground(Color.white);
+                    jPanel.add(kosten);
                 }
+                aantalComponenten--;
+                componentenPanel.add(jPanel);
             }
         }
+        rs.close();
+        connection.close();
+
+
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+
+
+//
+//
+//
+//        //Componenten info op het scherm
+//        for(Groep groep: netwerk.groepen) {
+//            for (Component component : groep.componenten) {
+//                JPanel jPanel = new JPanel(new GridLayout(4, 1));
+//                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
+//                jPanel.setBackground(backClr2);
+//                if(component instanceof Ontwerpcomponent) {
+//                    JLabel naam = new JLabel("Naam: " + component.getNaam());
+//                    naam.setForeground(Color.white);
+//                    jPanel.add(naam);
+//                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
+//                    beschikbaarheid.setForeground(Color.white);
+//                    jPanel.add(beschikbaarheid);
+//                    JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
+//                    kosten.setForeground(Color.white);
+//                    jPanel.add(kosten);
+//        //                   center.add(jPanel);
+//                    componentenPanel.add(jPanel);
+//                }
+//            }
+//        }
                 setVisible(true);
     }
 
