@@ -21,7 +21,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     private Double beschikbaarheidspercentage = 0.000;   //berekende beschikbaarheidspercentage uit optimalisatiefunctie
     private String totaleBeschikbaarheidNetwerkTekst;
     private JLabel beschikbaarheidspercentageLabel;
-    private Double totaleBedrag = 0.00;                  //berekende totale bedrag uit optimalisatiefunctie
+    private Double totaleBedrag;                  //berekende totale bedrag uit optimalisatiefunctie
     private static JLabel totaleBedragLabel;
     private JButton voegToe;
     private Color backClr1 = new Color(60, 63, 65); //achtergrondkleur
@@ -608,13 +608,13 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 //query's worden uitgevoerd om het netwerkontwerp in de database op te slaan.
                 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/monitoringsapplicatie_nerdygadgets", "root", "MaineCoon18"); //Verbinding met database wordt gemaakt
                 Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002DB" + "', '" + tabel2.getValueAt(2, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002W" + "', '" + tabel2.getValueAt(3, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003DB" + "', '" + tabel2.getValueAt(4, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
-                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedrag + "' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002DB" + "', '" + tabel2.getValueAt(2, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002W" + "', '" + tabel2.getValueAt(3, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003DB" + "', '" + tabel2.getValueAt(4, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                statement.executeUpdate("INSERT INTO Ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
 
                 //maakt van het ontwerp ook een ontwerpnetwerk zodat het in gezien kan worden door de gebruiker
                 Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
