@@ -453,6 +453,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         int teller = 0;
         while(teller<maxLoop-totaalSrvrDB){
             aantalDatabases[serverNummer]= teller;
+            //dit is om bij te houden hoe vaak er geprobeerd is een juiste server combinatie te vinden
             teller++;
             if (serverNummer<maxDBSrt) {
                 berekenDB(teller+totaalSrvrDB,serverNummer+1);
@@ -460,7 +461,8 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
             if(serverNummer==maxDBSrt) {
                 totaalTeller++;
-                System.out.println(totaalTeller + " W " + aantalWebservers[0] + "-" + aantalWebservers[1] + "-" + aantalWebservers[2] + "-" + "D " + aantalDatabases[0] + "-" + aantalDatabases[1] + "-" + aantalDatabases[2] + " ->" + BerekenBeschikbaarheid() + " - " + Berekenkosten() + " " + minKosten + resultaat);
+                //De print kan gebruikt worden om te testen wat het algoritme doet
+                //System.out.println(totaalTeller + " W " + aantalWebservers[0] + "-" + aantalWebservers[1] + "-" + aantalWebservers[2] + "-" + "D " + aantalDatabases[0] + "-" + aantalDatabases[1] + "-" + aantalDatabases[2] + " ->" + BerekenBeschikbaarheid() + " - " + Berekenkosten() + " " + minKosten + resultaat);
                 totaleBedragLabel.setText(minKosten + "");
                 double berekendeBeschikbaarheid = BerekenBeschikbaarheid();
                 double berekendeKosten = Berekenkosten();
@@ -480,6 +482,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     //berekent het juiste webserver aantal
     private static int berekenWB(int totaalSrvrWB,int serverNummer){
         int teller = 0;
+        //loop om het aantal (type) webservers te berekenen
         while(teller<maxLoop-totaalSrvrWB){
             aantalWebservers[serverNummer]= teller;
             if (serverNummer<maxWB) {
@@ -488,6 +491,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
             if(serverNummer==maxWB){
                 berekenDB(0,0);
             }
+            //dit is om bij te houden hoe vaak er geprobeerd is een juiste server combinatie te vinden
             teller++;
         }
         return serverNummer;
@@ -495,6 +499,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
     //berekent beschikbaarheid van heel het ontwerp
     private static double BerekenBeschikbaarheid(){
+        //het (1-beschikbaarheid A) deel van de formule per netwerkonderdeel uitrekenen
         double beschikbaarheidFW = 1 - Math.pow((1 - 0.99998), 1);
         double beschikbaarheidDB = 1 - Math.pow((1 - databaseBeschikbaarheid[0]), aantalDatabases[0]) * Math.pow((1 - databaseBeschikbaarheid[1]), aantalDatabases[1]) * Math.pow((1 - databaseBeschikbaarheid[2]), aantalDatabases[2]);
         double beschikbaarheidWB = 1 - Math.pow((1 - webserverBeschikbaarheid[0]), aantalWebservers[0]) * Math.pow((1 - webserverBeschikbaarheid[1]), aantalWebservers[1]) * Math.pow((1 - webserverBeschikbaarheid[2]), aantalWebservers[2]);
@@ -524,13 +529,11 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100);
                 berekenWB(0, 0);
                 System.out.println(totaalTeller + " combinaties onderzocht " + minKosten + " - " + resultaat);
+                //teller wordt gereset
                 totaalTeller = 0;
-                maxLoop++;
+                //om te voorkomen dat de uitkomst van de vorige (lagere) kosten weer worden gebruikt wordt minKosten opnieuw geinitialiseerd.
                 minKosten = Double.MAX_VALUE;
                 char[] nummers = resultaat.toCharArray();
-
-                System.out.println((Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100));
-//                    minimaalTotaleBeschikbaarheid = 0
 
 
                 //hier worden de waardes in de tabel er in gezet op basis van het resultaat van het algoritme
@@ -626,8 +629,8 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
                 dispose();
             }
-//        } catch(NumberFormatException nfe){
-//            minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
+        } catch(NumberFormatException nfe){
+            minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
 //            // melding dat er een percentage ingevuld moet worden
         } catch (SQLIntegrityConstraintViolationException exception) {
             componentToeVoegFoutmelding.setText("<html><font color = 'red'>U heeft nog geen naam ingevuld of de opgegeven naam bestaat al<font/><html/>");
