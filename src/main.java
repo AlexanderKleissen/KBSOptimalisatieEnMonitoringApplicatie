@@ -36,7 +36,7 @@ public class main {
      //   MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {

@@ -73,7 +73,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         optimaleWaardenOntwerp.setForeground(Color.white);
 
         //Ontwerpcomponenten uit database halen
-        Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/nerdygadgets", "root", "");
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM component_ontwerpen");
         while (rs.next()) {
@@ -525,6 +525,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         minimaalTotaleBeschikbaarheid.setText("Minimaal totaal beschikbaarheidspercentage:");     // standaard labeltekst zonder melding
         try {
             if (e.getSource() == bereken) {
+                if (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()) > 0 && Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText()) < 99.992) {
                 // ingevoerd percentage wordt van String naar Double omgezet
                 minBeschikbaarheid = (Double.parseDouble(jtMinimaalTotaleBeschikbaarheid.getText().replaceAll(",", ".")) / 100);
                 berekenWB(0, 0);
@@ -594,10 +595,17 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                 String beschikbaarheidnetwerk = df.format(beschikbaarheidNetwerk * 100);
                 beschikbaarheidspercentageLabel.setText("" + beschikbaarheidnetwerk);
 
-                for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         aantalDatabases[j] = 0;  // put your value here.
                     }
+                    for (int j = 0; j < 3; j++) {
+                        aantalDatabases[j] = 0;  // put your value here.
+                    }
+                    for (int j = 0; j < 3; j++) {
+                        aantalDatabases[j] = 0;  // put your value here.
+                    }
+                } else {
+                    minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Het percentage moet tussen de 0 en 99.992 zitten<font/><html/>");
                 }
             }
         } catch (NumberFormatException exception) {
@@ -611,7 +619,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                     beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText().replaceAll(",", "."));
 
                     //query's worden uitgevoerd om het netwerkontwerp in de database op te slaan.
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1"); //Verbinding met database wordt gemaakt
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
                     Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
                     statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
                     statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
@@ -629,9 +637,9 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
                     statement.close();
 
                     dispose();
+                } else {
+                    componentToeVoegFoutmelding.setText("<html><font color = 'red'>U heeft nog geen naam ingevuld of de opgegeven naam bestaat al<font/><html/>");
                 }
-            } else {
-                componentToeVoegFoutmelding.setText("<html><font color = 'red'>U heeft nog geen naam ingevuld of de opgegeven naam bestaat al<font/><html/>");
             }
 
         } catch(NumberFormatException nfe){
