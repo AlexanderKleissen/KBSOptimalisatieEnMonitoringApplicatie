@@ -606,29 +606,34 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
         try {
             if (e.getSource() == voegToe) {
-                String naamOntwerpnetwerk = vulNaamIn.getText();
-                beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText().replaceAll(",", "."));
+                if (!vulNaamIn.getText().equals("")) {
+                    String naamOntwerpnetwerk = vulNaamIn.getText();
+                    beschikbaarheidspercentage = Double.parseDouble(beschikbaarheidspercentageLabel.getText().replaceAll(",", "."));
 
-                //query's worden uitgevoerd om het netwerkontwerp in de database op te slaan.
-                Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1"); //Verbinding met database wordt gemaakt
-                Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002DB" + "', '" + tabel2.getValueAt(2, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002W" + "', '" + tabel2.getValueAt(3, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003DB" + "', '" + tabel2.getValueAt(4, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
-                statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                    //query's worden uitgevoerd om het netwerkontwerp in de database op te slaan.
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1"); //Verbinding met database wordt gemaakt
+                    Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
+                    statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001DB" + "', '" + tabel2.getValueAt(0, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                    statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9001W" + "', '" + tabel2.getValueAt(1, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                    statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002DB" + "', '" + tabel2.getValueAt(2, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                    statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9002W" + "', '" + tabel2.getValueAt(3, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                    statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003DB" + "', '" + tabel2.getValueAt(4, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                    statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "HAL9003W" + "', '" + tabel2.getValueAt(5, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
+                    statement.executeUpdate("INSERT INTO ontwerpnetwerk VALUES " + "('" + naamOntwerpnetwerk + "', '" + "pfSense" + "', '" + tabel2.getValueAt(6, 4) + "','" + beschikbaarheidspercentage + "', '" + totaleBedragLabel.getText().replaceAll(",", ".") + "' )");
 
-                //maakt van het ontwerp ook een ontwerpnetwerk zodat het in gezien kan worden door de gebruiker
-                Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
-                ontwerpnetwerk.setNaam(naamOntwerpnetwerk);
+                    //maakt van het ontwerp ook een ontwerpnetwerk zodat het in gezien kan worden door de gebruiker
+                    Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk();
+                    ontwerpnetwerk.setNaam(naamOntwerpnetwerk);
 
-                connection.close();
-                statement.close();
+                    connection.close();
+                    statement.close();
 
-                dispose();
+                    dispose();
+                }
+            } else {
+                componentToeVoegFoutmelding.setText("<html><font color = 'red'>U heeft nog geen naam ingevuld of de opgegeven naam bestaat al<font/><html/>");
             }
+
         } catch(NumberFormatException nfe){
             minimaalTotaleBeschikbaarheid.setText("<html>Minimaal totaal beschikbaarheidspercentage: <br> <font color = 'red'> Voer een percentage in <font/><html/>");
 //            // melding dat er een percentage ingevuld moet worden
