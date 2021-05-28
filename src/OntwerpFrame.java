@@ -192,51 +192,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
     } catch (SQLException e) {
         System.out.println(e);
     }
-
-
-//
-//
-//
-//        //Componenten info op het scherm
-//        for(Groep groep: netwerk.groepen) {
-//            for (Component component : groep.componenten) {
-//                JPanel jPanel = new JPanel(new GridLayout(4, 1));
-//                jPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1, true), BorderFactory.createEmptyBorder(7, 7, 7, 7)));
-//                jPanel.setBackground(backClr2);
-//                if(component instanceof Ontwerpcomponent) {
-//                    JLabel naam = new JLabel("Naam: " + component.getNaam());
-//                    naam.setForeground(Color.white);
-//                    jPanel.add(naam);
-//                    JLabel beschikbaarheid = new JLabel("Beschikbaarheid: " + component.getBeschikbaarheidspercentage() + "%");
-//                    beschikbaarheid.setForeground(Color.white);
-//                    jPanel.add(beschikbaarheid);
-//                    JLabel kosten = new JLabel("Kosten: €" + ((Ontwerpcomponent) component).getKosten());
-//                    kosten.setForeground(Color.white);
-//                    jPanel.add(kosten);
-//        //                   center.add(jPanel);
-//                    componentenPanel.add(jPanel);
-//                }
-//            }
-//        }
-                setVisible(true);
-    }
-
-
-    //Getters en setters
-    public Ontwerpnetwerk getOntwerpnetwerk() {
-        return ontwerpnetwerk;
-    }
-
-    public void setMonitoringnetwerk(Monitoringnetwerk monitoringnetwerk) {
-        this.monitoringnetwerk = monitoringnetwerk;
-    }
-
-    public boolean isGedruktOpOptimalisatieknop() {
-        return gedruktOpOptimalisatieknop;
-    }
-
-    public void setGedruktOpOptimalisatieknop(boolean gedruktOpOptimalisatieknop) {
-        this.gedruktOpOptimalisatieknop = gedruktOpOptimalisatieknop;
+    setVisible(true);
     }
 
     @Override
