@@ -104,12 +104,13 @@ public class OntwerpFrame extends JFrame implements ActionListener {
         summary.add(totaleKosten);
 
 
-    try {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
-        Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-        //ResultSet rs = statement.executeQuery("select * from ontwerpnetwerk where NaamNetwerk = '" + netwerk.getNaam() +"'"); //Query uitvoeren
-        ResultSet rs = statement.executeQuery("select * from ontwerpnetwerk where NaamNetwerk = '" + netwerk.getNaam() + "'");
-        //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
+            //Prepared statement object maken met connection zodat er een prepared statement uitgevoerd kan worden
+            PreparedStatement statement = connection.prepareStatement("select * from ontwerpnetwerk where NaamNetwerk = ? ");
+            statement.setString(1, netwerk.getNaam());
+            ResultSet rs = statement.executeQuery(); //Query uitvoeren
+
 
         while (rs.next()) {
             DecimalFormat drieDecimalen = new DecimalFormat("0.000");
@@ -118,7 +119,7 @@ public class OntwerpFrame extends JFrame implements ActionListener {
             double totaleBeschikbaarheidText = rs.getDouble(4);
             double totaleKostenText = rs.getDouble(5);
 
-            totaleBeschikbaarheid.setText("Totale beschikbaarheid: " + drieDecimalen.format(totaleBeschikbaarheidText));
+            totaleBeschikbaarheid.setText("Totale beschikbaarheid: " + drieDecimalen.format(totaleBeschikbaarheidText) + "%");
             totaleKosten.setText("Totale kosten: €" + tweeDecimalen.format(totaleKostenText));
 
             int aantalComponenten = rs.getInt(3);

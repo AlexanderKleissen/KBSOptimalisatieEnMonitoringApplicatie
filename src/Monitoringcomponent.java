@@ -19,8 +19,11 @@ public class Monitoringcomponent extends Component{
 
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
-            Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-            ResultSet rs = statement.executeQuery("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = '" + naam + "'"); //Query uitvoeren
+            //Prepared statement object maken met connection zodat er een prepared statement uitgevoerd kan worden
+            PreparedStatement statement = connection.prepareStatement("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = ? ");
+            statement.setString(1, naam);
+            ResultSet rs = statement.executeQuery(); //Query uitvoeren
+
             rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
 
             this.processorbelasting = rs.getDouble(1);
@@ -86,8 +89,11 @@ public class Monitoringcomponent extends Component{
     public void setGegevensUitDatabase() {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", ""); //Verbinding met database wordt gemaakt
-            Statement statement = connection.createStatement(); //Statement object maken met connection zodat er een statement uitgevoerd kan worden
-            ResultSet rs = statement.executeQuery("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = '" + this.getNaam() + "'"); //Query uitvoeren
+            //Prepared statement object maken met connection zodat er een prepared statement uitgevoerd kan worden
+            PreparedStatement statement = connection.prepareStatement("select CPU_Usage, Memory_Usage, Disk_Total, Disk_Used, Disk_Free, Uptime from infrastructure_monitoring where Object_Name = ? ");
+            statement.setString(1, this.getNaam());
+            ResultSet rs = statement.executeQuery(); //Query uitvoeren
+
             rs.next(); //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
 
             this.processorbelasting = rs.getDouble(1);

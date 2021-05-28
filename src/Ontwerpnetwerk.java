@@ -100,8 +100,12 @@ public class Ontwerpnetwerk extends Netwerk {
         }
 
         for (Ontwerpcomponent component : componentenNetwerk) { //het database-deel
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select NaamComponent from ontwerpnetwerk where NaamNetwerk = '" + this.getNaam() + "'");
+            //Prepared statement object maken met connection zodat er een prepared statement uitgevoerd kan worden
+            PreparedStatement statement = connection.prepareStatement("select NaamComponent from ontwerpnetwerk where NaamNetwerk = ? ");
+            statement.setString(1, this.getNaam()); //Query uitvoeren
+            ResultSet rs = statement.executeQuery();
+
+            //Hierdoor gaat de Resultset naar de volgende regel. Als dit er niet in staat dan zal er geen resultaat uit komen.
             while (rs.next()){
                 String componentinNetwerk = rs.getString(1);
                 netwerkComponentenUitTabel.add(componentinNetwerk);
@@ -115,9 +119,11 @@ public class Ontwerpnetwerk extends Netwerk {
                 boolean insertGelukt = insert.execute("insert into ontwerpnetwerk values" +
                         "('" + this.getNaam() + "', '" + component.getNaam() + "', 1, " + beschikbaarheid + ", " + kosten + ")");
             } else {
-                Statement update1 = connection.createStatement();
-                boolean update1Gelukt = update1.execute(
-                        "update ontwerpnetwerk set AantalGebruikt = AantalGebruikt+1  where NaamComponent = '" + component.getNaam() + "' AND NaamNetwerk = '" + this.getNaam() + "'");
+                PreparedStatement update1 = connection.prepareStatement("update ontwerpnetwerk set AantalGebruikt = AantalGebruikt+1  where NaamComponent = ? AND NaamNetwerk = ? '");
+                update1.setString(1, component.getNaam());
+                update1.setString(2, this.getNaam());
+                boolean update1Gelukt = update1.execute();
+
             }
         }
 
