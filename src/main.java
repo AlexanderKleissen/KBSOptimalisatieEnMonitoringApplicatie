@@ -1,10 +1,5 @@
-import javax.naming.CommunicationException;
-import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
 
 public class main {
     public static void main(String[] args) throws SQLException {
@@ -32,8 +27,6 @@ public class main {
         netwerk1.groepen.add(firewall);
         netwerk1.groepen.add(db);
         netwerk1.groepen.add(ws);
-
-     //   MonitoringFrame monitoringFrame1 = new MonitoringFrame(netwerk1);
 
         //Ontwerpcomponenten uit database halen
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");

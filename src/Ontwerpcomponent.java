@@ -1,5 +1,3 @@
-import javax.swing.*;
-import java.awt.*;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -7,7 +5,6 @@ import java.util.ArrayList;
 public class Ontwerpcomponent extends Component {
     private String kosten;
     private static ArrayList<Ontwerpcomponent> ontwerpcomponenten = new ArrayList<>();
-    private Icon image;
 
     //Constructors
     public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage) throws SQLException {
@@ -19,28 +16,11 @@ public class Ontwerpcomponent extends Component {
     //    naarDatabase();
     }
 
-
-    public Ontwerpcomponent(String naam, String type, double kosten, double beschikbaarheidspercentage, String image) throws SQLException{
-        super(naam, type, beschikbaarheidspercentage);
-        DecimalFormat df = new DecimalFormat("0.00");
-        String dfKosten = df.format(kosten);
-        this.kosten = dfKosten;
-        this.image = new ImageIcon(new ImageIcon(image).getImage().getScaledInstance(50,80, Image.SCALE_DEFAULT));
-        ontwerpcomponenten.add(this);
-     //   naarDatabase();
-    }
-
     //Getters en setters
-
 
     public String getKosten() {
         return kosten;
     }
-
-    public Icon getImage() {
-        return image;
-    }
-
     public static ArrayList<Ontwerpcomponent> getOntwerpcomponenten() {
         return ontwerpcomponenten;
     }

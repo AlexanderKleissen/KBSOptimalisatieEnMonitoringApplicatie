@@ -23,13 +23,4 @@ public abstract class Netwerk {
     public void setNaam(String naam) {
         this.naam = naam;
     }
-
-    public String getBeschikbaarheidspercentage() {
-        return beschikbaarheidspercentage;
-    }
-
-    public void setBeschikbaarheidspercentage(double beschikbaarheidspercentage) {
-        DecimalFormat df = new DecimalFormat("0.000");
-        String dfBeschikbaarheidspercentage = df.format(beschikbaarheidspercentage);
-    }
 }

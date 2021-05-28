@@ -11,9 +11,4 @@ public class Monitoringnetwerk extends Netwerk{
         groepen = new ArrayList<>();
         monitoringNetwerken.add(this);
     }
-
-    //Getters en Setters
-    public static ArrayList<Monitoringnetwerk> getMonitoringNetwerken() {
-        return monitoringNetwerken;
-    }
 }

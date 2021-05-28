@@ -30,16 +30,6 @@ public class Ontwerpnetwerk extends Netwerk {
         return ontwerpNetwerken;
     }
 
-    public String getKosten() {
-        return kosten;
-    }
-
-    public void setKosten(double kosten) {
-        DecimalFormat df = new DecimalFormat("0.00");
-        String dfKosten = df.format(kosten);
-        this.kosten = dfKosten;
-    }
-
     public static void uitDatabase() throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://11.11.20.100:3306/nerdygadgets", "root", "m2okbsd1");
         Statement statement = connection.createStatement();
@@ -94,73 +84,6 @@ public class Ontwerpnetwerk extends Netwerk {
 
         }
     }
-
-//        Groep firewallgroep = new Groep("firewallgroep");
-//        Groep webservergroep = new Groep("webservergroep");
-//        Groep databasegroep = new Groep("databasegroep");
-//
-//
-//        String naamNetwerk;
-//        Double kosten;
-//        Double beschikbaarheid;
-
-
-//        while (rs2.next()) {
-//            naamNetwerk = rs2.getString("NaamNetwerk") + "%";
-//            kosten = rs2.getDouble("Kosten");
-//            beschikbaarheid = rs2.getDouble("Beschikbaarheid");
-//
-//            for (Ontwerpnetwerk ontwerpnetwerk2 : Ontwerpnetwerk.getOntwerpNetwerken()) {
-//                if (ontwerpnetwerk2.getNaam().equals(naamNetwerk)) {
-//                    naamNetwerk = null;
-//                    kosten = 0.00;
-//                    beschikbaarheid = 0.000;
-//                }
-//            }
-//
-//            if (naamNetwerk != null) {
-//                Ontwerpnetwerk ontwerpnetwerk = new Ontwerpnetwerk(naamNetwerk, kosten, beschikbaarheid);
-//                ontwerpnetwerk.groepen.add(firewallgroep);
-//                ontwerpnetwerk.groepen.add(webservergroep);
-//                ontwerpnetwerk.groepen.add(databasegroep);
-//            }
-//
-//
-//
-//                for (Ontwerpcomponent ontwerpcomponent : Ontwerpcomponent.getOntwerpcomponenten()) {
-//                    if (ontwerpcomponent.getNaam().equals(rs2.getString("NaamComponent"))) {
-//                        for (int i = 0; i < rs2.getInt("AantalGebruikt"); i++) {
-//                            if (ontwerpcomponent.getType().equals("firewall")) {
-//                                firewallgroep.componenten.add(ontwerpcomponent);
-//
-//                            }
-//
-//                            if (ontwerpcomponent.getType().equals("webserver")) {
-//                                webservergroep.componenten.add(ontwerpcomponent);
-//
-//                            }
-//
-//                            if (ontwerpcomponent.getType().equals("database")) {
-//                                databasegroep.componenten.add(ontwerpcomponent);
-//                            }
-//                        }
-//                    }
-//
-//            }
-//        }
-//
-//
-//        //                        if(Ontwerpnetwerk.getOntwerpNetwerken().size() > 0) {
-//        //                        for(Ontwerpnetwerk ontwerpnetwerk: Ontwerpnetwerk.getOntwerpNetwerken()) {
-//        //                            if (ontwerpnetwerk.getNaam().equals(ontwerpnetwerk2.getNaam())) {
-//        //                                Ontwerpnetwerk.getOntwerpNetwerken().remove(ontwerpnetwerk2);
-//        //                            }
-//        //                        }
-//
-//
-//        connection.close();
-//        statement.close();
-//    }
 
     private void naarDatabase(double beschikbaarheid, double kosten) throws SQLException {
         ArrayList<Ontwerpcomponent> componentenNetwerk = new ArrayList<>();

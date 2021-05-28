@@ -4,9 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class KiesNetwerkDialog extends JDialog implements ActionListener {
-    private int aantalM = Monitoringnetwerk.getMonitoringNetwerken().size();
     private int aantalO = Ontwerpnetwerk.getOntwerpNetwerken().size();
-    private JButton netwerkKeuzeM, netwerkKeuzeO;
+    private JButton netwerkKeuzeO;
     private Frame frame;
     private Color backClr1 = new Color(60, 63, 65); //achtergrondkleur
 

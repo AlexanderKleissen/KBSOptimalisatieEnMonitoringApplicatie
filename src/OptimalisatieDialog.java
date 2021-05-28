@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class OptimalisatieDialog extends JDialog implements ActionListener {
     private OntwerpFrame ontwerpFrame;
@@ -140,43 +139,6 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         JScrollPane scrollPaneTabel1 = new JScrollPane(tabel1);
         scrollPaneTabel1.setPreferredSize(dimensieScrollPaneTabel1en2);
         tabel1.setFillsViewportHeight(true);                                                       //tabel vult de hele scrollPane ongeacht aantal rijen
-
-
-        //De optimale componenten naar aanleiding van optimalisatiefunctie toevoegen aan de arraylist van optimaleWaarden
-        //Nu een voorbeeld van een optimaal ontwerp met een beschikbaarheid van 99.990% gebruikt.
-
-//        for (Ontwerpcomponent ontwerpcomponent : ontwerpcomponenten) {
-//            if (ontwerpcomponent.getNaam().equals("HAL9001DB")) {
-//                for (int i = 0; i < 3; i++) {
-//                    optimaleWaarden.add(ontwerpcomponent);
-//                }
-//            }
-//            if (ontwerpcomponent.getNaam().equals("HAL9002DB")) {
-//                optimaleWaarden.add(ontwerpcomponent);
-//            }
-//
-//            if (ontwerpcomponent.getNaam().equals("HAL9003DB")) {
-//                optimaleWaarden.add(ontwerpcomponent);
-//            }
-//
-//            if (ontwerpcomponent.getNaam().equals("HAL9001W")) {
-//                optimaleWaarden.add(ontwerpcomponent);
-//            }
-//
-//            if (ontwerpcomponent.getNaam().equals("HAL9002W")) {
-//                for (int k = 0; k < 4; k++) {
-//                    optimaleWaarden.add(ontwerpcomponent);
-//                }
-//            }
-//
-//            if (ontwerpcomponent.getNaam().equals("HAL9003W")) {
-//                optimaleWaarden.add(ontwerpcomponent);
-//            }
-//
-//            if (ontwerpcomponent.getNaam().equals("pfSense")) {
-//                optimaleWaarden.add(ontwerpcomponent);
-//            }
-//        }
 
         //rechter tabel:
         String[] kolomnamen2 = {"Naam component", "Type", "Kosten (€)", "Beschikbaarheid (%)", "Aantal"};
@@ -346,11 +308,6 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
         JLabel totaleKosten = new JLabel("Totale kosten ontwerp (€):");
         totaleKosten.setForeground(Color.white);
-
-
-//        for (Ontwerpcomponent ontwerpcomponent : optimaleWaarden) {
-//            totaleBedrag += Double.parseDouble(ontwerpcomponent.getKosten().replaceAll(",", "."));
-//        }
 
         DecimalFormat df2 = new DecimalFormat("0.00");
 

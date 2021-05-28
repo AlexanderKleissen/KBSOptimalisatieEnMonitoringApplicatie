@@ -4,8 +4,6 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 
 public class ColorArrowUI extends BasicComboBoxUI { //hiermee kunnen we de kleur van het pijltje van de combobox wijzigen
-    private Color backClr1 = new Color(60, 63, 65); //de kleur van de rest
-
     @Override
     protected JButton createArrowButton() {
         final Color background = UIManager.getColor("ComboBoxUI.buttonBackgroundColor");

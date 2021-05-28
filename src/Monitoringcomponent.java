@@ -13,16 +13,6 @@ public class Monitoringcomponent extends Component{
     private String ipaddress;
 
     //Constructors
-    public Monitoringcomponent(String naam, String type, String beschikbaarheidsstatus, int beschikbaarheidsduur, int processorbelasting, int diskruimte, double periodiekeKosten, double beschikbaarheidspercentage) {
-        super(naam, type, beschikbaarheidspercentage);
-        this.beschikbaarheidsduur = beschikbaarheidsduur;
-        this.processorbelasting = processorbelasting;
-        this.beschikbareDiskruimte = diskruimte;
-        DecimalFormat df = new DecimalFormat("0.00");
-        String dfPeriodiekeKosten = df.format(periodiekeKosten);
-        this.periodiekeKosten = dfPeriodiekeKosten;
-    }
-
     public Monitoringcomponent(String naam, String type, double beschikbaarheidspercentage, double periodiekeKosten, String ipaddress) throws SQLException {
         super(naam, type, beschikbaarheidspercentage);
         this.ipaddress = ipaddress;
