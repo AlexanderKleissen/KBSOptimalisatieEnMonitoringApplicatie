@@ -1,11 +1,9 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseConnectieErrorDialog extends JDialog implements ActionListener {
+public class DatabaseConnectieErrorDialog extends JDialog {
 
    DatabaseConnectieErrorDialog() {
        try {
@@ -15,10 +13,5 @@ public class DatabaseConnectieErrorDialog extends JDialog implements ActionListe
            JOptionPane.showMessageDialog(this, "Kan geen verbinding maken met de database", "Database connectie error", JOptionPane.ERROR_MESSAGE);
            System.out.println(e);
        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
